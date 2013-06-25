@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ECKClient</groupId>
   <artifactId>ECKClient</artifactId>
-  <version>0.1</version>
+  <version>0.2-SNAPSHOT</version>
   <name>ECKClient</name>
   <description>Client library to support the ECK modules</description>
   <build>
