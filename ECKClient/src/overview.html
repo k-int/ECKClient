@@ -1,0 +1,81 @@
+<HTML>
+	<BODY>
+		Provides the classes necessary to interface with the ECKCore using a java 7 client 
+		<p>
+			All interfaces to the ECK functionality are static methods with each module having its own interface
+			<br/>
+       		<ul>
+           		<li>{@link com.k_int.euinside.client.module.metadataDefinition.Definition Metadata Definition}</li>
+           		<li>{@link com.k_int.euinside.client.module.pidgenerate.PIDGenerate PID Generation}</li>
+           		<li>{@link com.k_int.euinside.client.module.preview.Preview Preview}</li>
+           		<li>{@link com.k_int.euinside.client.module.setmanager.SetManager Set Manager}</li>
+           		<li>{@link com.k_int.euinside.client.module.validation.Validate Validation (monguz)}</li>
+           		<li>{@link com.k_int.euinside.client.module.validation.Validate2 Validation (semantika)}</li>
+       		</ul>
+       		<br/>
+       		Before a call is made to any module the base url of the ECKCore module needs to be set,
+       		this is achieved by calling BaseModule.setCoreBaseURL and passing the base url to the core as the parameter.<br/><br/>
+       		If this call is not made then all subsequent will fail as there is no default value for the core base url.
+       		<br/><br/>
+       		Examples:<br/>
+       		<br/>
+       		1. To generate a PID<br/>
+       		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
+       		String pid = PIDGenerate.generate("institutionURL", "item", "123456");<br/>
+       		<br/>
+       		2. To validate an edm record using the monguz validator<br/>
+       		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
+       		Errors errors = Validate2.sendFiles("myLidoFile.xml");<br/>
+       		<br/>
+       		3. To retrieve the status of a set<br/>
+       		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
+       		Status status = SetManager.getStatus("provider", "set");<br/>
+       		<br/><br/>
+       		The client library is dependent upon the following libraries:
+       		<br/>
+       		<br/>
+       		<table border="1" class="dependentLibraries">
+       			<tr>
+       				<th>Group</th>
+       				<th>Artifact</th>
+       				<th>Version</th>
+       			</tr>
+       			<tr>
+       				<td>com.fasterxml.jackson.core</td>
+       				<td>jackson-annotations</td>
+       				<td>2.2.1</td>
+       			</tr>
+       			<tr>
+       				<td>com.fasterxml.jackson.core</td>
+       				<td>jackson-databind</td>
+       				<td>2.2.1</td>
+       			</tr>
+       			<tr>
+       				<td>commons-logging</td>
+       				<td>commons-logging</td>
+       				<td>1.1.2</td>
+       			</tr>
+       			<tr>
+       				<td>javax.servlet</td>
+       				<td>servlet-api</td>
+       				<td>2.5</td>
+       			</tr>
+       			<tr>
+       				<td>log4j</td>
+       				<td>log4j</td>
+       				<td>1.2.17</td>
+       			</tr>
+       			<tr>
+       				<td>org.apache.httpcomponents</td>
+       				<td>httpclient</td>
+       				<td>4.2.5</td>
+       			</tr>
+       			<tr>
+       				<td>org.apache.httpcomponents</td>
+       				<td>httpmime</td>
+       				<td>4.2.1</td>
+       			</tr>
+       		</table>
+		</p>
+	</BODY>
+</HTML>
