@@ -4,7 +4,7 @@
   <artifactId>ECKClient</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>ECKClient</name>
-  <description>Client librart to support the ECK modules</description>
+  <description>Client library to support the ECK modules</description>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -104,8 +104,8 @@
     </repository>
   </repositories>
   <scm>
-    <connection>scm:git:git://github.com/k-int/EUInside.git</connection>
-    <developerConnection>scm:git:https://github.com/k-int/EUInside.git</developerConnection>
-    <url>https://github.com/k-int/EUInside</url>
+    <connection>scm:git:git://github.com/k-int/ECKClient.git</connection>
+    <developerConnection>scm:git:https://github.com/k-int/ECKClient.git</developerConnection>
+    <url>https://github.com/k-int/ECKClient</url>
   </scm>
 </project>
