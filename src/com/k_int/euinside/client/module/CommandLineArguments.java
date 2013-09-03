@@ -1,44 +1,60 @@
 package com.k_int.euinside.client.module;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.k_int.euinside.client.module.setmanager.SetManager;
 
 public class CommandLineArguments {
-	String accessionNumber = "";
-	ArrayList<String> badFilenames = new ArrayList<String>();
-	String coreBaseURL = "http://euinside.k-int.com/ECKCore2";
-	boolean deleteAll = false;
-	String errorCode = "";
-	String field = "";
-	ArrayList<String> filenames = new ArrayList<String>();
-	String institutionURL = "";
-	String language = "";
-	String pid = "";
-	String profile = "";
-	String provider = SetManager.PROVIDER_DEFAULT;
-	ArrayList<String> recordsToDelete = new ArrayList<String>();
-	String recordId = "";
-	String recordType = "";
-	boolean runAll = false;
-	boolean runCommit = false;
-	boolean runList = false;
-	boolean runPreview = false;
-	boolean runStatus = false;
-	boolean runUpdate = false;
-	boolean runValidate = false;
-	String set = SetManager.SET_DEFAULT;
+	static SimpleDateFormat expectedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private String accessionNumber = "";
+	private ArrayList<String> badFilenames = new ArrayList<String>();
+	private String coreBaseURL = "http://euinside.k-int.com/ECKCore2";
+	private Date dateTime = null;
+	private Integer days = null;
+	private Long duration = null;
+	private boolean deleteAll = false;
+	private String errorCode = "";
+	private String field = "";
+	private ArrayList<String> filenames = new ArrayList<String>();
+	private String group = null;
+	private String institutionURL = "";
+	private Integer itemsProcessed = null;
+	private String language = "";
+	private Integer limit = null;
+	private String moduleName = null;
+	private Integer numberFailed = null;
+	private Integer numberSuccessful = null;
+	private Integer offset = null;
+	private String pid = "";
+	private String profile = "";
+	private String provider = SetManager.PROVIDER_DEFAULT;
+	private String query = null;
+	private ArrayList<String> recordsToDelete = new ArrayList<String>();
+	private String recordId = "";
+	private String recordType = "";
+	private boolean runAll = false;
+	private boolean runCommit = false;
+	private boolean runList = false;
+	private boolean runPreview = false;
+	private boolean runQuery = false;
+	private boolean runStatus = false;
+	private boolean runUpdate = false;
+	private boolean runValidate = false;
+	private String set = SetManager.SET_DEFAULT;
 
 	public CommandLineArguments(String [] args) {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-accessionNumber":
 					i++;
-					accessionNumber = args[i];
+					setAccessionNumber(args[i]);
 					break;
 					
 				case "-all":
-					runAll = true;
+					setRunAll(true);
 					break;
 					
 				case "-badFilename":
@@ -47,26 +63,41 @@ public class CommandLineArguments {
 					break;
 					
 				case "-commit":
-					runCommit = true;
+					setRunCommit(true);
 					break;
 					
 				case "-coreBaseURL":
 					i++;
-					coreBaseURL = args[i];
+					setCoreBaseURL(args[i]);
+					break;
+					
+				case "-dateTime":
+					i++;
+					setDateTime(args[i]);
+					break;
+					
+				case "-days":
+					i++;
+					setDays(args[i]);
 					break;
 					
 				case "-deleteAll":
-					deleteAll = true;
+					setDeleteAll(true);
+					break;
+					
+				case "-duration":
+					i++;
+					setDuration(args[i]);
 					break;
 					
 				case "-errorCode":
 					i++;
-					errorCode = args[i];
+					setErrorCode(args[i]);
 					break;
 					
 				case "-field":
 					i++;
-					field = args[i];
+					setField(args[i]);
 					break;
 					
 				case "-filename":
@@ -74,37 +105,76 @@ public class CommandLineArguments {
 					filenames.add(args[i]);
 					break;
 					
+				case "-group":
+					i++;
+					setGroup(args[i]);
+					break;
+					
 				case "-institutionURL":
 					i++;
-					institutionURL = args[i];
+					setInstitutionURL(args[i]);
+					break;
+					
+				case "-itemsProcessed":
+					i++;
+					setItemsProcessed(args[i]);
 					break;
 					
 				case "-language":
 					i++;
-					language = args[i];
+					setLanguage(args[i]);
+					break;
+					
+				case "-limit":
+					i++;
+					setLimit(args[i]);
 					break;
 					
 				case "-list":
-					runList = true;
+					setRunList(true);
+					break;
+					
+				case "-moduleName":
+					i++;
+					setModuleName(args[i]);
+					break;
+					
+				case "-numberFailed":
+					i++;
+					setNumberFailed(args[i]);
+					break;
+					
+				case "-numberSuccessful":
+					i++;
+					setNumberSuccessful(args[i]);
+					break;
+					
+				case "-offset":
+					i++;
+					setOffset(args[i]);
 					break;
 					
 				case "-pid":
 					i++;
-					pid = args[i];
+					setPid(args[i]);
 					break;
 					
 				case "-preview":
-					runPreview = true;
+					setRunPreview(true);
 					break;
 					
 				case "-profile":
 					i++;
-					profile = args[i];
+					setProfile(args[i]);
 					break;
 					
 				case "-provider":
 					i++;
-					provider = args[i];
+					setProvider(args[i]);
+					break;
+					
+				case "-query":
+					setRunQuery(true);
 					break;
 					
 				case "-recordToDelete":
@@ -114,29 +184,29 @@ public class CommandLineArguments {
 					
 				case "-recordId":
 					i++;
-					recordId = args[i];
+					setRecordId(args[i]);
 					break;
 
 				case "-recordType":
 					i++;
-					recordType = args[i];
+					setRecordType(args[i]);
 					break;
 
 				case "-set":
 					i++;
-					set = args[i];
+					setSet(args[i]);
 					break;
 					
 				case "-status":
-					runStatus = true;
+					setRunStatus(true);
 					break;
 					
 				case "-update":
-					runUpdate = true;
+					setRunUpdate(true);
 					break;
 					
 				case "-validate":
-					runValidate = true;
+					setRunValidate(true);
 					break;
 			}
 		}
@@ -168,6 +238,26 @@ public class CommandLineArguments {
 		this.coreBaseURL = coreBaseURL;
 	}
 	
+	public Date getDateTime() {
+		return(dateTime);
+	}
+
+	public void setDateTime(String dateTime) {
+		try {
+			this.dateTime = expectedDateFormat.parse(dateTime);
+		} catch (ParseException e) {
+			// We ignore anything we cannot parse
+		}
+	}
+
+	public Integer getDays() {
+		return(days);
+	}
+
+	public void setDays(String days) {
+		this.days = Integer.parseInt(days);
+	}
+
 	public boolean isDeleteAll() {
 		return(deleteAll);
 	}
@@ -176,6 +266,18 @@ public class CommandLineArguments {
 		this.deleteAll = deleteAll;
 	}
 	
+	public Long getDuration() {
+		return(duration);
+	}
+
+	public Integer getDurationInteger() {
+		return(duration == null ? null : duration.intValue());
+	}
+
+	public void setDuration(String duration) {
+		this.duration = Long.parseLong(duration);
+	}
+
 	public String getErrorCode() {
 		return(errorCode);
 	}
@@ -200,6 +302,14 @@ public class CommandLineArguments {
 		this.filenames = filenames;
 	}
 	
+	public String getGroup() {
+		return(group);
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
 	public String getInstitutionURL() {
 		return(institutionURL);
 	}
@@ -208,12 +318,60 @@ public class CommandLineArguments {
 		this.institutionURL = institutionURL;
 	}
 
+	public Integer getItemsProcessed() {
+		return(itemsProcessed);
+	}
+
+	public void setItemsProcessed(String itemsProcessed) {
+		this.itemsProcessed = Integer.parseInt(itemsProcessed);
+	}
+
 	public String getLanguage() {
 		return(language);
 	}
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public Integer getLimit() {
+		return(limit);
+	}
+
+	public void setLimit(String limit) {
+		this.limit = Integer.parseInt(limit);
+	}
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
+
+	public Integer getNumberFailed() {
+		return(numberFailed);
+	}
+
+	public void setNumberFailed(String numberFailed) {
+		this.numberFailed = Integer.parseInt(numberFailed);
+	}
+
+	public Integer getNumberSuccessful() {
+		return(numberSuccessful);
+	}
+
+	public void setNumberSuccessful(String numberSuccessful) {
+		this.numberSuccessful = Integer.parseInt(numberSuccessful);
+	}
+
+	public Integer getOffset() {
+		return(offset);
+	}
+
+	public void setOffset(String offset) {
+		this.offset = Integer.parseInt(offset);
 	}
 
 	public String getPid() {
@@ -240,6 +398,14 @@ public class CommandLineArguments {
 		this.provider = provider;
 	}
 	
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
 	public ArrayList<String> getRecordsToDelete() {
 		return(recordsToDelete);
 	}
@@ -302,6 +468,14 @@ public class CommandLineArguments {
 	
 	public void setRunPreview(boolean runPreview) {
 		this.runPreview = runPreview;
+	}
+	
+	public boolean isRunQuery() {
+		return(runQuery);
+	}
+	
+	public void setRunQuery(boolean runQuery) {
+		this.runQuery = runQuery;
 	}
 	
 	public boolean isRunStatus() {

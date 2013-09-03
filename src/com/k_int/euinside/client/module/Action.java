@@ -21,6 +21,10 @@ public enum Action {
 	SET_MANAGER_UPDATE("update"),
 	SET_MANAGER_VALIDATE("validate"),
 
+	// Actions used by the Statistics module
+	STATISTICS_QUERY("query"),
+	STATISTICS_UPDATE("update"),
+	
 	// Actions used by validation
 	VALIDATION_VALIDATE("validate");
 	
