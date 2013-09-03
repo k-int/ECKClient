@@ -183,20 +183,35 @@ public class Statistics extends BaseModule {
 	}
 
 	/**
-	 * Updates the specified set for the given provider with the specified files
-	 * Only files with the extension of .zip and .zml with be submitted
+	 * Updates the statistics with the supplied information
 	 * 
-	 * @param provider ......... The provider of the records
-	 * @param set .............. The set the records belong to
-	 * @param filenames ........ The list of filenames containing records that need to be submitted 
-	 * @param commit ........... Do we commit on completion
-	 * @param deleteAll ........ Do we delete all the records before the update
-	 * @param recordsToDelete .. A list of record ids that need to be deleted
+	 * @param moduleName The name of the module we want statistics for
+	 * @param group The group within the module
+	 * @param startTime The time the processing started 
+	 * @param endTime The time the processing completed
+	 * @param numberFailed The number of items that failed the processing
+	 * @param numberSuccessful The number of items that completed the processing
+	 * 
+	 * @return A HttpResult of the call, a getHttpStatusCode of 202 means this call was successful
+	 */
+	static public HttpResult update(String moduleName, String group, long startTime, long endTime, int numberFailed, int numberSuccessful) {
+		return(update(moduleName, group, new Date(startTime), new Long(endTime - startTime), null, new Integer(numberFailed), new Integer(numberSuccessful))); 
+	}
+	
+	/**
+	 * Updates the statistics with the supplied information
+	 * 
+	 * @param moduleName The name of the module we want statistics for
+	 * @param group The group within the module
+	 * @param dateTime The date / time the processing started 
+	 * @param duration How long in milliseconds the processing took
+	 * @param itemsProcessed the total number of items that were processed
+	 * @param numberFailed The number of items that failed the processing
+	 * @param numberSuccessful The number of items that completed the processing
 	 * 
 	 * @return A HttpResult of the call, a getHttpStatusCode of 202 means this call was successful
 	 */
 	static public HttpResult update(String moduleName, String group, Date dateTime, Long duration, Integer itemsProcessed, Integer numberFailed, Integer numberSuccessful) {
-		// Are we going to commit or just update
 		String path = buildUpdatePath(moduleName, group, dateTime, duration, itemsProcessed, numberFailed, numberSuccessful); 
 		return(ClientHTTP.send(path));
 	}
