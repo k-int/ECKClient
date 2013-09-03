@@ -13,6 +13,7 @@ import com.k_int.euinside.client.module.Attribute;
 import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
+import com.k_int.euinside.client.module.statistics.query.StatisticItem;
 import com.k_int.euinside.client.module.statistics.query.StatisticItems;
 import com.k_int.euinside.client.module.statistics.query.StatusItem;
 import com.k_int.euinside.client.module.statistics.query.StatusItems;
@@ -98,7 +99,9 @@ public class Statistics extends BaseModule {
 	 */
 	static private String buildUpdatePath(String moduleName, String group, Date dateTime, Long duration, Integer itemsProcessed, Integer numberFailed, Integer numberSuccessful) { 
 		ArrayList<BasicNameValuePair> attributes = new ArrayList<BasicNameValuePair>();
-		addAttributeIfSet(attributes, Attribute.DATE_TIME, dateTime);
+		if (dateTime != null) {
+			addAttributeIfSet(attributes, Attribute.DATE_TIME, StatisticItem.expectedDateTimeFormat.format(dateTime));
+		}
 		addAttributeIfSet(attributes, Attribute.DURATION, duration);
 		addAttributeIfSet(attributes, Attribute.ITEMS_PROCESSED, itemsProcessed);
 		addAttributeIfSet(attributes, Attribute.NUMBER_FAILED, numberFailed);

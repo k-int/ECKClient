@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class StatisticItem {
 	static private final String FORMAT_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-	static private final SimpleDateFormat expectedDateTimeFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
+	static public final SimpleDateFormat expectedDateTimeFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
 	private Integer numberFailed;
 	private Long duration;
 	private Date statisticDate;
