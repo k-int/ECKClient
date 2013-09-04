@@ -16,20 +16,20 @@ public class Tracker {
 		statistic.start();
 	}
 	
-	public void incremntSuccessful() {
-		incremntSuccessful(1);
+	public void incrementSuccessful() {
+		incrementSuccessful(1);
 	}
 	
-	public void incremntSuccessful(int stepValue) {
-		statistic.incremntSuccessful(stepValue);
+	public void incrementSuccessful(int stepValue) {
+		statistic.incrementSuccessful(stepValue);
 	}
 	
-	public void incremntFailed() {
-		incremntFailed(1);
+	public void incrementFailed() {
+		incrementFailed(1);
 	}
 	
-	public void incremntFailed(int stepValue) {
-		statistic.incremntFailed(stepValue);
+	public void incrementFailed(int stepValue) {
+		statistic.incrementFailed(stepValue);
 	}
 	
 	public void completed() {

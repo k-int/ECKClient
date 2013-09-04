@@ -13,19 +13,19 @@ public class TrackerStatistic {
 		numberFailed = 0;
 	}
 	
-	public void incremntSuccessful() {
-		incremntSuccessful(1);
+	public void incrementSuccessful() {
+		incrementSuccessful(1);
 	}
 	
-	public void incremntSuccessful(int stepValue) {
+	public void incrementSuccessful(int stepValue) {
 		numberSuccessful += stepValue;
 	}
 	
-	public void incremntFailed() {
-		incremntFailed(1);
+	public void incrementFailed() {
+		incrementFailed(1);
 	}
 	
-	public void incremntFailed(int stepValue) {
+	public void incrementFailed(int stepValue) {
 		numberFailed += stepValue;
 	}
 	
