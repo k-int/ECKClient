@@ -1,4 +1,4 @@
-package com.k_int.euinside.client.module.dataMapping;
+package com.k_int.euinside.client.module.dataTransformation;
 
 public class RequestResponse {
 	private String requestId;

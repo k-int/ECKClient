@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.k_int.euinside.client.module.dataMapping.Format;
+import com.k_int.euinside.client.module.dataTransformation.Format;
 import com.k_int.euinside.client.module.setmanager.SetManager;
 
 public class CommandLineArguments {

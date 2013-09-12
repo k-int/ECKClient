@@ -1,4 +1,4 @@
-package com.k_int.euinside.client.module.dataMapping;
+package com.k_int.euinside.client.module.dataTransformation;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +29,7 @@ public class Transform extends BaseModule {
 	 * @return The path that is required for the data mapping module
 	 */
 	static private String buildPath(String provider, String batch, Action action, ArrayList<BasicNameValuePair> attributes) {
-		return(buildPath(Module.DATA_MAPPING, PATH_SEPARATOR + provider + PATH_SEPARATOR + batch + PATH_SEPARATOR + action.getName(), attributes));
+		return(buildPath(Module.DATA_TRANSFORMATION, PATH_SEPARATOR + provider + PATH_SEPARATOR + batch + PATH_SEPARATOR + action.getName(), attributes));
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Transform extends BaseModule {
 		RequestResponse request = null;
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_MAPPING_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), recordArray, null);
+		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), recordArray, null);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			request = ClientJSON.readJSONString(httpResult.getContent(), RequestResponse.class);
 		}
@@ -116,7 +116,7 @@ public class Transform extends BaseModule {
 		RequestResponse request = null;
 		ArrayList<String> filenameArray = new ArrayList<String>();
 		filenameArray.add(filename);
-		HttpResult httpResult = ClientHTTP.sendFiles(buildPath(provider, batch, Action.DATA_MAPPING_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), filenameArray);
+		HttpResult httpResult = ClientHTTP.sendFiles(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), filenameArray);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			request = ClientJSON.readJSONString(httpResult.getContent(), RequestResponse.class);
 		}
@@ -185,7 +185,7 @@ public class Transform extends BaseModule {
 	 */
 	static public byte [] fetch(String provider, String batch, RequestResponse request) {
 		byte [] result = null;
-		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_MAPPING_FETCH, buildRequestParameters(request)));
+		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_TRANSFORMATION_FETCH, buildRequestParameters(request)));
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			result = httpResult.getContentBytes();
 		}
@@ -202,7 +202,7 @@ public class Transform extends BaseModule {
 	 */
 	static public TransformationStatus status(String provider, String batch, RequestResponse request) {
 		TransformationStatus transformationStatus = TransformationStatus.NOT_READY;
-		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_MAPPING_STATUS, buildRequestParameters(request)));
+		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_TRANSFORMATION_STATUS, buildRequestParameters(request)));
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			StatusResponse status = ClientJSON.readJSONString(httpResult.getContent(), StatusResponse.class);
 			transformationStatus = status.getTransformationStatus();

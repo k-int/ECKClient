@@ -2,7 +2,7 @@ package com.k_int.euinside.client.module;
 
 public enum Module {
 
-	DATA_MAPPING("DataMapping", "DataMapping"),
+	DATA_TRANSFORMATION("DataTransformation", "DataTransformation"),
 	DEFINITION("Definition", "Definition"),
 	PID_GENERATE("PIDGenerate", "PIDGeneration"),
 	PREVIEW("Preview", "Preview"),

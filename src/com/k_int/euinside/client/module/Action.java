@@ -2,9 +2,9 @@ package com.k_int.euinside.client.module;
 
 public enum Action {
 	// Actions used by the data mapping service
-	DATA_MAPPING_FETCH("fetch"),
-	DATA_MAPPING_STATUS("status"),
-	DATA_MAPPING_TRANSFORM("Transform"),
+	DATA_TRANSFORMATION_FETCH("fetch"),
+	DATA_TRANSFORMATION_STATUS("status"),
+	DATA_TRANSFORMATION_TRANSFORM("Transform"),
 	
 	// Actions used by the definition service
 	DEFINITION_ERRORS("errors"),
