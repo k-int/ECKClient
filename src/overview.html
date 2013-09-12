@@ -5,10 +5,12 @@
 			All interfaces to the ECK functionality are static methods with each module having its own interface
 			<br/>
        		<ul>
+           		<li>{@link com.k_int.euinside.client.module.dataMapping.Transform Data Transformation}</li>
            		<li>{@link com.k_int.euinside.client.module.metadataDefinition.Definition Metadata Definition}</li>
            		<li>{@link com.k_int.euinside.client.module.pidgenerate.PIDGenerate PID Generation}</li>
            		<li>{@link com.k_int.euinside.client.module.preview.Preview Preview}</li>
            		<li>{@link com.k_int.euinside.client.module.setmanager.SetManager Set Manager}</li>
+           		<li>{@link com.k_int.euinside.client.module.statistics.Statistics Statistics}</li>
            		<li>{@link com.k_int.euinside.client.module.validation.Validate Validation (monguz)}</li>
            		<li>{@link com.k_int.euinside.client.module.validation.Validate2 Validation (semantika)}</li>
        		</ul>
@@ -23,14 +25,24 @@
        		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
        		String pid = PIDGenerate.generate("institutionURL", "item", "123456");<br/>
        		<br/>
-       		2. To validate an edm record using the monguz validator<br/>
+       		2. To validate a lido record using the monguz validator<br/>
        		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
        		Errors errors = Validate2.sendFiles("myLidoFile.xml");<br/>
        		<br/>
        		3. To retrieve the status of a set<br/>
        		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
        		Status status = SetManager.getStatus("provider", "set");<br/>
-       		<br/><br/>
+       		<br/>
+       		4. To convert from LIDO to EDM<br/>
+       		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
+       		byte [] edmRecord = Transform.transformWait(providerCode, batchId, Format.LIDO, Format.EDM, lidoRecord);<br/>
+       		<br/>
+       		5. To record a statistic in the statistics module<br/>
+       		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
+       		Statistics.update("SetManager", "Update", startTime, endTime, numberFailed, numberSuccessful);<br/>
+       		If you are processing a batch of records, then the classes {@link com.k_int.euinside.client.module.statistics.Tracker Tracker} or {@link com.k_int.euinside.client.module.statistics.TrackerBatch TrackerBatch} maybe more suitable for you
+       		<br/>
+       		<br/>
        		The client library is dependent upon the following libraries:
        		<br/>
        		<br/>
