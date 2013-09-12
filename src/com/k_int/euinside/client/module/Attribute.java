@@ -14,8 +14,13 @@ public enum Attribute {
 	NUMBER_FAILED("numberFailed"),
 	NUMBER_SUCCESSFUL("numberSuccessful"),
 	OFFSET("offset"),
+	RECORD("record"),
 	RECORD_ID("recordId"),
-	RECORD_TYPE("recordType");
+	RECORD_TYPE("recordType"),
+	RECORDS("records"),
+	REQUEST_ID("request_id"),
+	SOURCE_FORMAT("sourceFormat"),
+	TARGET_FORMAT("targetFormat");
 
 	private String name;
 	

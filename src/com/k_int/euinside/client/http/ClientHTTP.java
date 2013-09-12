@@ -38,7 +38,8 @@ public class ClientHTTP extends BaseClient {
 	private static Log log = LogFactory.getLog(ClientHTTP.class);
 
 	static private String FILENAME_PREFIX = "filename_";
-	static private String PARAMETER_PREFIX = "parameter_";
+	static private String PARAMETER_PREFIX_XML = "record";
+	static private String PARAMETER_PREFIX_ZIP = "records";
 	static private String EXTENSION_XML = ".xml"; 
 	static private String EXTENSION_ZIP = ".zip";
 	static private String CONTENT_TYPE_CHARSET_UTF_8 = "; charset=" + StandardCharsets.UTF_8.name(); 
@@ -78,14 +79,14 @@ public class ClientHTTP extends BaseClient {
 
 		if (xmlData != null) {
 			for (byte[] xmlBytes : xmlData) {
-				requestEntity.addPart(PARAMETER_PREFIX + filenameCount, new ByteArrayBody(xmlBytes, CONTENT_TYPE_APPLICATION_XML + CONTENT_TYPE_CHARSET_UTF_8, FILENAME_PREFIX + filenameCount));
+				requestEntity.addPart(getFileParameterName(false, filenameCount), new ByteArrayBody(xmlBytes, CONTENT_TYPE_APPLICATION_XML + CONTENT_TYPE_CHARSET_UTF_8, FILENAME_PREFIX + filenameCount));
 				filenameCount++;
 			}
 		}
 		
 		if (zipData != null) {
 			for (byte[] zipBytes : zipData) {
-				requestEntity.addPart(PARAMETER_PREFIX + filenameCount, new ByteArrayBody(zipBytes, CONTENT_TYPE_APPLICATION_ZIP, FILENAME_PREFIX + filenameCount));
+				requestEntity.addPart(getFileParameterName(true, filenameCount), new ByteArrayBody(zipBytes, CONTENT_TYPE_APPLICATION_ZIP, FILENAME_PREFIX + filenameCount));
 				filenameCount++;
 			}
 		}
@@ -94,6 +95,22 @@ public class ClientHTTP extends BaseClient {
 		return(result);
 	}
 
+	/**
+	 * Obtains the appropriate parameter name for the data being supplied, based on the file count and the type of file
+	 * 
+	 * @param isZipFile true if the contents represent a zip file
+	 * @param fileNumber the file number being processed (if it the first file then the number is not appended to the parameter name)
+	 * 
+	 * @return The parameter name to be used for this file 
+	 */
+	static private String getFileParameterName(boolean isZipFile, int fileNumber) {
+		String parameterName = (isZipFile ? PARAMETER_PREFIX_ZIP : PARAMETER_PREFIX_XML);
+		if (fileNumber > 1) {
+			parameterName += "_" + fileNumber;
+		}
+		return(parameterName);
+	}
+	
 	/**
 	 * Performs a HTTP PUT to send the supplied files to the given path
 	 * 
@@ -120,7 +137,7 @@ public class ClientHTTP extends BaseClient {
 		
         MultipartEntity requestEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         int filenameCount = 1;
-        String filenameContentType = null;
+        boolean isZipFile = false;
 
 		if (filenames != null) {
 			for (String filename : filenames) {
@@ -129,11 +146,9 @@ public class ClientHTTP extends BaseClient {
 				// does the file exist
 				if (fileObject.canRead()) {
 					// If the filename does not have the extension .xml or .zip then we will abandon the post
-					if (filename.endsWith(EXTENSION_XML)) {
-						filenameContentType = CONTENT_TYPE_APPLICATION_XML;
-					} else if (filename.endsWith(EXTENSION_ZIP)) {
-						filenameContentType = CONTENT_TYPE_APPLICATION_ZIP;
-					} else {
+					if (filename.endsWith(EXTENSION_ZIP)) {
+						isZipFile = true;
+					} else if (!filename.endsWith(EXTENSION_XML)) {
 						// We do not understand the extension
 						log.info("Filename has an unknwon extension: " + filename);
 						result.setCallResult(Error.UNKNOWN_FILE_TYPE);
@@ -141,7 +156,7 @@ public class ClientHTTP extends BaseClient {
 
 					if (result.getCallResult() == Error.NONE) {
 						log.info("Adding filename: " + filename);
-						requestEntity.addPart(PARAMETER_PREFIX + filenameCount, new FileBody(fileObject, filenameContentType, StandardCharsets.UTF_8.name()));
+						requestEntity.addPart(getFileParameterName(isZipFile, filenameCount), new FileBody(fileObject, (isZipFile ? CONTENT_TYPE_APPLICATION_ZIP : CONTENT_TYPE_APPLICATION_XML), StandardCharsets.UTF_8.name()));
 						filenameCount++;
 					}
 				} else {
@@ -167,6 +182,18 @@ public class ClientHTTP extends BaseClient {
 	 */
 	static public HttpResult send(String path) {
 		return(send(path, null, null));
+	}
+
+	/**
+	 * Performs a HTTP GET
+	 *  
+	 * @param path The url / path to perform the GET operation against
+	 * @param attributes An array of attribute name / value pairs that need to be added to the path
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult send(String path, ArrayList<BasicNameValuePair> attributes) {
+		return(send(path, null, attributes));
 	}
 
 	/**
@@ -210,7 +237,7 @@ public class ClientHTTP extends BaseClient {
 		            HttpResponse response = httpclient.execute(httpRequest);
 		            HttpEntity resEntity = response.getEntity();
 		            int httpStatusCode = response.getStatusLine().getStatusCode();
-	            	result.setContent(EntityUtils.toString(resEntity, StandardCharsets.UTF_8));		            	
+	            	result.setContent(EntityUtils.toByteArray(resEntity));		            	
 		            result.setHttpStatusCode(httpStatusCode);
 		            if ((httpStatusCode != HttpServletResponse.SC_OK) && (httpStatusCode != HttpServletResponse.SC_ACCEPTED)) {
 		            	result.setCallResult(Error.HTTP_ERROR);

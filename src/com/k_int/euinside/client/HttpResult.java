@@ -1,12 +1,14 @@
 package com.k_int.euinside.client;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * The HttpResult contans the result of an http call
  */
 public class HttpResult {
 	private Error callResult;
 	private int httpStatusCode;
-	private String content;
+	private byte [] content;
 
 	public HttpResult() {
 		callResult = Error.NONE;
@@ -54,15 +56,24 @@ public class HttpResult {
 	 * @return The textual content returned by the server
 	 */
 	public String getContent() {
+		return(new String(content, StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * Retrieves the content as returned by the server
+	 * 
+	 * @return The content as returned by the server
+	 */
+	public byte [] getContentBytes() {
 		return(content);
 	}
 
 	/**
-	 * Sets the textual content returned by the server
+	 * Sets the content returned by the server
 	 * 
 	 * @param content The textual content that was returned
 	 */
-	public void setContent(String content) {
+	public void setContent(byte [] content) {
 		this.content = content;
 	}
 	

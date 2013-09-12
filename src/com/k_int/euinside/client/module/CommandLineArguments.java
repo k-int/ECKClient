@@ -5,12 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.k_int.euinside.client.module.dataMapping.Format;
 import com.k_int.euinside.client.module.setmanager.SetManager;
 
 public class CommandLineArguments {
 	static SimpleDateFormat expectedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private String accessionNumber = "";
 	private ArrayList<String> badFilenames = new ArrayList<String>();
+	private String batch = "";
 	private String coreBaseURL = "http://euinside.k-int.com/ECKCore2";
 	private Date dateTime = null;
 	private Integer days = null;
@@ -28,6 +30,7 @@ public class CommandLineArguments {
 	private Integer numberFailed = null;
 	private Integer numberSuccessful = null;
 	private Integer offset = null;
+	private String outputFile = null;
 	private String pid = "";
 	private String profile = "";
 	private String provider = SetManager.PROVIDER_DEFAULT;
@@ -44,6 +47,8 @@ public class CommandLineArguments {
 	private boolean runUpdate = false;
 	private boolean runValidate = false;
 	private String set = SetManager.SET_DEFAULT;
+	private Format sourceFormat = Format.LIDO;
+	private Format targetFormat = Format.EDM;
 
 	public CommandLineArguments(String [] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -60,6 +65,11 @@ public class CommandLineArguments {
 				case "-badFilename":
 					i++;
 					badFilenames.add(args[i]);
+					break;
+					
+				case "-batch":
+					i++;
+					setBatch(args[i]);
 					break;
 					
 				case "-commit":
@@ -154,6 +164,11 @@ public class CommandLineArguments {
 					setOffset(args[i]);
 					break;
 					
+				case "-outputFile":
+					i++;
+					setOutputFile(args[i]);
+					break;
+					
 				case "-pid":
 					i++;
 					setPid(args[i]);
@@ -197,8 +212,18 @@ public class CommandLineArguments {
 					setSet(args[i]);
 					break;
 					
+				case "-sourceFormat":
+					i++;
+					setSourceFormat(args[i]);
+					break;
+					
 				case "-status":
 					setRunStatus(true);
+					break;
+					
+				case "-targetFormat":
+					i++;
+					setTargetFormat(args[i]);
 					break;
 					
 				case "-update":
@@ -228,6 +253,14 @@ public class CommandLineArguments {
 	
 	public void setBadFilenames(ArrayList<String> badFilenames) {
 		this.badFilenames = badFilenames;
+	}
+	
+	public String getBatch() {
+		return(batch);
+	}
+	
+	public void setBatch(String batch) {
+		this.batch = batch;
 	}
 	
 	public String getCoreBaseURL() {
@@ -374,6 +407,14 @@ public class CommandLineArguments {
 		this.offset = Integer.parseInt(offset);
 	}
 
+	public String getOutputFile() {
+		return(outputFile);
+	}
+
+	public void setOutputFile(String outputFile) {
+		this.outputFile = outputFile;
+	}
+
 	public String getPid() {
 		return(pid);
 	}
@@ -444,6 +485,22 @@ public class CommandLineArguments {
 	
 	public void setSet(String set) {
 		this.set = set;
+	}
+	
+	public Format getSourceFormat() {
+		return(sourceFormat);
+	}
+	
+	public void setSourceFormat(String sourceFormat) {
+		this.sourceFormat = Format.get(sourceFormat);
+	}
+	
+	public Format getTargetFormat() {
+		return(targetFormat);
+	}
+	
+	public void setTargetFormat(String targetFormat) {
+		this.targetFormat = Format.get(targetFormat);
 	}
 	
 	public boolean isRunAll() {
