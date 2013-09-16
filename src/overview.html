@@ -11,8 +11,9 @@
            		<li>{@link com.k_int.euinside.client.module.preview.Preview Preview}</li>
            		<li>{@link com.k_int.euinside.client.module.setmanager.SetManager Set Manager}</li>
            		<li>{@link com.k_int.euinside.client.module.statistics.Statistics Statistics}</li>
-           		<li>{@link com.k_int.euinside.client.module.validation.Validate Validation (monguz)}</li>
-           		<li>{@link com.k_int.euinside.client.module.validation.Validate2 Validation (semantika)}</li>
+           		<li>{@link com.k_int.euinside.client.module.validation.Validate Validation (Alternates between monguz and semantika)}</li>
+           		<li>{@link com.k_int.euinside.client.module.validation.ValidateMonguz Validation (monguz)}</li>
+           		<li>{@link com.k_int.euinside.client.module.validation.ValidateSemantika Validation (semantika)}</li>
        		</ul>
        		<br/>
        		Before a call is made to any module the base url of the ECKCore module needs to be set,
@@ -25,9 +26,9 @@
        		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
        		String pid = PIDGenerate.generate("institutionURL", "item", "123456");<br/>
        		<br/>
-       		2. To validate a lido record using the monguz validator<br/>
+       		2. To validate a lido record<br/>
        		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
-       		Errors errors = Validate2.sendFiles("myLidoFile.xml");<br/>
+       		ValidationResult result = Validate.sendFiles("providerCode", "myLidoFile.xml");<br/>
        		<br/>
        		3. To retrieve the status of a set<br/>
        		BaseModule.setCoreBaseURL("http://euinside.k-int.com/ECKCore2"); // Needs to be done once in the program, before any other calls to the ECKClient<br/>
@@ -55,12 +56,22 @@
        			<tr>
        				<td>com.fasterxml.jackson.core</td>
        				<td>jackson-annotations</td>
-       				<td>2.2.1</td>
+       				<td>2.2.3</td>
        			</tr>
        			<tr>
        				<td>com.fasterxml.jackson.core</td>
        				<td>jackson-databind</td>
-       				<td>2.2.1</td>
+       				<td>2.2.3</td>
+       			</tr>
+       			<tr>
+       				<td>com.fasterxml.jackson.dataformat</td>
+       				<td>jackson-dataformat-xml</td>
+       				<td>2.2.3</td>
+       			</tr>
+       			<tr>
+       				<td>commons-io</td>
+       				<td>commons-io</td>
+       				<td>2.4</td>
        			</tr>
        			<tr>
        				<td>commons-logging</td>

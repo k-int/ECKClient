@@ -49,6 +49,7 @@ public class CommandLineArguments {
 	private String set = SetManager.SET_DEFAULT;
 	private Format sourceFormat = Format.LIDO;
 	private Format targetFormat = Format.EDM;
+	private boolean useSemantika = true;
 
 	public CommandLineArguments(String [] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -228,6 +229,14 @@ public class CommandLineArguments {
 					
 				case "-update":
 					setRunUpdate(true);
+					break;
+					
+				case "-useMonguz":
+					setUseSemantika(false);
+					break;
+					
+				case "-useSemantika":
+					setUseSemantika(true);
 					break;
 					
 				case "-validate":
@@ -501,6 +510,14 @@ public class CommandLineArguments {
 	
 	public void setTargetFormat(String targetFormat) {
 		this.targetFormat = Format.get(targetFormat);
+	}
+
+	public void setUseSemantika(boolean useSemantika) {
+		this.useSemantika = useSemantika;
+	}
+	
+	public boolean useSemantika() {
+		return(useSemantika);
 	}
 	
 	public boolean isRunAll() {

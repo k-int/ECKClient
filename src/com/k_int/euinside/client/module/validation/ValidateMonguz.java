@@ -1,33 +1,24 @@
 package com.k_int.euinside.client.module.validation;
 
-import com.k_int.euinside.client.module.CommandLineArguments;
+import com.k_int.euinside.client.module.Module;
 
 /**
- * This class alternates the validation between monguz and semantika
- * If you want to always use a specific validation module then call either ValidateMonguz or ValidateSemantika
+ * This class provides the interface for the Validation module supplied by monguz
+ *  
  */
-public class Validate {
-	private static boolean useSemantika = true;
-	
-	// As the validation objects have no class members it is fine to just have 1 static worker that we use all the time
-	private static final ValidateBase monguz = new ValidateMonguz();
-	private static final ValidateBase semantika = new ValidateSemantika();
+public class ValidateMonguz extends ValidateBase {
 
-	/**
-	 * Retrieves the worker object to use for validation
-	 * 
-	 * @return An instance of a validation object
-	 */
-	private static ValidateBase getWorker() {
-		// Ensure we use a different worker to last time
-		useSemantika = !useSemantika;
-		
-		return(useSemantika ? semantika : monguz);
-		
+	// Due to the base class being abstract, we need to instantiate an object and use it
+	// Using the one object for multiple calls is fine as there are no class members
+	static private final ValidateMonguz workerValidate = new ValidateMonguz();
+	
+	@Override
+	protected Module getModule() {
+		return(Module.VALIDATION);
 	}
 	
 	/**
-	 * Sends the supplied record to a Validation module for validation
+	 * Sends the supplied record to the Validation module for validation
 	 *
 	 * @param provider The code for the data provider
 	 * @param xmlRecord The record that is to be sent
@@ -35,7 +26,7 @@ public class Validate {
 	 * @return The interpreted data returned form the server
 	 */
 	static public ValidationResult sendBytes(String provider, byte[] xmlRecord) {
-		return(getWorker().send(provider,  xmlRecord));
+		return(workerValidate.send(provider,  xmlRecord));
 	}
 
 	/**
@@ -47,7 +38,7 @@ public class Validate {
 	 * @return The interpreted data returned form the server
 	 */
 	static public ValidationResult sendFiles(String provider, String filename) {
-		return(getWorker().send(provider,  filename));
+		return(workerValidate.send(provider,  filename));
 	}
 	
 	/**
@@ -65,9 +56,6 @@ public class Validate {
 	 */
 	public static void main(String [] args)
 	{
-		CommandLineArguments arguments = new CommandLineArguments(args);
-		useSemantika = !arguments.useSemantika();
-		getWorker().test(args);
+		workerValidate.test(args);
 	}
-
 }
