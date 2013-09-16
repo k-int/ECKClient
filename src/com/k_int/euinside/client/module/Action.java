@@ -31,6 +31,7 @@ public enum Action {
 	STATISTICS_UPDATE("update"),
 	
 	// Actions used by validation
+	VALIDATION_PROFILES("profiles"),
 	VALIDATION_VALIDATE("validate");
 	
 	private String name;

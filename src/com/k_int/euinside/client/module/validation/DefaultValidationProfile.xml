@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsdvalidator="http://www.europeanainside.eu/schema/xsd-validator"
+       xmlns:urivalidator="http://www.europeanainside.eu/schema/uri-validator"
+       xmlns:linkvalidator="http://www.europeanainside.eu/schema/link-validator"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.europeanainside.eu/schema/xsd-validator
+                           http://www.europeanainside.eu/schema/xsd-validator/xsd-validator.xsd
+                           http://www.europeanainside.eu/schema/uri-validator
+                           http://www.europeanainside.eu/schema/uri-validator/uri-validator.xsd
+                           http://www.europeanainside.eu/schema/link-validator
+                           http://www.europeanainside.eu/schema/link-validator/link-validator.xsd">
+	<bean class="eu.europeanainside.validation.ValidatorPluginManager">
+		<property name="plugins">
+			<list>
+				<ref bean="schemaPlugin"/>
+				<ref bean="uriPlugin"/>
+				<ref bean="linkPlugin"/>
+			</list>
+		</property>
+	</bean>
+	<xsd-validator:define name="schemaPlugin" xsdPath="http://www.lidoschema.org/schema/v1.0/lido-v1.0.xsd"/>
+	<uri-validator:define name="uriPlugin"/>
+	<link-validator:define name="linkPlugin"/>
+</beans>

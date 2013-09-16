@@ -1,8 +1,8 @@
 package com.k_int.euinside.client.module.validation;
 
+import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 
 import com.k_int.euinside.client.HttpResult;
 import com.k_int.euinside.client.http.ClientHTTP;
@@ -13,8 +13,9 @@ import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.xml.ClientXML;
 
 public abstract class ValidateBase extends BaseModule {
-	static private String VALIDATION_PROFILE = "lido";
-	static private String VALIDATION_SINGLE  = "single";
+	static private final String DEFAULT_PROFILE_FILENAME = "DefaultValidationProfile.xml"; 
+	static private final String VALIDATION_PROFILE = "lido";
+	static private final String VALIDATION_SINGLE  = "single";
 
 	/**
 	 * Returns the module that the validation is going to occur against
@@ -24,14 +25,51 @@ public abstract class ValidateBase extends BaseModule {
 	protected abstract Module getModule();
 	
 	/**
-	 * Builds the path required for the validaion module
+	 * Builds the path required for the validation module
+	 * 
+	 * @param provider The code for the data provider
+	 * @param action The validation action to be performed
+	 * @param includeSet Do we include the set in the url or not
 	 * 
 	 * @return The path that is required for the validation module
 	 */
-	private String buildPath(String provider) {
-		return(buildPath(getModule(), PATH_SEPARATOR + provider + PATH_SEPARATOR + VALIDATION_SINGLE + PATH_SEPARATOR + Action.VALIDATION_VALIDATE.getName() + PATH_SEPARATOR + VALIDATION_PROFILE));
+	private String buildPath(String provider, Action action, boolean includeSet) {
+		return(buildPath(getModule(), PATH_SEPARATOR + provider + (includeSet ? (PATH_SEPARATOR + VALIDATION_SINGLE) : "") + PATH_SEPARATOR + action.getName() + PATH_SEPARATOR + VALIDATION_PROFILE));
 	}
 
+	/**
+	 * Builds the path required for the profile action
+	 * 
+	 * @param provider The code for the data provider
+	 * 
+	 * @return The path that is required for the profile action
+	 */
+	private String buildProfilePath(String provider) {
+		return(buildPath(provider, Action.VALIDATION_PROFILES, false));
+	}
+	
+	/**
+	 * Builds the path required for the validate action
+	 * 
+	 * @param provider The code for the data provider
+	 * 
+	 * @return The path that is required for the validate action
+	 */
+	private String buildValidatePath(String provider) {
+		return(buildPath(provider, Action.VALIDATION_VALIDATE, true));
+	}
+	
+	private void sendDefaultProfile(String provider) {
+		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
+		
+		try {
+			recordArray.add(IOUtils.toByteArray(getClass().getResourceAsStream(DEFAULT_PROFILE_FILENAME)));
+			ClientHTTP.sendBytes(buildProfilePath(provider), recordArray, null);
+		} catch (IOException e) {
+			// We will ignore the IOException as there is not a lot we can do if that happens
+		}
+	}
+	
 	/**
 	 * Maps the result returned xml into a set of classes
 	 * 
@@ -52,9 +90,27 @@ public abstract class ValidateBase extends BaseModule {
 	 * @return The interpreted data returned form the server
 	 */
 	public ValidationResult send(String provider, byte[] xmlRecord) {
+		return(send(provider, xmlRecord, true));
+	}
+
+	/**
+	 * Sends the supplied record to the Validation module for validation
+	 *
+	 * @param provider The code for the data provider
+	 * @param xmlRecord The record that is to be sent
+	 * @param sendProfileOnFailure If we fail to get a result, do we send a default profile and try again
+	 * 
+	 * @return The interpreted data returned form the server
+	 */
+	private ValidationResult send(String provider, byte[] xmlRecord, boolean sendProfileOnFailure) {
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		return(mapHttpResultToErrors(ClientHTTP.sendBytes(buildPath(provider), recordArray, null)));
+		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendBytes(buildValidatePath(provider), recordArray, null));
+		if ((result == null) && sendProfileOnFailure) {
+			sendDefaultProfile(provider);
+			result = send(provider, xmlRecord, false);
+		}
+		return(result);
 	}
 
 	/**
@@ -66,9 +122,27 @@ public abstract class ValidateBase extends BaseModule {
 	 * @return The interpreted data returned form the server
 	 */
 	public ValidationResult send(String provider, String filename) {
+		return(send(provider, filename, true));
+	}
+	
+	/**
+	 * Sends the supplied record to the Validation module for validation
+	 *  
+	 * @param provider The code for the data provider
+	 * @param filename The file that contains the record that is to be sent to the validation module
+	 * @param sendProfileOnFailure If we fail to get a result, do we send a default profile and try again
+	 * 
+	 * @return The interpreted data returned form the server
+	 */
+	private ValidationResult send(String provider, String filename, boolean sendProfileOnFailure) {
 		ArrayList<String> filenameArray = new ArrayList<String>();
 		filenameArray.add(filename);
-		return(mapHttpResultToErrors(ClientHTTP.sendFiles(buildPath(provider), filenameArray)));
+		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendFiles(buildValidatePath(provider), filenameArray));
+		if ((result == null) && sendProfileOnFailure) {
+			sendDefaultProfile(provider);
+			result = send(provider, filename, false);
+		}
+		return(result);
 	}
 	
 	/**
