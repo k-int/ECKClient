@@ -8,6 +8,8 @@ import com.k_int.euinside.client.module.Module;
  */
 public class ValidateSemantika extends ValidateBase {
 
+	static private final String DEFAULT_LIDO_PROFILE_FILENAME = "LidoValidationProfile_Semantika.xsd"; 
+
 	// Due to the base class being abstract, we need to instantiate an object and use it
 	// Using the one object for multiple calls is fine as there are no class members
 	static private final ValidateSemantika workerValidate = new ValidateSemantika();
@@ -15,6 +17,11 @@ public class ValidateSemantika extends ValidateBase {
 	@Override
 	protected Module getModule() {
 		return(Module.VALIDATION2);
+	}
+	
+	@Override
+	protected String getDefaultLidoProfile() {
+		return(DEFAULT_LIDO_PROFILE_FILENAME);
 	}
 	
 	/**
@@ -54,8 +61,7 @@ public class ValidateSemantika extends ValidateBase {
 	 * 		<tr><td>-provider</td><td>The providers code</td></tr>
      *  </table>
 	 */
-	public static void main(String [] args)
-	{
+	public static void main(String [] args) {
 		workerValidate.test(args);
 	}
 }

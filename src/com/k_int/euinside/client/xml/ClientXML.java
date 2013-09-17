@@ -19,10 +19,11 @@ import com.k_int.euinside.client.MappingClient;
  */
 public class ClientXML extends MappingClient {
 
+	private static ClientXML workerObject = null;
 	private static XmlMapper mapper = null;
-	private static ClientXML workerObject = new ClientXML();
-
+	
 	static {
+		workerObject = new ClientXML();
 		mapper = new XmlMapper();
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 	}

@@ -1,6 +1,7 @@
 package com.k_int.euinside.client.module.validation;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.commons.io.IOUtils;
 
@@ -13,7 +14,6 @@ import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.xml.ClientXML;
 
 public abstract class ValidateBase extends BaseModule {
-	static private final String DEFAULT_PROFILE_FILENAME = "DefaultValidationProfile.xml"; 
 	static private final String VALIDATION_PROFILE = "lido";
 	static private final String VALIDATION_SINGLE  = "single";
 
@@ -23,6 +23,13 @@ public abstract class ValidateBase extends BaseModule {
 	 * @return The module that is going to perform the validation
 	 */
 	protected abstract Module getModule();
+
+	/**
+	 * Returns the filename for the default lido profile
+	 * 
+	 * @return The filename we use for the default lido profile
+	 */
+	protected abstract String getDefaultLidoProfile();
 	
 	/**
 	 * Builds the path required for the validation module
@@ -63,8 +70,12 @@ public abstract class ValidateBase extends BaseModule {
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		
 		try {
-			recordArray.add(IOUtils.toByteArray(getClass().getResourceAsStream(DEFAULT_PROFILE_FILENAME)));
-			ClientHTTP.sendBytes(buildProfilePath(provider), recordArray, null);
+			InputStream lidoProfileStream = getClass().getResourceAsStream(getDefaultLidoProfile());
+			if (lidoProfileStream != null) {
+				// We have a default profile so try and send it
+				recordArray.add(IOUtils.toByteArray(lidoProfileStream));
+				ClientHTTP.sendBytes(buildProfilePath(provider), recordArray, null);
+			}
 		} catch (IOException e) {
 			// We will ignore the IOException as there is not a lot we can do if that happens
 		}

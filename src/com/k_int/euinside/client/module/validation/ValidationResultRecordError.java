@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module.validation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
  */
 @JacksonXmlRootElement(localName="error")
 public class ValidationResultRecordError {
+
 	@JacksonXmlProperty(isAttribute=true)  
 	private String plugin;
 
@@ -22,6 +24,9 @@ public class ValidationResultRecordError {
 		setText(text);
 	}
 
+	public ValidationResultRecordError() {
+	}
+	
 	/**
 	 * The plugin that discovered the error
 	 * 
@@ -38,6 +43,11 @@ public class ValidationResultRecordError {
 	 */
 	public void setPlugin(String plugin) {
 		this.plugin = plugin;
+	}
+
+	@JsonSetter("Plugin")
+	public void setPluginSemantika(String plugin) {
+		setPlugin(plugin);
 	}
 
 	/**

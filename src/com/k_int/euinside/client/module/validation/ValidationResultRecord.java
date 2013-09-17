@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module.validation;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -44,6 +45,11 @@ public class ValidationResultRecord {
 		this.id = id;
 	}
 
+	@JsonSetter("Id")
+	public void setIdSemantika(String id) {
+		setId(id);
+	}
+
 	/**
 	 * Returns whether the validation was successful or not
 	 * 
@@ -59,7 +65,12 @@ public class ValidationResultRecord {
 	 * @param result If the valus is "success" then the validation was successful otherwise it failed
 	 */
 	public void setResult(String result) {
-		this.result = RESULT_SUCCESS.equals(result);
+		this.result = RESULT_SUCCESS.equalsIgnoreCase(result);
+	}
+
+	@JsonSetter("Result")
+	public void setResultsemantika(String result) {
+		setResult(result);
 	}
 
 	/**
@@ -77,6 +88,12 @@ public class ValidationResultRecord {
 	 * @param errors The errors that occured during validation
 	 */
 	public void setErrors(List<ValidationResultRecordError> errors) {
+		setErrors(errors);
+	}
+
+	@JacksonXmlElementWrapper(useWrapping=false)
+	@JsonSetter("Error")
+	public void setErrorsSemantika(List<ValidationResultRecordError> errors) {
 		this.errors = errors;
 	}
 

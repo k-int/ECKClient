@@ -7,6 +7,7 @@ import com.k_int.euinside.client.module.Module;
  *  
  */
 public class ValidateMonguz extends ValidateBase {
+	static private final String DEFAULT_LIDO_PROFILE_FILENAME = "LidoValidationProfile_Monguz.xml"; 
 
 	// Due to the base class being abstract, we need to instantiate an object and use it
 	// Using the one object for multiple calls is fine as there are no class members
@@ -15,6 +16,11 @@ public class ValidateMonguz extends ValidateBase {
 	@Override
 	protected Module getModule() {
 		return(Module.VALIDATION);
+	}
+	
+	@Override
+	protected String getDefaultLidoProfile() {
+		return(DEFAULT_LIDO_PROFILE_FILENAME);
 	}
 	
 	/**
