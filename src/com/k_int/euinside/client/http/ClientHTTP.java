@@ -49,6 +49,20 @@ public class ClientHTTP extends BaseClient {
 	static private String CONTENT_TYPE_APPLICATION_ZIP = "application/zip";
 
 	/**
+	 * Performs a HTTP PUT to send the supplied zip data to the given path
+	 * 
+	 * @param path The URL / Path of where the data needs to be sent
+	 * @param zipData The zip file that is to be sent
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult sendBytes(String path, byte [] zipData) {
+		ArrayList<byte[]> zipArray = new ArrayList<byte []>();
+		zipArray.add(zipData);
+		return(sendBytes(path, null, zipArray, null));
+	}
+
+	/**
 	 * Performs a HTTP PUT to send the supplied data to the given path
 	 * 
 	 * @param path The URL / Path of where the data needs to be sent

@@ -2,14 +2,20 @@ package com.k_int.euinside.client.module.dataTransformation;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.k_int.euinside.client.HttpResult;
+import com.k_int.euinside.client.UnZipRecords;
+import com.k_int.euinside.client.ZipRecords;
 import com.k_int.euinside.client.http.ClientHTTP;
 import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.module.Action;
@@ -63,6 +69,49 @@ public class Transform extends BaseModule {
 		return(attributes);
 	}
 	
+	/**
+	 * Sends the supplied xml record to the DataMapping module, for zip files use sendFiles
+	 *
+	 * @param provider A code for the provider of the data
+	 * @param batch An identifier that identifies this submission, for when the records are retrieved later
+	 * @param sourceFormat The format the source data is in 
+	 * @param targetFormat The format that the data is to be converted to 
+	 * @param transformRecords The records that are to be zipped and sent
+	 * 
+	 * @return The trnasformRecords that were passed to us, accept they will now be updated with the converted record 
+	 */
+	static public List<TransformRecord> transformWait(String provider, String batch, Format sourceFormat, Format targetFormat, List<TransformRecord> transformRecords) {
+		
+		// Build the zip file
+		ZipRecords zipRecords = new ZipRecords();
+		HashMap<String, TransformRecord> recordMap = new HashMap<String, TransformRecord>();  
+		for (TransformRecord transformRecord : transformRecords) {
+			recordMap.put("Transformed_" + transformRecord.add(zipRecords), transformRecord);
+		}
+		
+		// Send the records away to be converted
+		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), zipRecords.getZip());
+		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
+			RequestResponse request = ClientJSON.readJSONString(httpResult.getContent(), RequestResponse.class);
+			
+			// Wait until the records have been converted
+			byte [] zipResponse = wait(provider, batch, request);
+			if (zipResponse != null) {
+				UnZipRecords unZipRecords = new UnZipRecords(zipResponse);
+				StringBuffer name = new StringBuffer();
+				byte [] convertedRecord = null;
+				while ((convertedRecord = unZipRecords.getNextEntry(name)) != null) {
+					// Look up our hash map for the record
+					TransformRecord record = recordMap.get(name.toString());
+					if (record != null) {
+						record.setXmlConvertedRecord(convertedRecord);
+					}
+				}
+			}
+		}
+		return(transformRecords);
+	}
+
 	/**
 	 * Sends the supplied xml record to the DataMapping module, for zip files use sendFiles
 	 *
@@ -226,9 +275,9 @@ public class Transform extends BaseModule {
 	 * 		<tr><td>-targetFormat</td><td>The format that you want the file being converted to</td></tr>
      *  </table>
 	 */
-	public static void main(String [] args)
-	{
+	public static void main(String [] args)	{
 		CommandLineArguments arguments = parseCommandLineArguments(args);
+		
 		String provider = arguments.getProvider();
 		String batch = arguments.getBatch();
 		if (batch.isEmpty()) {
@@ -242,6 +291,7 @@ public class Transform extends BaseModule {
 			if (arguments.getFilenames().isEmpty()) {
 				System.out.println("No files supplied");
 			} else {
+				// Test sending the first file
 				byte [] content = transformWait(provider, batch, arguments.getSourceFormat(), arguments.getTargetFormat(), arguments.getFilenames().get(0));
 		
 				if (content == null) {
@@ -260,6 +310,27 @@ public class Transform extends BaseModule {
 					} else {
 						System.out.println(new String(content));
 					}
+				}
+
+				// Test sending the files zipped, but passing through as a byte array
+				List<TransformRecord> transformRecords = new ArrayList<TransformRecord>();
+				Long counter = new Long(1);
+				for (String filename : arguments.getFilenames()) {
+					try {
+						TransformRecord transformRecord = new TransformRecord();
+						transformRecord.setIdentifier(counter);
+						transformRecord.setXmlRecordToConvert(FileUtils.readFileToByteArray(new File(filename)));
+						transformRecords.add(transformRecord);
+						counter++;
+					} catch (IOException e) {
+						System.out.println("Error reading file: " + filename);
+					}
+				}
+				transformWait(provider, batch, Format.LIDO, Format.EDM, transformRecords);
+				for (TransformRecord transformRecord : transformRecords) {
+					System.out.println("Identifier: " + transformRecord.getIdentifier().toString());
+					byte [] converted = transformRecord.getXmlConvertedRecord();
+					System.out.println("Converted record: " + ((converted == null) ? "Not Converted" : new String(converted)));
 				}
 			}
 		}
