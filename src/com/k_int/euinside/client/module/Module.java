@@ -4,6 +4,7 @@ public enum Module {
 
 	DATA_TRANSFORMATION("DataTransformation", "DataTransformation"),
 	DEFINITION("Definition", "Definition"),
+	EUROPEANA("Europeana", "Europeana"),
 	PID_GENERATE("PIDGenerate", "PIDGeneration"),
 	PREVIEW("Preview", "Preview"),
 	SET_MANAGER("SetManager/Set", "SetManager"), // Note: The name is used as part of a url, so cannot contain spaces 

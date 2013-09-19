@@ -10,7 +10,11 @@ public enum Action {
 	DEFINITION_ERRORS("errors"),
 	DEFINITION_LANGUAGES("languages"),
 	DEFINITION_PROFILES("profiles"),
-	
+
+	// Actions used by Europeana
+	EUROPEANA_DATASETS("datasets"),
+	EUROPEANA_PROVIDERS("providers"),
+
 	// Actions used by PID Generate
 	PID_GENERATE_GENERATE("generate"),
 	PID_GENERATE_LOOKUP("lookup"),

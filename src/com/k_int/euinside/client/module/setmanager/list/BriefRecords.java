@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /*
  * BriefRecords is an array of BriefRecords that is used by the module SetManager with the lit action
  */
-public class BriefRecords extends ArrayList<BriefRecord>{
+public class BriefRecords extends ArrayList<BriefRecord> {
 
 	private static final long serialVersionUID = 1234502L;
 

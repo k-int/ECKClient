@@ -317,11 +317,15 @@ public class Transform extends BaseModule {
 				Long counter = new Long(1);
 				for (String filename : arguments.getFilenames()) {
 					try {
-						TransformRecord transformRecord = new TransformRecord();
-						transformRecord.setIdentifier(counter);
-						transformRecord.setXmlRecordToConvert(FileUtils.readFileToByteArray(new File(filename)));
-						transformRecords.add(transformRecord);
-						counter++;
+						if (filename.endsWith(".xml")) {
+							TransformRecord transformRecord = new TransformRecord();
+							transformRecord.setIdentifier(counter);
+							transformRecord.setXmlRecordToConvert(FileUtils.readFileToByteArray(new File(filename)));
+							transformRecords.add(transformRecord);
+							counter++;
+						} else {
+							System.out.println("Ignore file: " + filename + " as it dosn't end with .xml");
+						}
 					} catch (IOException e) {
 						System.out.println("Error reading file: " + filename);
 					}
