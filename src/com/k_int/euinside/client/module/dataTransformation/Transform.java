@@ -3,6 +3,7 @@ package com.k_int.euinside.client.module.dataTransformation;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -334,7 +335,7 @@ public class Transform extends BaseModule {
 				for (TransformRecord transformRecord : transformRecords) {
 					System.out.println("Identifier: " + transformRecord.getIdentifier().toString());
 					byte [] converted = transformRecord.getXmlConvertedRecord();
-					System.out.println("Converted record: " + ((converted == null) ? "Not Converted" : new String(converted)));
+					System.out.println("Converted record: " + ((converted == null) ? "Not Converted" : new String(converted, Charset.forName("UTF-8"))));
 				}
 			}
 		}
