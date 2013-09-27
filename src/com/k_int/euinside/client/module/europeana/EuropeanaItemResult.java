@@ -1,11 +1,20 @@
 package com.k_int.euinside.client.module.europeana;
 
-public class ProviderBriefDetail {
+import com.k_int.euinside.client.json.baseJSON;
 
+public abstract class EuropeanaItemResult extends baseJSON {
+
+	private boolean success;
 	private String identifier;
 	private String name;
-
-	public ProviderBriefDetail() {
+	private String description;
+	
+	public boolean isSuccess() {
+		return(success);
+	}
+	
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 	
 	/**
@@ -16,7 +25,7 @@ public class ProviderBriefDetail {
 	public String getIdentifier() {
 		return(identifier);
 	}
-
+	
 	/**
 	 * Sets the identifier
 	 * 
@@ -25,7 +34,7 @@ public class ProviderBriefDetail {
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
-
+	
 	/**
 	 * Retrieves the name
 	 * 
@@ -43,15 +52,25 @@ public class ProviderBriefDetail {
 		this.name = name;
 	}
 	
+	public String getDescription() {
+		return(description);
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	/**
 	 * Formats the members of this class in a simple to view way
 	 * 
 	 * @return The formatted string
 	 */
 	public String toString() {
-		String result = "Class: ProviderBriefDetails\n";
-		result += "Identifier: " + identifier + "\n"; 
-		result += "Name: " + name + "\n"; 
+		String result = "Class: EuropeanaResult\n";
+		result += "Success: " + success + "\n";
+		result += "Identifier: " + identifier + "\n";
+		result += "Name: " + name + "\n";
+		result += "Description: " + description + "\n";
 		return(result);
 	}
 }

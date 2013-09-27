@@ -2,10 +2,17 @@ package com.k_int.euinside.client.module.pidgenerate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The PIDComponents class holds al the elements used or returned by the PID Generation module 
  */
-public class PIDComponents {
+public class PIDComponents extends baseJSON {
+	private static Log log = LogFactory.getLog(PIDComponents.class);
+
 	@JsonProperty("InstitutionUrl")
 	private String institutionURL;
 	@JsonProperty("RecordType")
@@ -16,6 +23,11 @@ public class PIDComponents {
 	public PIDComponents() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Constructor that takes all the input elements as parameters
 	 *  

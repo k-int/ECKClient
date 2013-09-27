@@ -1,9 +1,15 @@
 package com.k_int.euinside.client.module.metadataDefinition.profile;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The Field class represents a field as defined by the Metadata Definition Module
  */
-public class Field {
+public class Field extends baseJSON {
+	private static Log log = LogFactory.getLog(Field.class);
 
 	private String definition;
 	private String example;
@@ -13,6 +19,11 @@ public class Field {
 	public Field() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the definition of the field
 	 * 

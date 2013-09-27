@@ -1,9 +1,15 @@
 package com.k_int.euinside.client.module.setmanager.status;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The WorkingSet class contains the working set elements when the SetManager action status is called  
  */
-public class WorkingSet {
+public class WorkingSet extends baseJSON {
+	private static Log log = LogFactory.getLog(WorkingSet.class);
 
 	private String status;
 	private int numberOfRecords;
@@ -15,6 +21,11 @@ public class WorkingSet {
 	public WorkingSet() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the status of the working set
 	 * 

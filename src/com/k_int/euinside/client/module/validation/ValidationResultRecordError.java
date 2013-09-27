@@ -1,17 +1,22 @@
 package com.k_int.euinside.client.module.validation;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import com.k_int.euinside.client.json.baseJSON;
 
 /**
  * This class contains an error that occurred during validation
  */
 @JacksonXmlRootElement(localName="error")
-public class ValidationResultRecordError {
+public class ValidationResultRecordError extends baseJSON {
+	private static Log log = LogFactory.getLog(ValidationResultRecordError.class);
 
 	@JacksonXmlProperty(isAttribute=true)  
 	private String plugin;
@@ -25,6 +30,11 @@ public class ValidationResultRecordError {
 	}
 
 	public ValidationResultRecordError() {
+	}
+	
+	@Override
+	protected Log getLogger() {
+		return(log);
 	}
 	
 	/**

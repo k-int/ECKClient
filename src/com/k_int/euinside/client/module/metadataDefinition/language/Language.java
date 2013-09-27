@@ -1,15 +1,27 @@
 package com.k_int.euinside.client.module.metadataDefinition.language;
 
+import com.k_int.euinside.client.json.baseJSON;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * The Language class defines a Language as returned by the Metadata Defiinition module
  */
-public class Language {
+public class Language extends baseJSON {
+	private static Log log = LogFactory.getLog(Language.class);
+
 	String code;
 	String language;
 	
 	public Language() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the language code
 	 * 

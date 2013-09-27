@@ -2,10 +2,16 @@ package com.k_int.euinside.client.module.setmanager.status;
 
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The History class contains the history element when the SetManager action sttaus is called  
  */
-public class History {
+public class History extends baseJSON {
+	private static Log log = LogFactory.getLog(History.class);
 
 	private String action;
 	private Date when;
@@ -15,6 +21,11 @@ public class History {
 	public History() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the action that was performed
 	 * 

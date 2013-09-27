@@ -50,6 +50,7 @@ public class CommandLineArguments {
 	private Format sourceFormat = Format.LIDO;
 	private Format targetFormat = Format.EDM;
 	private boolean useSemantika = true;
+	private String wskey = null;
 
 	public CommandLineArguments(String [] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -241,6 +242,11 @@ public class CommandLineArguments {
 					
 				case "-validate":
 					setRunValidate(true);
+					break;
+
+				case "-wskey":
+					i++;
+					setWskey(args[i]);
 					break;
 			}
 		}
@@ -520,6 +526,14 @@ public class CommandLineArguments {
 		return(useSemantika);
 	}
 	
+	public String getWskey() {
+		return(wskey);
+	}
+	
+	public void setWskey(String wskey) {
+		this.wskey = wskey;
+	}
+
 	public boolean isRunAll() {
 		return(runAll);
 	}

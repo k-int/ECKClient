@@ -4,7 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StatisticItem {
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
+public class StatisticItem extends baseJSON {
+	private static Log log = LogFactory.getLog(StatisticItem.class);
+
 	static private final String FORMAT_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	static public final SimpleDateFormat expectedDateTimeFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
 	private Integer numberFailed;
@@ -12,6 +19,11 @@ public class StatisticItem {
 	private Date statisticDate;
 	private Integer numberSuccessful;
 	private Integer numberProcessed;
+	
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
 	
 	public Integer getNumberFailed() {
 		return(numberFailed);

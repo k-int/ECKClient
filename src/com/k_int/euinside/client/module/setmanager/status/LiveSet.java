@@ -2,10 +2,16 @@ package com.k_int.euinside.client.module.setmanager.status;
 
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The LiveSet class contains the live set elements when the SetManager action status is called  
  */
-public class LiveSet {
+public class LiveSet extends baseJSON {
+	private static Log log = LogFactory.getLog(LiveSet.class);
 
 	private String status;
 	private Date dateCommitted;
@@ -14,6 +20,11 @@ public class LiveSet {
 	public LiveSet() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the status of the Live Set
 	 * 

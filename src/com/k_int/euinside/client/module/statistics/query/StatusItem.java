@@ -4,7 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StatusItem extends StatisticItem{
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public class StatusItem extends StatisticItem {
+	private static Log log = LogFactory.getLog(StatusItem.class);
 
 	static private final String FORMAT_DATE = "yyyyMMdd";
 	static private final SimpleDateFormat expectedDateFormat = new SimpleDateFormat(FORMAT_DATE);
@@ -13,6 +17,11 @@ public class StatusItem extends StatisticItem{
 	private Integer slowestTime;
 	private Integer averageTime;
 	private Date date;
+	
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
 	
 	public Integer getFastestTime() {
 		return(fastestTime);

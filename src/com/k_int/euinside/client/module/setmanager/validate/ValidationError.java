@@ -3,10 +3,16 @@ package com.k_int.euinside.client.module.setmanager.validate;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The ValidationError class holds the validation errors for a particular record 
  */
-public class ValidationError {
+public class ValidationError extends baseJSON {
+	private static Log log = LogFactory.getLog(ValidationError.class);
 
 	private String cmsId;
 	private String persistentId;
@@ -16,6 +22,11 @@ public class ValidationError {
 	public ValidationError() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the cms identifier that these validation errors are for
 	 * 

@@ -2,16 +2,21 @@ package com.k_int.euinside.client.module.validation;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.k_int.euinside.client.json.baseJSON;
 
 /**
  * This class contains the result for an individual record
  */
 @JacksonXmlRootElement(localName="record")
-public class ValidationResultRecord {
+public class ValidationResultRecord extends baseJSON {
+	private static Log log = LogFactory.getLog(ValidationResultRecord.class);
 	private static final String RESULT_SUCCESS = "success";  
 
 	@JacksonXmlProperty(isAttribute=true)  
@@ -27,6 +32,11 @@ public class ValidationResultRecord {
 	public ValidationResultRecord() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Returns the id of the record that his result is for
 	 * 

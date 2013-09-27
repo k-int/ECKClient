@@ -2,10 +2,16 @@ package com.k_int.euinside.client.module.setmanager.list;
 
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The BriefRecord class represnts a record that is returned from the SetManager module using the list action
  */
-public class BriefRecord {
+public class BriefRecord extends baseJSON {
+	private static Log log = LogFactory.getLog(BriefRecord.class);
 
 	private String cmsId;
 	private String persistentId;
@@ -16,6 +22,11 @@ public class BriefRecord {
 	public BriefRecord() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the cms Identifier
 	 * 

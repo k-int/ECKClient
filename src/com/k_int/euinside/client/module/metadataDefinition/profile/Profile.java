@@ -2,10 +2,17 @@ package com.k_int.euinside.client.module.metadataDefinition.profile;
 
 import java.util.ArrayList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The Profile class represents a Preofile as returned by the Metadata Definition module
  */
-public class Profile {
+public class Profile extends baseJSON {
+	private static Log log = LogFactory.getLog(Profile.class);
+
 	private String definition;
 	private String profile;
 	private ArrayList<Field> fields;
@@ -13,6 +20,11 @@ public class Profile {
 	public Profile() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the definition of the profile
 	 * 

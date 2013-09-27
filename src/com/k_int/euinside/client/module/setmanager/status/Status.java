@@ -3,10 +3,17 @@ package com.k_int.euinside.client.module.setmanager.status;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The Status class contains details about the set when the module SetManager action status is called  
  */
-public class Status {
+public class Status extends baseJSON {
+	private static Log log = LogFactory.getLog(Status.class);
+
 
 	private String code;
 	private String description;
@@ -19,6 +26,11 @@ public class Status {
 	public Status() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the code for this set
 	 * 

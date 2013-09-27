@@ -2,10 +2,16 @@ package com.k_int.euinside.client.module.setmanager.status;
 
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.k_int.euinside.client.json.baseJSON;
+
 /**
  * The QueuedActions class contains the actions that are waiting to be processed when the SetManager action status is called  
  */
-public class QueuedActions {
+public class QueuedActions extends baseJSON {
+	private static Log log = LogFactory.getLog(QueuedActions.class);
 
 	private String action;
 	private Date queued;
@@ -16,6 +22,11 @@ public class QueuedActions {
 	public QueuedActions() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the action that is waiting to be performed
 	 * 

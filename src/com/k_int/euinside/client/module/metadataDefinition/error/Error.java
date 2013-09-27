@@ -1,9 +1,15 @@
 package com.k_int.euinside.client.module.metadataDefinition.error;
 
+import com.k_int.euinside.client.json.baseJSON;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * The Error class holds the error definition returned from the Metadata Definition module
  */
-public class Error {
+public class Error extends baseJSON {
+	private static Log log = LogFactory.getLog(Error.class);
 
 	String error;
 	String definition;
@@ -11,6 +17,11 @@ public class Error {
 	public Error() {
 	}
 
+	@Override
+	protected Log getLogger() {
+		return(log);
+	}
+	
 	/**
 	 * Retrieves the error code for this error
 	 * 

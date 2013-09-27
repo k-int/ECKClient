@@ -1,73 +1,25 @@
 package com.k_int.euinside.client.module.europeana;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Class to define a Europeana data set
  */
-public class DataSet {
-	private String identifier;
-	private String name;
-	private String description;
+public class DataSet extends EuropeanaItemResult {
+	private static Log log = LogFactory.getLog(DataSet.class);
 	private String status;
-	private Long accepted;
-	private Long rejected;
+	private Long publishedRecords;
+	private Long deletedRecords;
 
 	public DataSet() {
 	}
 	
-	/**
-	 * Retrieves the identifier of the data set
-	 * 
-	 * @return The identifier
-	 */
-	public String getIdentifier() {
-		return(identifier);
+	@Override
+	protected Log getLogger() {
+		return(log);
 	}
-
-	/**
-	 * Sets the Identifier
-	 * 
-	 * @param identifier The identifier for this data set
-	 */
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
-
-	/**
-	 * Retrieves the name of the data set
-	 * 
-	 * @return The name
-	 */
-	public String getName() {
-		return(name);
-	}
-
-	/**
-	 * Sets the name
-	 * 
-	 * @param name The name of the data set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Retrieves the description
-	 * 
-	 * @return The description of the data set
-	 */
-	public String getDescription() {
-		return(description);
-	}
-
-	/**
-	 * Sets the description
-	 * 
-	 * @param description The description of the data set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
+	
 	/**
 	 * Retrieves the status
 	 * 
@@ -90,8 +42,8 @@ public class DataSet {
 	 * 
 	 * @return The number of accepted records in the data set
 	 */
-	public Long getAccepted() {
-		return(accepted);
+	public Long getPublishedRecords() {
+		return(publishedRecords);
 	}
 
 	/**
@@ -99,8 +51,8 @@ public class DataSet {
 	 * 
 	 * @param accepted The number of accepted records in the data set
 	 */
-	public void setAccepted(Long accepted) {
-		this.accepted = accepted;
+	public void setPublishedRecords(Long publishedRecords) {
+		this.publishedRecords = publishedRecords;
 	}
 
 	/**
@@ -108,8 +60,8 @@ public class DataSet {
 	 * 
 	 * @return The number of rejected records in the data set
 	 */
-	public Long getRejected() {
-		return(rejected);
+	public Long getDeletedRecords() {
+		return(deletedRecords);
 	}
 
 	/**
@@ -117,10 +69,14 @@ public class DataSet {
 	 * 
 	 * @param rejected The number of rejected records in the data set
 	 */
-	public void setRejected(Long rejected) {
-		this.rejected = rejected;
+	public void setDeletedRecords(String deletedRecords) {
+		try {
+			this.deletedRecords = Long.parseLong(deletedRecords);
+		} catch (NumberFormatException e) {
+			// Not a valid number so we will ignore for now
+		}
 	}
-	
+
 	/**
 	 * Formats the members of this class in a simple to view way
 	 * 
@@ -128,12 +84,10 @@ public class DataSet {
 	 */
 	public String toString() {
 		String result = "Class: DataSet\n";
-		result += "Identifier: " + identifier + "\n"; 
-		result += "Name: " + name + "\n"; 
-		result += "Description: " + description + "\n"; 
+		result += super.toString();
 		result += "Status: " + status + "\n"; 
-		result += "Accepted: " + accepted.toString() + "\n"; 
-		result += "Rejected: " + rejected.toString() + "\n"; 
+		result += "Published Records: " + publishedRecords.toString() + "\n"; 
+		result += "Deleted Records: " + ((deletedRecords == null) ? "" : deletedRecords.toString()) + "\n"; 
 		return(result);
 	}
 }
