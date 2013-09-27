@@ -1,6 +1,10 @@
 package com.k_int.euinside.client.module.preview;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+
+import org.apache.commons.io.IOUtils;
 
 import com.k_int.euinside.client.HttpResult;
 import com.k_int.euinside.client.http.ClientHTTP;
@@ -18,8 +22,8 @@ public class Preview extends BaseModule{
 	 * 
 	 * @return The path that is required for the validation module
 	 */
-	static private String buildPath() {
-		return(buildPath(Module.PREVIEW, PATH_SEPARATOR + DEFAULT_TEMPLATE + PATH_SEPARATOR + Action.PREVIEW_PREVIEW.getName()));
+	static private String buildPath(String provider, String batch) {
+		return(buildPath(Module.PREVIEW, PATH_SEPARATOR + provider + PATH_SEPARATOR + batch + PATH_SEPARATOR + Action.PREVIEW_PREVIEW.getName() + PATH_SEPARATOR + "lido"));
 	}
 
 	/**
@@ -29,10 +33,10 @@ public class Preview extends BaseModule{
 	 * 
 	 * @return The result returned from the server
 	 */
-	static public HttpResult sendBytes(byte[] xmlRecord) {
+	static public HttpResult sendBytes(String provider, String batch, byte[] xmlRecord) {
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		return(ClientHTTP.sendBytes(buildPath(), recordArray, null));
+		return(ClientHTTP.sendBytes(buildPath(provider, batch), recordArray, null));
 	}
 
 	/**
@@ -42,10 +46,10 @@ public class Preview extends BaseModule{
 	 * 
 	 * @return The result returned from the server
 	 */
-	static public HttpResult sendFiles(String filename) {
+	static public HttpResult sendFiles(String provider, String batch, String filename) {
 		ArrayList<String> filenameArray = new ArrayList<String>();
 		filenameArray.add(filename);
-		return(ClientHTTP.sendFiles(buildPath(), filenameArray));
+		return(ClientHTTP.sendFiles(buildPath(provider, batch), filenameArray));
 	}
 	
 	/**
@@ -64,13 +68,24 @@ public class Preview extends BaseModule{
 		CommandLineArguments arguments = parseCommandLineArguments(args);
 		
 		if (!arguments.getFilenames().isEmpty()) {
-			HttpResult result = sendFiles(arguments.getFilenames().get(0));
+			HttpResult result = sendFiles(arguments.getProvider(), arguments.getBatch(), arguments.getFilenames().get(0));
 	
 			if (result == null) {
 				System.out.println("Failed to preview file");
 			} else {
-				System.out.println("Result from preview");
-				System.out.println(result.toString());
+				if (arguments.getOutputFile() != null) {
+					System.out.println("output written to file: " + arguments.getOutputFile());
+					try {
+						FileOutputStream outputStream = new FileOutputStream(new File(arguments.getOutputFile()));
+						IOUtils.write(result.getContent(), outputStream);
+						outputStream.close();
+					} catch (Exception e) {
+						System.out.println("Exception writing to file: " + e.toString());
+					}
+				} else {
+					System.out.println("Result from preview");
+					System.out.println(result.toString());
+				}
 			}
 		}
 	}
