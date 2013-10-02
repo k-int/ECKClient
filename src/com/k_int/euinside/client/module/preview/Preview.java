@@ -77,7 +77,7 @@ public class Preview extends BaseModule{
 					System.out.println("output written to file: " + arguments.getOutputFile());
 					try {
 						FileOutputStream outputStream = new FileOutputStream(new File(arguments.getOutputFile()));
-						IOUtils.write(result.getContent(), outputStream);
+						IOUtils.write(result.getContentBytes(), outputStream);
 						outputStream.close();
 					} catch (Exception e) {
 						System.out.println("Exception writing to file: " + e.toString());
