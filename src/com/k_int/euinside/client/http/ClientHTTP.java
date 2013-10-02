@@ -18,6 +18,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -86,6 +87,21 @@ public class ClientHTTP extends BaseClient {
 	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
 	 */
 	static public HttpResult sendBytes(String path, ArrayList<byte[]> xmlData, ArrayList<byte[]> zipData, ArrayList<BasicNameValuePair> attributes) {
+		return(sendBytes(path, xmlData, zipData, attributes, false));
+	}
+	
+	/**
+	 * Performs a HTTP PUT to send the supplied data to the given path
+	 * 
+	 * @param path The URL / Path of where the data needs to be sent
+	 * @param xmlData An array of xml files that are to be sent
+	 * @param zipData An array of zip files that are to be sent
+	 * @param attributes An array of attribute name / value pairs that need to be added to the path 
+	 * @param acceptXML true if we are to accept XML, this explicitly sets the Accept header to application/xml
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult sendBytes(String path, ArrayList<byte[]> xmlData, ArrayList<byte[]> zipData, ArrayList<BasicNameValuePair> attributes, boolean acceptXML) {
 		HttpResult result = new HttpResult();
 		
         MultipartEntity requestEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -105,7 +121,7 @@ public class ClientHTTP extends BaseClient {
 			}
 		}
 		
-		result = send(path, requestEntity, attributes);
+		result = send(path, requestEntity, attributes, acceptXML);
 		return(result);
 	}
 
@@ -147,6 +163,20 @@ public class ClientHTTP extends BaseClient {
 	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
 	 */
 	static public HttpResult sendFiles(String path, ArrayList<String> filenames, ArrayList<BasicNameValuePair> attributes) {
+		return(sendFiles(path, filenames, attributes, false));
+	}
+	
+	/**
+	 * Performs a HTTP PUT to send the supplied files to the given path
+	 * 
+	 * @param path The URL / Path of where the files need to be sent
+	 * @param filenames An array of filenames that need to be sent
+	 * @param attributes An array of attribute name / value pairs that need to be added to the path 
+	 * @param acceptXML true if we are to accept XML, this explicitly sets the Accept header to application/xml
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult sendFiles(String path, ArrayList<String> filenames, ArrayList<BasicNameValuePair> attributes, boolean acceptXML) {
 		HttpResult result = new HttpResult();
 		
         MultipartEntity requestEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -182,7 +212,7 @@ public class ClientHTTP extends BaseClient {
 
 		// If we did not have any errors, perform the post
 		if (result.getCallResult() == Error.NONE) {
-			result = send(path, requestEntity, attributes);
+			result = send(path, requestEntity, attributes, acceptXML);
 		}
 		return(result);
 	}
@@ -220,6 +250,20 @@ public class ClientHTTP extends BaseClient {
 	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
 	 */
 	static public HttpResult send(String path, MultipartEntity requestEntity, ArrayList<BasicNameValuePair> attributes) {
+		return(send(path, requestEntity, attributes, false));
+	}
+	/**
+	 * Performs a HTTP operation against the specified  path
+	 * 
+	 * @param path The URL path to perform the operation against 
+	 * @param requestEntity The entities to be posted, if this field is null then a GET will occur
+	 * @param attributes An array of attribute name / value pairs that need to be added to the path
+	 * @param attributes An array of attribute name / value pairs that need to be added to the path
+	 * @param acceptXML true if we are to accept XML, this explicitly sets the Accept header to application/xml
+	 *  
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult send(String path, MultipartEntity requestEntity, ArrayList<BasicNameValuePair> attributes, boolean acceptXML) {
 		HttpResult result = new HttpResult();
 		if (attributes != null) {
 			for (BasicNameValuePair attribute : attributes) {
@@ -244,6 +288,9 @@ public class ClientHTTP extends BaseClient {
 	        		HttpPost httpPost = new HttpPost(url);
 	        		httpPost.setEntity(requestEntity);
 	        		httpRequest = httpPost;
+	        	}
+	        	if (acceptXML) {
+	        		httpRequest.setHeader("Accept", ContentType.APPLICATION_XML.getMimeType());
 	        	}
 
 	            log.info("executing request " + httpRequest.getRequestLine());

@@ -116,7 +116,7 @@ public abstract class ValidateBase extends BaseModule {
 	private ValidationResult send(String provider, byte[] xmlRecord, boolean sendProfileOnFailure) {
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendBytes(buildValidatePath(provider), recordArray, null));
+		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendBytes(buildValidatePath(provider), recordArray, null, null, true));
 		if ((result == null) && sendProfileOnFailure) {
 			sendDefaultProfile(provider);
 			result = send(provider, xmlRecord, false);
@@ -148,7 +148,7 @@ public abstract class ValidateBase extends BaseModule {
 	private ValidationResult send(String provider, String filename, boolean sendProfileOnFailure) {
 		ArrayList<String> filenameArray = new ArrayList<String>();
 		filenameArray.add(filename);
-		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendFiles(buildValidatePath(provider), filenameArray));
+		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendFiles(buildValidatePath(provider), filenameArray, null, true));
 		if ((result == null) && sendProfileOnFailure) {
 			sendDefaultProfile(provider);
 			result = send(provider, filename, false);
