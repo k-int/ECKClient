@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.entity.ContentType;
 
 import com.k_int.euinside.client.HttpResult;
 import com.k_int.euinside.client.http.ClientHTTP;
@@ -76,7 +77,7 @@ public abstract class ValidateBase extends BaseModule {
 			if (lidoProfileStream != null) {
 				// We have a default profile so try and send it
 				recordArray.add(IOUtils.toByteArray(lidoProfileStream));
-				ClientHTTP.sendBytes(buildProfilePath(provider), recordArray, null);
+				ClientHTTP.sendBytes(buildProfilePath(provider), recordArray, null, ContentType.TEXT_HTML);
 			}
 		} catch (IOException e) {
 			// We will ignore the IOException as there is not a lot we can do if that happens
@@ -118,7 +119,7 @@ public abstract class ValidateBase extends BaseModule {
 	private ValidationResult send(String provider, byte[] xmlRecord, boolean sendProfileOnFailure) {
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendBytes(buildValidatePath(provider), recordArray, null, null, true));
+		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendBytes(buildValidatePath(provider), recordArray, null, null, ContentType.APPLICATION_XML));
 		if ((result == null) && sendProfileOnFailure) {
 			sendDefaultProfile(provider);
 			result = send(provider, xmlRecord, false);
@@ -150,7 +151,7 @@ public abstract class ValidateBase extends BaseModule {
 	private ValidationResult send(String provider, String filename, boolean sendProfileOnFailure) {
 		ArrayList<String> filenameArray = new ArrayList<String>();
 		filenameArray.add(filename);
-		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendFiles(buildValidatePath(provider), filenameArray, null, true));
+		ValidationResult result = mapHttpResultToErrors(ClientHTTP.sendFiles(buildValidatePath(provider), filenameArray, null, ContentType.APPLICATION_XML));
 		if ((result == null) && sendProfileOnFailure) {
 			sendDefaultProfile(provider);
 			result = send(provider, filename, false);

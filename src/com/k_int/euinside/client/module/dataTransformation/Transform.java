@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.k_int.euinside.client.HttpResult;
@@ -91,7 +92,7 @@ public class Transform extends BaseModule {
 		}
 		
 		// Send the records away to be converted
-		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), zipRecords.getZip());
+		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), zipRecords.getZip(), ContentType.APPLICATION_JSON);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			RequestResponse request = ClientJSON.readJSONString(httpResult.getContent(), RequestResponse.class);
 			
@@ -128,7 +129,7 @@ public class Transform extends BaseModule {
 		RequestResponse request = null;
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), recordArray, null);
+		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), recordArray, null, ContentType.APPLICATION_JSON);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			request = ClientJSON.readJSONString(httpResult.getContent(), RequestResponse.class);
 		}
@@ -166,7 +167,7 @@ public class Transform extends BaseModule {
 		RequestResponse request = null;
 		ArrayList<String> filenameArray = new ArrayList<String>();
 		filenameArray.add(filename);
-		HttpResult httpResult = ClientHTTP.sendFiles(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), filenameArray);
+		HttpResult httpResult = ClientHTTP.sendFiles(buildPath(provider, batch, Action.DATA_TRANSFORMATION_TRANSFORM, buildFormatParameters(sourceFormat, targetFormat)), filenameArray, ContentType.APPLICATION_JSON);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			request = ClientJSON.readJSONString(httpResult.getContent(), RequestResponse.class);
 		}
@@ -235,7 +236,7 @@ public class Transform extends BaseModule {
 	 */
 	static public byte [] fetch(String provider, String batch, RequestResponse request) {
 		byte [] result = null;
-		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_TRANSFORMATION_FETCH, buildRequestParameters(request)));
+		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_TRANSFORMATION_FETCH, buildRequestParameters(request)), ContentType.APPLICATION_OCTET_STREAM);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			result = httpResult.getContentBytes();
 		}
@@ -252,7 +253,7 @@ public class Transform extends BaseModule {
 	 */
 	static public TransformationStatus status(String provider, String batch, RequestResponse request) {
 		TransformationStatus transformationStatus = TransformationStatus.NOT_READY;
-		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_TRANSFORMATION_STATUS, buildRequestParameters(request)));
+		HttpResult httpResult = ClientHTTP.send(buildPath(provider, batch, Action.DATA_TRANSFORMATION_STATUS, buildRequestParameters(request)), ContentType.APPLICATION_JSON);
 		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
 			StatusResponse status = ClientJSON.readJSONString(httpResult.getContent(), StatusResponse.class);
 			transformationStatus = status.getTransformationStatus();

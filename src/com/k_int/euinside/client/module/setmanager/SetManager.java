@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module.setmanager;
 
 import java.util.ArrayList;
 
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.k_int.euinside.client.HttpResult;
@@ -132,7 +133,7 @@ public class SetManager extends BaseModule {
 		attributes.add(new BasicNameValuePair(Attribute.RECORD_ID.getName(), recordId));
 		String path = buildPath(provider, set, Action.SET_MANAGER_PREVIEW, attributes);
 
-		result = ClientHTTP.send(path).getContent();
+		result = ClientHTTP.send(path, ContentType.APPLICATION_XHTML_XML).getContent();
 		return(result);
 	}
 

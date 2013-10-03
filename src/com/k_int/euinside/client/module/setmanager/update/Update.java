@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module.setmanager.update;
 
 import java.util.ArrayList;
 
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.k_int.euinside.client.HttpResult;
@@ -55,7 +56,7 @@ public class Update {
 	 * @return A HttpResult object, if the httpStatusCode is HttpServletResponse.SC_ACCEPTED, then the call has been successful 
 	 */
 	static public HttpResult sendBytes(String path, ArrayList<byte[]> xmlData, ArrayList<byte[]> zipData, boolean deleteAll, ArrayList<String> recordsToDelete) {
-		return(ClientHTTP.sendBytes(path, xmlData, zipData, buildattributeArray(deleteAll, recordsToDelete)));
+		return(ClientHTTP.sendBytes(path, xmlData, zipData, buildattributeArray(deleteAll, recordsToDelete), ContentType.TEXT_HTML));
 	}
 
 	/**
@@ -69,6 +70,6 @@ public class Update {
 	 * @return A HttpResult object, if the httpStatusCode is HttpServletResponse.SC_ACCEPTED, then the call has been successful 
 	 */
 	static public HttpResult sendFiles(String path, ArrayList<String> filenames, boolean deleteAll, ArrayList<String> recordsToDelete) {
-		return(ClientHTTP.sendFiles(path, filenames, buildattributeArray(deleteAll, recordsToDelete)));
+		return(ClientHTTP.sendFiles(path, filenames, buildattributeArray(deleteAll, recordsToDelete), ContentType.TEXT_HTML));
 	}
 }

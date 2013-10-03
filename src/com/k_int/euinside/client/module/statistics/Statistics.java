@@ -3,6 +3,7 @@ package com.k_int.euinside.client.module.statistics;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.k_int.euinside.client.HttpResult;
@@ -213,7 +214,7 @@ public class Statistics extends BaseModule {
 	 */
 	static public HttpResult update(String moduleName, String group, Date dateTime, Long duration, Integer itemsProcessed, Integer numberFailed, Integer numberSuccessful) {
 		String path = buildUpdatePath(moduleName, group, dateTime, duration, itemsProcessed, numberFailed, numberSuccessful); 
-		return(ClientHTTP.send(path));
+		return(ClientHTTP.send(path, ContentType.TEXT_HTML));
 	}
 
 	/**
