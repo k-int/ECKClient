@@ -195,9 +195,7 @@ public class Transform extends BaseModule {
 	 *  
 	 * @param provider A code for the provider of the data
 	 * @param batch An identifier that identifies this submission, for when the records are retrieved later
-	 * @param sourceFormat The format the source data is in 
-	 * @param targetFormat The format that the data is to be converted to 
-	 * @param filename ... The file that contains the record that is to be sent to the validation module
+	 * @param request The response from the initial request 
 	 * 
 	 * @return The result returned form the server
 	 */

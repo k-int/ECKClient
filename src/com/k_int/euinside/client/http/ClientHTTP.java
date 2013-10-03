@@ -224,7 +224,6 @@ public class ClientHTTP extends BaseClient {
 	 * @param path The URL path to perform the operation against 
 	 * @param requestEntity The entities to be posted, if this field is null then a GET will occur
 	 * @param attributes An array of attribute name / value pairs that need to be added to the path
-	 * @param attributes An array of attribute name / value pairs that need to be added to the path
 	 * @param acceptableResponseContentType The type of content we expect to be returned
 	 *  
 	 * @return A HttpResult object that can be interrogated to see if the call was successful or not

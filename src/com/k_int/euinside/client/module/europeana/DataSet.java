@@ -49,7 +49,7 @@ public class DataSet extends EuropeanaItemResult {
 	/**
 	 * Sets the number of accepted records
 	 * 
-	 * @param accepted The number of accepted records in the data set
+	 * @param publishedRecords The number of accepted records in the data set
 	 */
 	public void setPublishedRecords(Long publishedRecords) {
 		this.publishedRecords = publishedRecords;
@@ -67,7 +67,7 @@ public class DataSet extends EuropeanaItemResult {
 	/**
 	 * Sets the number of rejected records
 	 * 
-	 * @param rejected The number of rejected records in the data set
+	 * @param deletedRecords The number of rejected records in the data set
 	 */
 	public void setDeletedRecords(String deletedRecords) {
 		try {
