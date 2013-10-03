@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 
 import com.k_int.euinside.client.HttpResult;
+import com.k_int.euinside.client.UnZipRecords;
 import com.k_int.euinside.client.http.ClientHTTP;
 import com.k_int.euinside.client.module.Action;
 import com.k_int.euinside.client.module.BaseModule;
@@ -15,7 +18,8 @@ import com.k_int.euinside.client.module.Module;
 
 public class Preview extends BaseModule{
 
-	static private String DEFAULT_TEMPLATE = "default";
+	static public String DEFAULT_PROVIDER = "default";
+	static public String NOT_BATCH = "single";
 	
 	/**
 	 * Builds the path required for the validaion module
@@ -31,12 +35,19 @@ public class Preview extends BaseModule{
 	 *  
 	 * @param xmlRecord ... The record that is to be sent
 	 * 
-	 * @return The result returned from the server
+	 * @return A byte array of the html record
 	 */
-	static public HttpResult sendBytes(String provider, String batch, byte[] xmlRecord) {
+	static public byte [] sendBytes(String provider, String batch, byte[] xmlRecord) {
+		byte [] result = null;
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
-		return(ClientHTTP.sendBytes(buildPath(provider, batch), recordArray, null));
+		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch), recordArray, null);
+		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
+			// Now this should be a zip file, so we need tto unzip it
+			UnZipRecords unzip = new UnZipRecords(httpResult.getContentBytes());
+			result = unzip.getNextEntry(null);
+		}
+		return(result);
 	}
 
 	/**

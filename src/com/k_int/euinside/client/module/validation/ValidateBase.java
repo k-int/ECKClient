@@ -14,8 +14,9 @@ import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.xml.ClientXML;
 
 public abstract class ValidateBase extends BaseModule {
-	static private final String VALIDATION_PROFILE = "lido";
-	static private final String VALIDATION_SINGLE  = "single";
+	static public final String VALIDATION_PROFILE = "lido";
+	static public final String VALIDATION_SINGLE  = "single";
+	static public final String DEFAULT_PROVIDER = "default";
 
 	/**
 	 * Returns the module that the validation is going to occur against
@@ -42,6 +43,7 @@ public abstract class ValidateBase extends BaseModule {
 	 */
 	private String buildPath(String provider, Action action, boolean includeSet) {
 		return(buildPath(getModule(), PATH_SEPARATOR + provider + (includeSet ? (PATH_SEPARATOR + VALIDATION_SINGLE) : "") + PATH_SEPARATOR + action.getName() + PATH_SEPARATOR + VALIDATION_PROFILE));
+//		return(buildPath(getModule(), PATH_SEPARATOR + DEFAULT_PROVIDER + (includeSet ? (PATH_SEPARATOR + VALIDATION_SINGLE) : "") + PATH_SEPARATOR + action.getName() + PATH_SEPARATOR + VALIDATION_PROFILE));
 	}
 
 	/**
