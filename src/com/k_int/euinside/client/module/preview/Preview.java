@@ -17,6 +17,9 @@ import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
 
+/**
+ * This class calls the Preview module
+ */
 public class Preview extends BaseModule{
 
 	static public String DEFAULT_PROVIDER = "default";

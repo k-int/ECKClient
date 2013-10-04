@@ -26,6 +26,9 @@ import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
 
+/**
+ * The transform module provides the interface into the DataTransformation module
+ */
 public class Transform extends BaseModule {
 	
 	/**

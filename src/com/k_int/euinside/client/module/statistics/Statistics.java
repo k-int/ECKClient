@@ -19,6 +19,9 @@ import com.k_int.euinside.client.module.statistics.query.StatisticItems;
 import com.k_int.euinside.client.module.statistics.query.StatusItem;
 import com.k_int.euinside.client.module.statistics.query.StatusItems;
 
+/**
+ * This class provides an interface into the statistics module
+ */
 public class Statistics extends BaseModule {
 
 	static private final String QUERY_TYPE_ITEMS         = "items";

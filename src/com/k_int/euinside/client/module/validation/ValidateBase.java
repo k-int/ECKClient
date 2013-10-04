@@ -14,6 +14,9 @@ import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.xml.ClientXML;
 
+/**
+ * Base class for the validation moduled
+ */
 public abstract class ValidateBase extends BaseModule {
 	static public final String VALIDATION_PROFILE = "lido";
 	static public final String VALIDATION_SINGLE  = "single";

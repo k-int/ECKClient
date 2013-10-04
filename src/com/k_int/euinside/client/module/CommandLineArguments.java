@@ -8,6 +8,11 @@ import java.util.Date;
 import com.k_int.euinside.client.module.dataTransformation.Format;
 import com.k_int.euinside.client.module.setmanager.SetManager;
 
+/** 
+ * This class parses the command line for all the main methods that are contained within the client
+ * All top level classes have a main so command line tests can be carried out on that functionality
+ * Each of the main methods defines which parameters they use from here
+ */
 public class CommandLineArguments {
 	static SimpleDateFormat expectedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private String accessionNumber = "";
