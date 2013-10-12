@@ -78,17 +78,4 @@ public class LiveSet extends baseJSON {
 	public void setNumberOfRecords(int numberOfRecords) {
 		this.numberOfRecords = numberOfRecords;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: LiveSet:\n"; 
-		result += "\tStatus: " + status + "\n";
-		result += "\tDate Committed: " + dateCommitted + "\n";
-		result += "\tNumber of Records: " + numberOfRecords + "\n\n";
-		return(result);
-	}
 }

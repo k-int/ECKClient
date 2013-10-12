@@ -83,18 +83,4 @@ public abstract class EuropeanaItemResult extends baseJSON {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: EuropeanaResult\n";
-		result += "Success: " + success + "\n";
-		result += "Identifier: " + identifier + "\n";
-		result += "Name: " + name + "\n";
-		result += "Description: " + description + "\n";
-		return(result);
-	}
 }

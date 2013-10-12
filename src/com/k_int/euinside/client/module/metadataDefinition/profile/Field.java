@@ -95,18 +95,4 @@ public class Field extends baseJSON {
 	public void setXpath(String xpath) {
 		this.xpath = xpath;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: Field:\n"; 
-		result += "\tdefinition: " + definition + "\n";
-		result += "\texample: " + example + "\n";
-		result += "\tfield: " + field + "\n";
-		result += "\txpath: " + xpath + "\n";
-		return(result);
-	}
 }

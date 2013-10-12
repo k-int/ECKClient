@@ -76,18 +76,4 @@ public class DataSet extends EuropeanaItemResult {
 			// Not a valid number so we will ignore for now
 		}
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: DataSet\n";
-		result += super.toString();
-		result += "Status: " + status + "\n"; 
-		result += "Published Records: " + publishedRecords.toString() + "\n"; 
-		result += "Deleted Records: " + ((deletedRecords == null) ? "" : deletedRecords.toString()) + "\n"; 
-		return(result);
-	}
 }

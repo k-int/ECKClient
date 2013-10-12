@@ -57,17 +57,4 @@ public class Language extends baseJSON {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: Language:\n"; 
-		result += "\tcode: " + code + "\n";
-		result += "\tlanguage: " + language + "\n";
-		return(result);
-	}
-
 }

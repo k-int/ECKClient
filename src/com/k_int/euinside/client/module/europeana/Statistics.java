@@ -155,6 +155,7 @@ public class Statistics extends BaseModule {
 					ArrayList<Provider> items = providers.getItems();
 					if ((items != null) && !items.isEmpty()) {
 						providerId = items.get(0).getIdentifier();
+						
 					}
 				}
 			}

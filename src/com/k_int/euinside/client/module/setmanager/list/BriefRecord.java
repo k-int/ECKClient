@@ -117,18 +117,4 @@ public class BriefRecord extends baseJSON {
 	public void setValidationStatus(String validationStatus) {
 		this.validationStatus = validationStatus;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: BriefRecordd:\n"; 
-		result += "\tcmsId: " + cmsId + "\n";
-		result += "\tpersistentId: " + persistentId + "\n";
-		result += "\tdeleted: " + deleted + "\n";
-		result += "\tValidation Status: " + validationStatus + "\n";
-		return(result);
-	}
 }

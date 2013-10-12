@@ -98,29 +98,12 @@ public class ValidationResultRecord extends baseJSON {
 	 * @param errors The errors that occured during validation
 	 */
 	public void setErrors(List<ValidationResultRecordError> errors) {
-		setErrors(errors);
+		this.errors = errors;
 	}
 
 	@JacksonXmlElementWrapper(useWrapping=false)
 	@JsonSetter("Error")
 	public void setErrorsSemantika(List<ValidationResultRecordError> errors) {
-		this.errors = errors;
-	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: ValidationResultRecord:\n"; 
-		result += "\tid: " + id + "\n";
-		result += "\tresult: " + (this.result ? "true" : "false") + "\n";
-		if (errors != null) {
-			for (ValidationResultRecordError error : errors) {
-				result += error.toString();
-			}
-		}
-		return(result);
+		setErrors(errors);
 	}
 }

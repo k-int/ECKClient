@@ -116,19 +116,4 @@ public class QueuedActions extends baseJSON {
 	public void setDeleteAll(boolean deleteAll) {
 		this.deleteAll = deleteAll;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: QueuedAction:\n"; 
-		result += "\tAction: " + action + "\n";
-		result += "\tQueued: " + queued + "\n";
-		result += "\tContent Type: " + contentType + "\n";
-		result += "\tRecords to Delete: " + recordsToBeDeleted + "\n";
-		result += "\tDelete All: " + deleteAll + "\n\n";
-		return(result);
-	}
 }

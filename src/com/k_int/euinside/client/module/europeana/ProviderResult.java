@@ -38,21 +38,4 @@ public class ProviderResult extends EuropeanaResult {
 	public void setItems(ArrayList<Provider> items) {
 		this.items = items;
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: Providers\n";
-		result += super.toString();
-
-		if (items != null) {
-			for (Provider detail : items) {
-				result += detail.toString();
-			}
-		}
-		return(result);
-	}
 }

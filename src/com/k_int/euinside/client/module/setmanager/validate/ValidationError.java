@@ -78,20 +78,4 @@ public class ValidationError extends baseJSON {
 	public void setErrors(ArrayList<Error> errors) {
 		this.errors = errors;
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: ValidationError:\n"; 
-		result += "\tcmsId: " + cmsId + "\n";
-		result += "\tpersistentId: " + persistentId + "\n";
-		result += "\tlastUpdated: " + lastUpdated + "\n";
-		for (Error error : errors) {
-			result += error.toString();
-		}
-		return(result);
-	}
 }

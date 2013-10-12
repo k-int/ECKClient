@@ -78,19 +78,4 @@ public class Profile extends baseJSON {
 	public void setFields(ArrayList<Field> fields) {
 		this.fields = fields;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: Profile:\n"; 
-		result += "\tdefinition: " + definition + "\n";
-		result += "\tprofile: " + profile + "\n";
-		for (Field field : fields) {
-			result += field.toString();
-		}
-		return(result);
-	}
 }

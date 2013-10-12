@@ -77,16 +77,4 @@ public class ValidationResultRecordError extends baseJSON {
 	public void setText(String text) {
 		this.text = text;
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: ValidationResultRecordError:\n"; 
-		result += "\tplugin: " + plugin + "\n";
-		result += "\ttext: " + text + "\n";
-		return(result);
-	}
 }

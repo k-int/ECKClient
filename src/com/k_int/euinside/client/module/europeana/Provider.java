@@ -35,16 +35,4 @@ public class Provider extends EuropeanaItemResult {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: ProviderDetail\n";
-		result += super.toString();
-		result += "Country: " + country + "\n"; 
-		return(result);
-	}
 }

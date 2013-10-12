@@ -68,21 +68,4 @@ public class StatisticItem extends baseJSON {
 	public void setNumberProcessed(Integer numberProcessed) {
 		this.numberProcessed = numberProcessed;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: StatisticItem:\n"; 
-		result += "\tnumberFailed: " + numberFailed.toString() + "\n";
-		result += "\tduration: " + duration.toString() + "\n";
-		if (statisticDate != null) {
-			result += "\tstatisticDate: " + expectedDateTimeFormat.format(statisticDate) + "\n";
-		}
-		result += "\tnumberSuccessful: " + numberSuccessful.toString() + "\n";
-		result += "\tnumberProcessed: " + numberProcessed.toString() + "\n";
-		return(result);
-	}
 }

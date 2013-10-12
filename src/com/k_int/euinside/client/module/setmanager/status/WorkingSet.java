@@ -133,19 +133,4 @@ public class WorkingSet extends baseJSON {
 	public void setNumberOfRecordsDeleted(int numberOfRecordsDeleted) {
 		this.numberOfRecordsDeleted = numberOfRecordsDeleted;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: WorkingSet:\n"; 
-		result += "\tStatus: " + status + "\n";
-		result += "\tNumber of Records (valid): " + numberOfRecordsValid + "\n";
-		result += "\tNumber of Records (awaiting validation): " + numberOfRecordsAwaitingValidation + "\n";
-		result += "\tNumber of Records (validation errors): " + numberOfRecordsValidationErrors + "\n";
-		result += "\tNumber of Records (deleted): " + numberOfRecordsDeleted + "\n\n";
-		return(result);
-	}
 }

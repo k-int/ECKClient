@@ -67,7 +67,8 @@ public class ClientXML extends MappingClient {
 	 */
 	static public <T> T readXML(HttpResult httpResult, Class<T> resultType) {
 		T result = null;
-		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
+		if ((httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) ||
+		    (httpResult.getHttpStatusCode() == HttpServletResponse.SC_PRECONDITION_FAILED)) {
 			result = readXMLString(httpResult.getContent(), resultType);
 		}
 		return(result);

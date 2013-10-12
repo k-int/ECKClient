@@ -95,17 +95,4 @@ public class PIDComponents extends baseJSON {
 	public void setAccessionNumber(String accessionNumber) {
 		this.accessionNumber = accessionNumber;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: PIDComponents:\n"; 
-		result += "\taccessionNumber: \"" + accessionNumber + "\"\n";
-		result += "\tinstitutionURL: \"" + institutionURL + "\"\n";
-		result += "\trecordType: \"" + recordType + "\"\n";
-		return(result);
-	}
 }

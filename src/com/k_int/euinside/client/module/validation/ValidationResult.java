@@ -110,21 +110,4 @@ public class ValidationResult extends baseJSON {
 	public void setRecordsSemantika(List<ValidationResultRecord> records) {
 		setRecords(records);
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: ValidationResult:\n"; 
-		result += "\tprovider: " + provider + "\n";
-		result += "\tset: " + set + "\n";
-		if (records != null) {
-			for (ValidationResultRecord record : records) {
-				result += record.toString();
-			}
-		}
-		return(result);
-	}
 }

@@ -57,16 +57,4 @@ public class Error extends baseJSON {
 	public void setDefinition(String definition) {
 		this.definition = definition;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: Error:\n"; 
-		result += "\terror: " + error + "\n";
-		result += "\tdefinition: " + definition + "\n";
-		return(result);
-	}
 }

@@ -97,18 +97,4 @@ public class History extends baseJSON {
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: History:\n"; 
-		result += "\tAction: " + action + "\n";
-		result += "\tWhen: " + when + "\n";
-		result += "\tNumber of Records: " + numberOfRecords + "\n";
-		result += "\tDuration: " + duration + "\n";
-		return(result);
-	}
 }

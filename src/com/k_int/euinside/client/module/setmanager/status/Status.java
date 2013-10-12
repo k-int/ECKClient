@@ -156,29 +156,4 @@ public class Status extends baseJSON {
 	public void setHistory(ArrayList<History> history) {
 		this.history = history;
 	}
-
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: Status:\n"; 
-		result += "\tCode: " + code + "\n";
-		result += "\tDescription: " + description + "\n";
-		result += "\tCreated: " + created + "\n";
-		if (liveSet != null) {
-			result += liveSet.toString();
-		}
-		if (workingSet != null) {
-			result += workingSet.toString();
-		}
-		for (QueuedActions queuedAction : queuedActions) {
-			result += queuedAction.toString();
-		}
-		for (History h : history) {
-			result += h.toString();
-		}
-		return(result);
-	}
 }

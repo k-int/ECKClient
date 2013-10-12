@@ -159,22 +159,4 @@ public abstract class EuropeanaResult extends baseJSON {
 	public void setTotalResults(Integer totalResults) {
 		this.totalResults = totalResults;
 	}
-	
-	/**
-	 * Formats the members of this class in a simple to view way
-	 * 
-	 * @return The formatted string
-	 */
-	public String toString() {
-		String result = "Class: EuropeanaResult\n";
-		result += "API Key: " + apikey + "\n";
-		result += "Action: " + action + "\n";
-		result += "Success: " + success + "\n";
-		result += "Error: " + ((error == null) ? "" : error) + "\n";
-		result += "Stats Start Time: " + ((statsStartTime == null) ? "" : statsStartTime.toString()) + "\n";
-		result += "Stats Duration: " + ((statsDuration == null) ? "" : statsDuration.toString()) + "\n";
-		result += "Items Count: " + itemsCount.toString() + "\n";
-		result += "Items Total: " + totalResults.toString() + "\n";
-		return(result);
-	}
 }
