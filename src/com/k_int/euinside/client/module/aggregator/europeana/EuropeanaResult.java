@@ -1,4 +1,4 @@
-package com.k_int.euinside.client.module.europeana;
+package com.k_int.euinside.client.module.aggregator.europeana;
 
 import com.k_int.euinside.client.json.baseJSON;
 

@@ -1,19 +1,20 @@
-package com.k_int.euinside.client.module.europeana;
+package com.k_int.euinside.client.module.aggregator.europeana;
 
 import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 /**
  * This class contains the provider result details
  */
-public class ProviderResult extends EuropeanaResult {
-	private static Log log = LogFactory.getLog(ProviderResult.class);
+public class EuropeanaProviderResult extends EuropeanaResult {
+	private static Log log = LogFactory.getLog(EuropeanaProviderResult.class);
 
-	private ArrayList<Provider> items;
+	private ArrayList<EuropeanaProvider> items;
 
-	public ProviderResult() {
+	public EuropeanaProviderResult() {
 	}
 	
 	@Override
@@ -26,7 +27,7 @@ public class ProviderResult extends EuropeanaResult {
 	 * 
 	 * @return The list of providers
 	 */
-	public ArrayList<Provider> getItems() {
+	public ArrayList<EuropeanaProvider> getItems() {
 		return(items);
 	}
 
@@ -35,7 +36,7 @@ public class ProviderResult extends EuropeanaResult {
 	 * 
 	 * @param items The list of providers
 	 */
-	public void setItems(ArrayList<Provider> items) {
+	public void setItems(ArrayList<EuropeanaProvider> items) {
 		this.items = items;
 	}
 }

@@ -16,6 +16,7 @@ import com.k_int.euinside.client.module.setmanager.SetManager;
 public class CommandLineArguments {
 	static SimpleDateFormat expectedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private String accessionNumber = "";
+	private String aggregator = "";
 	private ArrayList<String> badFilenames = new ArrayList<String>();
 	private String batch = "";
 	private String coreBaseURL = "http://euinside.k-int.com/ECKCore2";
@@ -64,6 +65,11 @@ public class CommandLineArguments {
 				case "-accessionNumber":
 					i++;
 					setAccessionNumber(args[i]);
+					break;
+					
+				case "-aggregator":
+					i++;
+					setAggregator(args[i]);
 					break;
 					
 				case "-all":
@@ -270,6 +276,14 @@ public class CommandLineArguments {
 
 	public void setAccessionNumber(String accessionNumber) {
 		this.accessionNumber = accessionNumber;
+	}
+
+	public String getAggregator() {
+		return(aggregator);
+	}
+
+	public void setAggregator(String aggregator) {
+		this.aggregator = aggregator;
 	}
 
 	public ArrayList<String> getBadFilenames() {

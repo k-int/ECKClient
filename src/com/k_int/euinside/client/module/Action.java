@@ -1,6 +1,9 @@
 package com.k_int.euinside.client.module;
 
 public enum Action {
+	// Actions used by the aggregator service in the core module
+	AGGREGATOR_STATISTICS("statistics"),
+	
 	// Actions used by the data mapping service
 	DATA_TRANSFORMATION_FETCH("fetch"),
 	DATA_TRANSFORMATION_STATUS("status"),

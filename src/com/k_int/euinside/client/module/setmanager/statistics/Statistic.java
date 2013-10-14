@@ -1,10 +1,14 @@
 package com.k_int.euinside.client.module.setmanager.statistics;
 
+import java.util.ArrayList;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.k_int.euinside.client.json.baseJSON;
-import com.k_int.euinside.client.module.europeana.DataSet;
+import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaDataSet;
+import com.k_int.euinside.client.module.aggregator.generic.GenericEuropeanaStatistic;
+import com.k_int.euinside.client.module.aggregator.generic.GenericStatistic;
 
 public class Statistic extends baseJSON {
 	private static Log log = LogFactory.getLog(Statistic.class);
@@ -15,7 +19,7 @@ public class Statistic extends baseJSON {
 	private Long pending;
 	private Long rejected;
 	private Long total;
-	private DataSet europeanaMostRecent;
+	private EuropeanaDataSet europeanaMostRecent;
 	
 	@Override
 	protected Log getLogger() {
@@ -86,11 +90,33 @@ public class Statistic extends baseJSON {
 		this.total = total;
 	}
 
-	public DataSet getEuropeanaMostRecent() {
+	public EuropeanaDataSet getEuropeanaMostRecent() {
 		return(europeanaMostRecent);
 	}
 
-	public void setEuropeanaMostRecent(DataSet europeanaMostRecent) {
+	public void setEuropeanaMostRecent(EuropeanaDataSet europeanaMostRecent) {
 		this.europeanaMostRecent = europeanaMostRecent;
+	}
+	
+	/**
+	 * Converts this instance into a generic statistics result
+	 * 
+	 * @return A generic statistics object that represents this data
+	 */
+	public GenericStatistic convertToGeneric() {
+		GenericStatistic result = new GenericStatistic();
+		result.setAccepted(getAccepted());
+		result.setCollectionCode(getCollectionCode());
+		result.setDescription(getDescription());
+		result.setPending(getPending());
+		result.setProviderCode(getProviderCode());
+		result.setRejected(getRejected());
+		result.setTotal(getTotal());
+		if (europeanaMostRecent != null) {
+			ArrayList<GenericEuropeanaStatistic> europeanaStatistics = new ArrayList<GenericEuropeanaStatistic>();
+			result.setEuropeanaDataSets(europeanaStatistics);
+			europeanaStatistics.add(europeanaMostRecent.convertToGenericEuropeana());
+		}
+		return(result);
 	}
 }

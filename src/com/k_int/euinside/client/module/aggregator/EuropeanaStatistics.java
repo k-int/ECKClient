@@ -1,4 +1,4 @@
-package com.k_int.euinside.client.module.europeana;
+package com.k_int.euinside.client.module.aggregator;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,10 @@ import com.k_int.euinside.client.module.Action;
 import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
+import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaDataSet;
+import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaDataSetResult;
+import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaProvider;
+import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaProviderResult;
 import com.k_int.euinside.client.module.setmanager.SetManager;
 
 /**
@@ -20,7 +24,7 @@ import com.k_int.euinside.client.module.setmanager.SetManager;
  * <li>4. Fetches details about a dataset</li>
  * </ul>
  */
-public class Statistics extends BaseModule {
+public class EuropeanaStatistics extends BaseModule {
 	private static String JSON_POSTFIX = ".json";
 
 	/**
@@ -46,7 +50,6 @@ public class Statistics extends BaseModule {
 	 * @return The path appropriate for these parameters
 	 */
 	private static String buildPath(Action action, String wskey, String identifier, boolean isIdentifierProviderId) {
-//		return(buildPath(Module.EUROPEANA, PATH_SEPARATOR + action.getName() + ((identifier == null) ? "" : (PATH_SEPARATOR + identifier)) + JSON_POSTFIX));
 		ArrayList<BasicNameValuePair> attributes = new ArrayList<BasicNameValuePair>();
 		attributes.add(new BasicNameValuePair("wskey", wskey));
 		if (identifier == null) {
@@ -64,8 +67,8 @@ public class Statistics extends BaseModule {
 	 * 
 	 * @return An array of the europeana providers
 	 */
-	static public ProviderResult getProviders(String wskey) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDERS, wskey), ProviderResult.class));
+	static public EuropeanaProviderResult getProviders(String wskey) {
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDERS, wskey), EuropeanaProviderResult.class));
 	}
 
 	/** 
@@ -76,8 +79,8 @@ public class Statistics extends BaseModule {
 	 * 
 	 * @return The details for the specified provider 
 	 */
-	static public ProviderResult getProvider(String wskey, String providerId) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDERS, wskey, providerId, true), ProviderResult.class));
+	static public EuropeanaProviderResult getProvider(String wskey, String providerId) {
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDERS, wskey, providerId, true), EuropeanaProviderResult.class));
 	}
 
 	/** 
@@ -88,8 +91,8 @@ public class Statistics extends BaseModule {
 	 * 
 	 * @return The details of the data sets for the specified provider 
 	 */
-	static public DataSetResult getProviderDataSets(String wskey, String providerId) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASETS, wskey, providerId, true), DataSetResult.class));
+	static public EuropeanaDataSetResult getProviderDataSets(String wskey, String providerId) {
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASETS, wskey, providerId, true), EuropeanaDataSetResult.class));
 	}
 
 	/** 
@@ -100,8 +103,8 @@ public class Statistics extends BaseModule {
 	 * 
 	 * @return The details for the specified data set 
 	 */
-	static public DataSetResult getDataSet(String wskey, String dataSetId) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASETS, wskey, dataSetId, false), DataSetResult.class));
+	static public EuropeanaDataSetResult getDataSet(String wskey, String dataSetId) {
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASETS, wskey, dataSetId, false), EuropeanaDataSetResult.class));
 	}
 
 	/** 
@@ -112,11 +115,11 @@ public class Statistics extends BaseModule {
 	 * 
 	 * @return The details for the most recent data set for the provider
 	 */
-	static public DataSet getMostRecentDataSet(String wskey, String providerId) {
-		DataSet dataSet = null;
-		DataSetResult providerDataSets = getProviderDataSets(wskey, providerId);
+	static public EuropeanaDataSet getMostRecentDataSet(String wskey, String providerId) {
+		EuropeanaDataSet dataSet = null;
+		EuropeanaDataSetResult providerDataSets = getProviderDataSets(wskey, providerId);
 		if (providerDataSets != null) {
-			ArrayList<DataSet> items = providerDataSets.getItems();
+			ArrayList<EuropeanaDataSet> items = providerDataSets.getItems();
 			if ((items != null) && !items.isEmpty()) {
 				dataSet = items.get(items.size() - 1);
 			}
@@ -133,6 +136,7 @@ public class Statistics extends BaseModule {
 	 *      <col width="85%"/>
 	 *      <tr><td>-coreBaseURL</td><td>The base URL of the core module</td></tr>
 	 *      <tr><td>-provider</td><td>The provider id we will retrieve information about</td></tr>
+	 *      <tr><td>-set</td><td>The set id we will retrieve information about</td></tr>
      *  </table>
 	 */
 	public static void main(String [] args)
@@ -145,14 +149,14 @@ public class Statistics extends BaseModule {
 		if ((wskey == null) || wskey.isEmpty()) {
 			System.out.println("No wskey specified\n");
 		} else {
-			ProviderResult providers = getProviders(wskey);
+			EuropeanaProviderResult providers = getProviders(wskey);
 			if (providers == null) {
 				System.out.println("Failed to get providers\n");
 			} else {
 				System.out.println("Result from getProviders:\n");
 				System.out.println(providers.toString() + "\n");
 				if ((providerId == null) || providerId.isEmpty() || providerId.equals(SetManager.PROVIDER_DEFAULT)) {
-					ArrayList<Provider> items = providers.getItems();
+					ArrayList<EuropeanaProvider> items = providers.getItems();
 					if ((items != null) && !items.isEmpty()) {
 						providerId = items.get(0).getIdentifier();
 						
@@ -171,32 +175,34 @@ public class Statistics extends BaseModule {
 					System.out.println(providers.toString() + "\n");
 				}
 	
-				DataSetResult providerDataSets = getProviderDataSets(wskey, providerId);
+				EuropeanaDataSetResult providerDataSets = getProviderDataSets(wskey, providerId);
 				if (providerDataSets == null) {
 					System.out.println("Failed to get provider data sets\n");
 				} else {
 					System.out.println("Result from getProviderDataSets:\n");
 					System.out.println(providerDataSets.toString() + "\n");
 					if ((setId == null) || setId.isEmpty() || setId.equals(SetManager.SET_DEFAULT)) {
-						ArrayList<DataSet> items = providerDataSets.getItems();
+						ArrayList<EuropeanaDataSet> items = providerDataSets.getItems();
 						if ((items != null) && !items.isEmpty()) {
 							setId = items.get(0).getIdentifier();
 						}
 					}
 	
-					DataSet mostRecentDataSet = getMostRecentDataSet(wskey, providerId);
+					EuropeanaDataSet mostRecentDataSet = getMostRecentDataSet(wskey, providerId);
 					if (mostRecentDataSet == null) {
 						System.out.println("Failed to get most recent data set\n");
 					} else {
 						System.out.println("Result from getMostRecentDataSet:\n");
 						System.out.println(mostRecentDataSet.toString() + "\n");
+						System.out.println("Generic Result:\n");
+						System.out.println(mostRecentDataSet.convertToGeneric().toString() + "\n");
 					}
 				}
 			}
 						
 			if ((setId != null) && !setId.isEmpty() && !setId.equals(SetManager.SET_DEFAULT)) {
 				System.out.println("Using set id: \"" + setId + "\"");
-				DataSetResult dataSets = getDataSet(wskey, setId);
+				EuropeanaDataSetResult dataSets = getDataSet(wskey, setId);
 				if (dataSets == null) {
 					System.out.println("Failed to get data set\n");
 				} else {

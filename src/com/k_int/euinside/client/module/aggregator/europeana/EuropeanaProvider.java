@@ -1,16 +1,17 @@
-package com.k_int.euinside.client.module.europeana;
+package com.k_int.euinside.client.module.aggregator.europeana;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 /**
  * This class contains Europeana provider details
  */
-public class Provider extends EuropeanaItemResult {
-	private static Log log = LogFactory.getLog(Provider.class);
+public class EuropeanaProvider extends EuropeanaItemResult {
+	private static Log log = LogFactory.getLog(EuropeanaProvider.class);
 
 	private String country;
 
-	public Provider() {
+	public EuropeanaProvider() {
 	}
 
 	@Override

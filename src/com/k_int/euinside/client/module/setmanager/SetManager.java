@@ -305,6 +305,8 @@ public class SetManager extends BaseModule {
 				System.out.println("Failed to retrieve the statistics\n");
 			} else {
 				System.out.println("Result from preview: " + result.toString() + "\n");
+				System.out.println("Generic Result:\n");
+				System.out.println(result.convertToGeneric().toString() + "\n");
 			}
 		}
 	}

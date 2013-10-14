@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module;
 
 public enum Module {
 
+	AGGREGATOR("Aggregator", "Aggregator"),
 	DATA_TRANSFORMATION("DataTransformation", "DataTransformation"),
 	DEFINITION("Definition", "Definition"),
 	EUROPEANA("Europeana", "Europeana"),

@@ -1,20 +1,21 @@
-package com.k_int.euinside.client.module.europeana;
+package com.k_int.euinside.client.module.aggregator.europeana;
 
 import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 /**
  * Class that defines a europeana DataSet result
  *
  */
-public class DataSetResult extends EuropeanaResult {
-	private static Log log = LogFactory.getLog(DataSetResult.class);
+public class EuropeanaDataSetResult extends EuropeanaResult {
+	private static Log log = LogFactory.getLog(EuropeanaDataSetResult.class);
 
-	private ArrayList<DataSet> items;
+	private ArrayList<EuropeanaDataSet> items;
 	
-	public DataSetResult() {
+	public EuropeanaDataSetResult() {
 	}
 	
 	@Override
@@ -27,7 +28,7 @@ public class DataSetResult extends EuropeanaResult {
 	 * 
 	 * @return The list of DataSets for this result
 	 */
-	public ArrayList<DataSet> getItems() {
+	public ArrayList<EuropeanaDataSet> getItems() {
 		return(items);
 	}
 
@@ -36,7 +37,7 @@ public class DataSetResult extends EuropeanaResult {
 	 * 
 	 * @param items The DataSets this result represents
 	 */
-	public void setItems(ArrayList<DataSet> items) {
+	public void setItems(ArrayList<EuropeanaDataSet> items) {
 		this.items = items;
 	}
 }
