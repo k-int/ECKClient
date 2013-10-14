@@ -14,6 +14,7 @@ import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.setmanager.list.BriefRecords;
+import com.k_int.euinside.client.module.setmanager.statistics.Statistic;
 import com.k_int.euinside.client.module.setmanager.status.Status;
 import com.k_int.euinside.client.module.setmanager.update.Update;
 import com.k_int.euinside.client.module.setmanager.validate.ValidationErrors;
@@ -108,6 +109,7 @@ public class SetManager extends BaseModule {
 	 * 
 	 * @param provider ... The provider of the records
 	 * @param set ........ The set the records belong to
+	 * 
 	 * @return A list of all the records in the set
 	 */
 	static public BriefRecords getList(String provider, String set) {
@@ -125,7 +127,7 @@ public class SetManager extends BaseModule {
 	 * @param set ........ The set the records belong to
 	 * @param recordId ... The identifier for the record you want to preview 
 	 *
-	 * @return A list of all the records in the set
+	 * @return The europeana preview for the specified record 
 	 */
 	static public String preview(String provider, String set, String recordId) {
 		String result = null;
@@ -134,6 +136,22 @@ public class SetManager extends BaseModule {
 		String path = buildPath(provider, set, Action.SET_MANAGER_PREVIEW, attributes);
 
 		result = ClientHTTP.send(path, ContentType.APPLICATION_XHTML_XML).getContent();
+		return(result);
+	}
+
+	/**
+	 * Returns the statistics for the specified provider and set
+	 * 
+	 * @param provider ... The provider of the records
+	 * @param set ........ The set the records belong to
+	 *
+	 * @return The statistics for the given provider and set
+	 */
+	static public Statistic statistic(String provider, String set) {
+		Statistic result = null;
+		String path = buildPath(provider, set, Action.SET_MANAGER_STATISTICS);
+
+		result = ClientJSON.readJSON(path, Statistic.class);
 		return(result);
 	}
 
@@ -278,6 +296,16 @@ public class SetManager extends BaseModule {
 			System.out.println("Calling Action Preview");
 			String result = preview(arguments.getProvider(), arguments.getSet(), arguments.getRecordId());
 			System.out.println("Result from preview: " + result + "\n");
+		}
+
+		if (arguments.isRunAll() || arguments.isRunStatistic()) {
+			System.out.println("Calling Action Statistic");
+			Statistic result = statistic(arguments.getProvider(), arguments.getSet());
+			if (result == null) {
+				System.out.println("Failed to retrieve the statistics\n");
+			} else {
+				System.out.println("Result from preview: " + result.toString() + "\n");
+			}
 		}
 	}
 }

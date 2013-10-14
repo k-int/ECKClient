@@ -48,6 +48,7 @@ public class CommandLineArguments {
 	private boolean runList = false;
 	private boolean runPreview = false;
 	private boolean runQuery = false;
+	private boolean runStatistic = false;
 	private boolean runStatus = false;
 	private boolean runUpdate = false;
 	private boolean runValidate = false;
@@ -222,6 +223,10 @@ public class CommandLineArguments {
 				case "-sourceFormat":
 					i++;
 					setSourceFormat(args[i]);
+					break;
+					
+				case "-statistic":
+					setRunStatistic(true);
 					break;
 					
 				case "-status":
@@ -569,6 +574,14 @@ public class CommandLineArguments {
 	
 	public void setRunQuery(boolean runQuery) {
 		this.runQuery = runQuery;
+	}
+	
+	public boolean isRunStatistic() {
+		return(runStatistic);
+	}
+	
+	public void setRunStatistic(boolean runStatistic) {
+		this.runStatistic = runStatistic;
 	}
 	
 	public boolean isRunStatus() {

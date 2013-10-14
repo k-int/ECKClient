@@ -26,6 +26,7 @@ public enum Action {
 	SET_MANAGER_COMMIT("commit"),
 	SET_MANAGER_LIST("list"),
 	SET_MANAGER_PREVIEW("preview"),
+	SET_MANAGER_STATISTICS("statistics"),
 	SET_MANAGER_STATUS("status"),
 	SET_MANAGER_UPDATE("update"),
 	SET_MANAGER_VALIDATE("validate"),
