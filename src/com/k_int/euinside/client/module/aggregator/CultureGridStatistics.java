@@ -8,13 +8,7 @@ import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.module.aggregator.cultureGrid.CultureGridStatistic;
 
 /**
- * This class fetches statistics from a CultureGrid instancethe europeana api
- * <ul>
- * <li>1. Fetches the list of Europenana providers</li>
- * <li>2. Fetches details about a specific provider</li>
- * <li>3. Fetches the datasets for a provider</li>
- * <li>4. Fetches details about a dataset</li>
- * </ul>
+ * This class fetches statistics from a CultureGrid instance
  */
 public class CultureGridStatistics extends BaseModule {
 
