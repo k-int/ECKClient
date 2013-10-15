@@ -53,7 +53,7 @@ public class CultureGridStatistic extends StatisticBase {
 		GenericStatistic result = new GenericStatistic();
 		copy(result);
 		result.setTotal(getAccepted() + getPending() + getRejected());
-		if (europeanaDataSets != null) {
+		if ((europeanaDataSets != null) && !europeanaDataSets.isEmpty()) {
 			ArrayList<GenericEuropeanaStatistic> europeanaStatistics = new ArrayList<GenericEuropeanaStatistic>();
 			result.setEuropeanaDataSets(europeanaStatistics);
 			for (CultureGridEuropeanaStatistic europeanaStatistic : getEuropeanaDataSets()) {
