@@ -89,6 +89,11 @@
   		<artifactId>jackson-dataformat-xml</artifactId>
   		<version>2.2.3</version>
   	</dependency>
+    <dependency>
+        <groupId>org.swordapp</groupId>
+        <artifactId>sword-common</artifactId>
+        <version>1.2-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   
   <repositories>

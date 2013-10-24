@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module.setmanager;
 
 import java.util.ArrayList;
 
+import com.k_int.euinside.client.module.push.DataPush;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -65,7 +66,7 @@ public class SetManager extends BaseModule {
 	/**
 	 * Retrieves the status for the default provider and default set
 	 * 
-	 * @return The status for the for the default provider and default set 
+	 * @return The status for the default provider and default set
 	 */
 	static public Status getStatus() {
 		return(getStatus(null, null, 0));
@@ -206,6 +207,18 @@ public class SetManager extends BaseModule {
 		return(Update.sendBytes(path, xmlData, zipData, deleteAll, recordsToDelete));
 	}
 
+    /**
+    * Pushes committed records to CultureGrid. Retrieves records based on set and provider.
+    * @param provider ...........The provider of the records
+    * @param set ................The set the records belong to
+    * @return A HttpResult contains summary  the result of request and error messages
+    */
+    static public HttpResult push(String provider, String set){
+        String path= buildPath( provider, set, Action.SET_MANAGER_DATAPUSH );
+        return(DataPush.push( path ));
+
+    }
+
 	/**
 	 * Returns the validation errors for the given set
 	 * 
@@ -309,5 +322,10 @@ public class SetManager extends BaseModule {
 				System.out.println(result.convertToGeneric().toString() + "\n");
 			}
 		}
+        if (arguments.isRunAll() || arguments.isRunPush()) {
+            System.out.println( "Calling Action DataPush" );
+            HttpResult result = push( arguments.getProvider(), arguments.getSet() );
+            System.out.println( "Result from datapush: " + result.toString() );
+        }
 	}
 }

@@ -33,6 +33,7 @@ public enum Action {
 	SET_MANAGER_STATUS("status"),
 	SET_MANAGER_UPDATE("update"),
 	SET_MANAGER_VALIDATE("validate"),
+    SET_MANAGER_DATAPUSH("push"),
 
 	// Actions used by the Statistics module
 	STATISTICS_QUERY("query"),

@@ -53,6 +53,7 @@ public class CommandLineArguments {
 	private boolean runStatus = false;
 	private boolean runUpdate = false;
 	private boolean runValidate = false;
+    private boolean runPush=false;
 	private String set = SetManager.SET_DEFAULT;
 	private Format sourceFormat = Format.LIDO;
 	private Format targetFormat = Format.EDM;
@@ -259,7 +260,9 @@ public class CommandLineArguments {
 				case "-validate":
 					setRunValidate(true);
 					break;
-
+                case "-push":
+                    setRunPush(true);
+                    break;
 				case "-wskey":
 					i++;
 					setWskey(args[i]);
@@ -269,7 +272,12 @@ public class CommandLineArguments {
 		BaseModule.setCoreBaseURL(coreBaseURL);
 		System.out.println("Using \"" + coreBaseURL + "\" as the base url");
 	}
-	
+	public boolean isRunPush(){
+        return runPush;
+    }
+    public void setRunPush(boolean push){
+        runPush=push;
+    }
 	public String getAccessionNumber() {
 		return(accessionNumber);
 	}
