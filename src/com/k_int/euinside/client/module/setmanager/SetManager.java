@@ -2,7 +2,6 @@ package com.k_int.euinside.client.module.setmanager;
 
 import java.util.ArrayList;
 
-import com.k_int.euinside.client.module.push.DataPush;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -215,7 +214,7 @@ public class SetManager extends BaseModule {
     */
     static public HttpResult push(String provider, String set){
         String path= buildPath( provider, set, Action.SET_MANAGER_DATAPUSH );
-        return(DataPush.push( path ));
+        return (ClientHTTP.send(path, ContentType.TEXT_HTML));
 
     }
 
