@@ -2,6 +2,7 @@ package com.k_int.euinside.client.module.setmanager;
 
 import java.util.ArrayList;
 
+import com.k_int.euinside.client.module.setmanager.push.DataPushResult;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -212,10 +213,12 @@ public class SetManager extends BaseModule {
     * @param set ................The set the records belong to
     * @return A HttpResult contains summary  the result of request and error messages
     */
-    static public HttpResult push(String provider, String set){
-        String path= buildPath( provider, set, Action.SET_MANAGER_DATAPUSH );
-        return (ClientHTTP.send(path, ContentType.TEXT_HTML));
-
+    static public DataPushResult push(String provider, String set, String swordLoc){
+        ArrayList<BasicNameValuePair> attr = new ArrayList<BasicNameValuePair>();
+        attr.add( new BasicNameValuePair( "swordURL",swordLoc ));
+//        String path= buildPath( provider, set, Action.SET_MANAGER_DATAPUSH,attr );
+        String path = "Set/default/default/push";  // Used for local testing.
+        return ClientJSON.readJSON( path, DataPushResult.class );
     }
 
 	/**
@@ -323,7 +326,7 @@ public class SetManager extends BaseModule {
 		}
         if (arguments.isRunAll() || arguments.isRunPush()) {
             System.out.println( "Calling Action DataPush" );
-            HttpResult result = push( arguments.getProvider(), arguments.getSet() );
+            DataPushResult result = push( arguments.getProvider(), arguments.getSet(), arguments.getSwordURL() );
             System.out.println( "Result from datapush: " + result.toString() );
         }
 	}

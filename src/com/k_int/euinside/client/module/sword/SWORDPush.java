@@ -1,7 +1,9 @@
 package com.k_int.euinside.client.module.sword;
 
+import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.sword.client.PostMessageByte;
 import com.k_int.euinside.client.module.sword.client.SWClient;
+import org.apache.commons.io.IOUtils;
 import org.purl.sword.base.DepositResponse;
 import org.purl.sword.base.SWORDErrorDocument;
 import org.purl.sword.base.SWORDException;
@@ -9,6 +11,9 @@ import org.purl.sword.base.ServiceDocument;
 import org.purl.sword.client.ClientConstants;
 import org.purl.sword.client.SWORDClientException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -34,6 +39,33 @@ public class SWORDPush {
         this.password = password;
         this.onBehalfOf = onBehalfOf;
         this.collectionId = collectionId;
+    }
+
+    public static void main( String[] args ) {
+        if(args[0].equals( "-help" )){
+            System.out.println("Arguments required: -swordURL -u -p -onBehalf -collectionId -filePath -recordType .");
+            System.exit( 0 );
+        }
+        CommandLineArguments arg = new CommandLineArguments( args );
+        SWORDPush swordPush = new SWORDPush( arg.getSwordURL(),
+                arg.getUsername(),arg.getPassword(),
+                arg.getOnBehalfOf(),arg.getCollectionId() );
+
+        String errors="No response received.";
+        try {
+            File rec = new File(arg.getFilePath());
+            FileInputStream fis = new FileInputStream( rec);
+            byte [] record = IOUtils.toByteArray( fis );
+//             if used with DPP sword we should only accept these two types
+//            String fileType = rec.getName().contains( ".zip" )? DATA_TYPE_ZIP : DATA_TYPE_XML;
+            errors = swordPush.pushData(record, arg.getRecordType(), rec.getName());
+        } catch ( IOException e ) {
+            System.out.print( "There was an error reading the provided file. " + e.getMessage() );
+        }
+
+        System.out.println("Successful deposits: "+swordPush.getSuccessful());
+        System.out.println("Failed deposits: "+swordPush.getFailed());
+        System.out.println("Error messages: "+errors);
     }
 
     /**
@@ -79,41 +111,7 @@ public class SWORDPush {
      */
 
     public String pushData( byte[] data, String dataType ) {
-	    if ( swordClient == null ) {
-            try {
-                initializeSWClient();
-            } catch ( SWORDClientException e ) {
-                return "Error initializing SWClient: " + e.getMessage();
-            } catch ( MalformedURLException e ) {
-                return "Error initializing SWClient: " + e.getMessage();
-            }
-	    }
-	
-	    StringBuilder result = new StringBuilder( "" );
-	
-	    try {
-            postMessage.setRecord( data );
-            postMessage.setFiletype( dataType );
-            DepositResponse response = swordClient.postFile( postMessage );
-            if ( response.getHttpResponse() == 201 || response.getHttpResponse() == 202 ) {
-                successCount++;
-            } else {
-                errorCount++;
-                try {
-                    SWORDErrorDocument errorDoc = response.getErrorDocument();
-                    result.append( " The Error URI is: " )
-                           .append( errorDoc.getErrorURI() )
-                           .append( " Summary is: " )
-                           .append( errorDoc.getSummary() )
-                           .append( "\n" );
-                } catch ( SWORDException se ) {
-                    result.append( se.getMessage() ).append( "\n" );
-                }
-            }
-	    } catch ( SWORDClientException e ) {
-            result.append( "There was an error: " ).append( e.getMessage() );
-	    }
-	    return result.toString();
+	    return pushData( data, dataType, null );
     }
 
     /**
@@ -136,36 +134,18 @@ public class SWORDPush {
                 return "Error initializing SWClient: " + e.getMessage();
             }
         }
-        StringBuilder result = new StringBuilder( "" );
+        StringBuilder errors = new StringBuilder( "" );
 
         try {
             postMessage.setRecord( data );
             postMessage.setFiletype( dataType );
             postMessage.setFileName( fileName );
             DepositResponse response = swordClient.postFile( postMessage );
-            if ( response.getHttpResponse() == 201 || response.getHttpResponse() == 202 ) {
-                successCount++;
-            } else {
-                errorCount++;
-                try {
-                    SWORDErrorDocument errorDoc = response.getErrorDocument();
-                    if ( fileName != null ) {    // On PostMessage this will cause error, as getFileName tries to parse filePath.
-                        result.append( "Error with file: " )
-                              .append( fileName );
-                    }
-                    result.append( " The Error URI is: " )
-                          .append( errorDoc.getErrorURI() )
-                          .append( " Summary is: " )
-                          .append( errorDoc.getSummary() )
-                          .append( "\n" );
-                } catch ( SWORDException se ) {
-                    result.append( se.getMessage() ).append( "\n" );
-                }
-            }
+            evaluateResponse( fileName, errors, response );
         } catch ( SWORDClientException e ) {
-            result.append( "There was an error: " ).append( e.getMessage() );
+            errors.append( "There was an error: " ).append( e.getMessage() );
         }
-        return result.toString();
+        return errors.toString();
 
     }
 
@@ -187,43 +167,38 @@ public class SWORDPush {
                 return "Error initializing SWClient: " + e.getMessage();
             }
         }
-        StringBuilder result = new StringBuilder( "" );
+        StringBuilder errors = new StringBuilder( "" );
 
         try {
             DepositResponse response = swordClient.postFile( customMessage );
-            if ( response.getHttpResponse() == 201 || response.getHttpResponse() == 202 ) {
-                successCount++;
-            } else {
-                errorCount++;
-                try {
-                    SWORDErrorDocument errorDoc = response.getErrorDocument();
-                    if ( customMessage.getFileName() != null ) {// On PostMessage this will cause error, as getFileName tries to parse filePath.
-                        result.append( "Error with file: " )
-                              .append( customMessage.getFileName() );
-                    }
-                    result.append( " The Error URI is: " )
-                          .append( errorDoc.getErrorURI() )
-                          .append( " Summary is: " )
-                          .append( errorDoc.getSummary() )
-                          .append( "\n" );
-                } catch ( SWORDException se ) {
-                    result.append( se.getMessage() ).append( "\n" );
-                }
-            }
+            evaluateResponse( customMessage.getFileName(), errors, response );
         } catch ( SWORDClientException e ) {
-            result.append( "There was an error: " ).append( e.getMessage() );
+            errors.append( "There was an error: " ).append( e.getMessage() );
         }
-        return result.toString();
+        return errors.toString();
     }
 
-    public int getSuccessful() {
-        return successCount;
+    private void evaluateResponse( String fileName, StringBuilder errors, DepositResponse response ) {
+        if ( response.getHttpResponse() == 201 || response.getHttpResponse() == 202 ) {
+            successCount++;
+        } else {
+            errorCount++;
+            try {
+                SWORDErrorDocument errorDoc = response.getErrorDocument();
+                if ( fileName != null ) {    // On PostMessage this will cause error, as getFileName tries to parse filePath.
+                    errors.append( "Error with file: " )
+                            .append( fileName );
+                }
+                errors.append( " The Error URI is: " )
+                        .append( errorDoc.getErrorURI() )
+                        .append( " Summary is: " )
+                        .append( errorDoc.getSummary() )
+                        .append( "\n" );
+            } catch ( SWORDException se ) {
+                errors.append( se.getMessage() ).append( "\n" );
+            }
+        }
     }
-
-    public int getFailed() {
-        return errorCount;
-    }
-
 
     /**
      * Creates a PostMessage, which contains all the information that will be included in the HTTP request.
@@ -333,4 +308,13 @@ public class SWORDPush {
     public void setPostMessage( PostMessageByte postMessage ) {
         this.postMessage = postMessage;
     }
+
+    public int getSuccessful() {
+        return successCount;
+    }
+
+    public int getFailed() {
+        return errorCount;
+    }
+
 }

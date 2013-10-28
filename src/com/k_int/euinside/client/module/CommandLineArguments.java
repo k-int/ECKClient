@@ -59,6 +59,13 @@ public class CommandLineArguments {
 	private Format targetFormat = Format.EDM;
 	private boolean useSemantika = true;
 	private String wskey = null;
+    private String swordLocation;
+    private String username;
+    private String password;
+    private String onBehalfOf;
+    private String collectionId;
+    private String filePath;
+
 
 	public CommandLineArguments(String [] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -267,6 +274,30 @@ public class CommandLineArguments {
 					i++;
 					setWskey(args[i]);
 					break;
+                case "-swordURL":
+                    i++;
+                    setSwordURL( args[i] );
+                    break;
+                case "-u":
+                    i++;
+                    setUsername( args[i] );
+                    break;
+                case "-p":
+                    i++;
+                    setPassword( args[i] );
+                    break;
+                case "-onBehalf":
+                    i++;
+                    setOnBehalfOf( args[i] );
+                    break;
+                case "-collectionId":
+                    i++;
+                    setCollectionId( args[i] );
+                    break;
+                case "-filePath":
+                    i++;
+                    setFilePath(args[i]);
+                    break;
 			}
 		}
 		BaseModule.setCoreBaseURL(coreBaseURL);
@@ -365,8 +396,47 @@ public class CommandLineArguments {
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
-	
-	public String getField() {
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername( String username ) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword( String password ) {
+        this.password = password;
+    }
+
+    public String getOnBehalfOf() {
+        return onBehalfOf;
+    }
+
+    public void setOnBehalfOf( String onBehalfOf ) {
+        this.onBehalfOf = onBehalfOf;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId( String collectionId ) {
+        this.collectionId = collectionId;
+    }
+
+    public String getFilePath(){
+        return filePath;
+    }
+    public void setFilePath(String filepath){
+        filePath=filepath;
+    }
+
+    public String getField() {
 		return(field);
 	}
 	
@@ -629,4 +699,12 @@ public class CommandLineArguments {
 	public void setRunValidate(boolean runValidate) {
 		this.runValidate = runValidate;
 	}
+
+    public String getSwordURL() {
+        return swordLocation;
+    }
+
+    public void setSwordURL( String swordLocation ) {
+        this.swordLocation = swordLocation;
+    }
 }
