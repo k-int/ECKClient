@@ -216,8 +216,7 @@ public class SetManager extends BaseModule {
     static public DataPushResult push(String provider, String set, String swordLoc){
         ArrayList<BasicNameValuePair> attr = new ArrayList<BasicNameValuePair>();
         attr.add( new BasicNameValuePair( "swordURL",swordLoc ));
-//        String path= buildPath( provider, set, Action.SET_MANAGER_DATAPUSH,attr );
-        String path = "Set/default/default/push";  // Used for local testing.
+        String path= buildPath( provider, set, Action.SET_MANAGER_DATAPUSH,attr );
         return ClientJSON.readJSON( path, DataPushResult.class );
     }
 
