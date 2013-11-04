@@ -18,6 +18,7 @@ import com.k_int.euinside.client.json.baseJSON;
 public class ValidationResultRecord extends baseJSON {
 	private static Log log = LogFactory.getLog(ValidationResultRecord.class);
 	private static final String RESULT_SUCCESS = "success";  
+	private static final String RESULT_SUCCESSFUL = "successful";  
 
 	@JacksonXmlProperty(isAttribute=true)  
 	private String id;
@@ -75,7 +76,7 @@ public class ValidationResultRecord extends baseJSON {
 	 * @param result If the valus is "success" then the validation was successful otherwise it failed
 	 */
 	public void setResult(String result) {
-		this.result = RESULT_SUCCESS.equalsIgnoreCase(result);
+		this.result = RESULT_SUCCESS.equalsIgnoreCase(result) || RESULT_SUCCESSFUL.equalsIgnoreCase(result);
 	}
 
 	@JsonSetter("Result")
