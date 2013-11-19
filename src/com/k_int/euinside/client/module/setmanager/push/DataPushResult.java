@@ -6,7 +6,9 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
-
+/**
+ * Class used to return the result of a data push operation in JSON format.
+ */
 public class DataPushResult extends baseJSON {
     private int failedDeposits;
     private int successfulDeposits;

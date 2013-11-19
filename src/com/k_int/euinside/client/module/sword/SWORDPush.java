@@ -24,14 +24,15 @@ public class SWORDPush {
     private String password;
     private String onBehalfOf;
     private String collectionId;
-    private ServiceDocument serviceDoc;
     private SWClient swordClient;
     private PostMessageByte postMessage;
     private int successCount = 0;
     private int errorCount = 0;
+    private int requestTimeout = 60000;
 
     public static final String DATA_TYPE_XML = "application/xml";
     public static final String DATA_TYPE_ZIP = "application/zip";
+    public static final String PACKAGING_PEOPLES_RECORDS= "http://www.peoplesnetwork.gov.uk/sword-types/peoplesrecord-zip";
 
     public SWORDPush( String serverLoc, String username, String password, String onBehalfOf, String collectionId ) {
         this.serverLoc = serverLoc;
@@ -42,30 +43,30 @@ public class SWORDPush {
     }
 
     public static void main( String[] args ) {
-        if(args[0].equals( "-help" )){
-            System.out.println("Arguments required: -swordURL -u -p -onBehalf -collectionId -filePath -recordType .");
+        if ( args[0].equals( "-help" ) ) {
+            System.out.println( "Arguments required: -swordURL -u -p -onBehalf -collectionId -filePath -recordType ." );
             System.exit( 0 );
         }
         CommandLineArguments arg = new CommandLineArguments( args );
         SWORDPush swordPush = new SWORDPush( arg.getSwordURL(),
-                arg.getUsername(),arg.getPassword(),
-                arg.getOnBehalfOf(),arg.getCollectionId() );
+                arg.getUsername(), arg.getPassword(),
+                arg.getOnBehalfOf(), arg.getCollectionId() );
 
-        String errors="No response received.";
+        String errors = "No response received.";
         try {
-            File rec = new File(arg.getFilePath());
-            FileInputStream fis = new FileInputStream( rec);
-            byte [] record = IOUtils.toByteArray( fis );
+            File rec = new File( arg.getFilePath() );
+            FileInputStream fis = new FileInputStream( rec );
+            byte[] record = IOUtils.toByteArray( fis );
 //             if used with DPP sword we should only accept these two types
 //            String fileType = rec.getName().contains( ".zip" )? DATA_TYPE_ZIP : DATA_TYPE_XML;
-            errors = swordPush.pushData(record, arg.getRecordType(), rec.getName());
+            errors = swordPush.pushData( record, arg.getRecordType(), rec.getName() );
         } catch ( IOException e ) {
             System.out.print( "There was an error reading the provided file. " + e.getMessage() );
         }
 
-        System.out.println("Successful deposits: "+swordPush.getSuccessful());
-        System.out.println("Failed deposits: "+swordPush.getFailed());
-        System.out.println("Error messages: "+errors);
+        System.out.println( "Successful deposits: " + swordPush.getSuccessful() );
+        System.out.println( "Failed deposits: " + swordPush.getFailed() );
+        System.out.println( "Error messages: " + errors );
     }
 
     /**
@@ -75,7 +76,11 @@ public class SWORDPush {
      * @return If successful, the SWORDClient will be returned.
      */
     public SWClient initializeSWClient() throws SWORDClientException, MalformedURLException {
+
         if ( swordClient != null ) return swordClient;
+        serverLoc=serverLoc.trim();
+        if ( !serverLoc.endsWith( "/" ) ) serverLoc+=( "/" );
+        if ( !serverLoc.startsWith( "http://" ) ) serverLoc = "http://" + serverLoc;
 
         String swordLocation = serverLoc + collectionId;
         SWClient swordClient = new SWClient();
@@ -91,12 +96,13 @@ public class SWORDPush {
             swordClient.clearCredentials();
         }
 
-        // get the service document. This will give some parameters asked for deposit
-        serviceDoc = swordClient.getServiceDocument( serverLoc + "servicedocument", onBehalfOf );
+//        get the service document. This describes the sword server. We could use this to set attributes like useMD5, noOp etc.
+//        serviceDoc = swordClient.getServiceDocument( serverLoc + "servicedocument", onBehalfOf );
 
+        swordClient.setSocketTimeout( requestTimeout );
         this.swordClient = swordClient;
         // A default post message. Data will be added during pushData procedure.
-        postMessage = createMessage( swordLocation, onBehalfOf, serviceDoc );
+        postMessage = createMessage( swordLocation, onBehalfOf, null );
 
         return swordClient;
     }
@@ -111,20 +117,21 @@ public class SWORDPush {
      */
 
     public String pushData( byte[] data, String dataType ) {
-	    return pushData( data, dataType, null );
+        return pushData( data, dataType, null );
     }
+
 
     /**
      * Push data to the SWORD server, using the details provided in SWORDPush constructor.
-     * A default PostMessage is used, including data, and dataType provided.
+     * A default PostMessage is used, including data, dataType and package format provided.
      *
      * @param data     A byte array that will be pushed to the SWORD server
      * @param dataType The type of data within byte array. dpp SWORD server accepts xml and zip.
-     * @param fileName Name of the file being deposited. Used to identify which records return each error.
+     * @param packageFormat The packaging format of the data.
      * @return A String representation of any errors that occurred during the push process.
      */
 
-    public String pushData( byte[] data, String dataType, String fileName ) {
+    public String pushData( byte[] data, String dataType, String packageFormat ) {
         if ( swordClient == null ) {
             try {
                 initializeSWClient();
@@ -139,9 +146,9 @@ public class SWORDPush {
         try {
             postMessage.setRecord( data );
             postMessage.setFiletype( dataType );
-            postMessage.setFileName( fileName );
+            postMessage.setFormatNamespace( packageFormat );
             DepositResponse response = swordClient.postFile( postMessage );
-            evaluateResponse( fileName, errors, response );
+            evaluateResponse( errors, response );
         } catch ( SWORDClientException e ) {
             errors.append( "There was an error: " ).append( e.getMessage() );
         }
@@ -171,24 +178,21 @@ public class SWORDPush {
 
         try {
             DepositResponse response = swordClient.postFile( customMessage );
-            evaluateResponse( customMessage.getFileName(), errors, response );
+            evaluateResponse( errors, response );
         } catch ( SWORDClientException e ) {
             errors.append( "There was an error: " ).append( e.getMessage() );
         }
         return errors.toString();
     }
 
-    private void evaluateResponse( String fileName, StringBuilder errors, DepositResponse response ) {
+    private void evaluateResponse(StringBuilder errors, DepositResponse response ) {
         if ( response.getHttpResponse() == 201 || response.getHttpResponse() == 202 ) {
             successCount++;
         } else {
             errorCount++;
             try {
                 SWORDErrorDocument errorDoc = response.getErrorDocument();
-                if ( fileName != null ) {    // On PostMessage this will cause error, as getFileName tries to parse filePath.
-                    errors.append( "Error with file: " )
-                            .append( fileName );
-                }
+
                 errors.append( " The Error URI is: " )
                         .append( errorDoc.getErrorURI() )
                         .append( " Summary is: " )
@@ -203,24 +207,17 @@ public class SWORDPush {
     /**
      * Creates a PostMessage, which contains all the information that will be included in the HTTP request.
      * SWORD library formats these information to be read by a SWORD server.
-     *
-     * @param location
-     * @param onBehalfOf
-     * @param serviceDoc
-     * @return
      */
     private PostMessageByte createMessage( String location, String onBehalfOf, ServiceDocument serviceDoc ) {
 
         PostMessageByte message = new PostMessageByte();
         message.setDestination( location );
-        message.setVerbose( serviceDoc.getService().isVerbose() );
+        message.setVerbose( true );    // provide detailed log
         message.setOnBehalfOf( onBehalfOf );
-        message.setNoOp( serviceDoc.getService().isNoOp() );
-        message.setUserAgent( ClientConstants.SERVICE_NAME );  // this should be edited.
-
-        // Not sure about following parameters.
-//          message.setUseMD5(false);
-//          message.setChecksumError(false);   True if the item should include a checksum error.
+        message.setUserAgent( "ECK SWORD Client" );
+        message.setNoOp( false );        //noOp means the deposit is simulated and wont actually happen.
+        message.setUseMD5(false);
+        message.setChecksumError(false);  // True if the item should include a checksum error.
         message.setCorruptRequest( false );  // True if the item should corrupt the POST header.
 
         return message;
@@ -316,5 +313,11 @@ public class SWORDPush {
     public int getFailed() {
         return errorCount;
     }
+    public void setRequestTimeout(int time){
+        requestTimeout=time;
+        if(swordClient!=null){
+            swordClient.setSocketTimeout( time );
+        }
+    }
 
-}
+} 
