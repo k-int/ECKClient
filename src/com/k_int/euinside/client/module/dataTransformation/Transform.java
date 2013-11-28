@@ -156,6 +156,13 @@ public class Transform extends BaseModule {
 	}
 	
 	/**
+	 * For some reason grails is selecting the wrong static method, so have created another method with a different name, that just calls the original method
+	 */
+	static public byte [] transformWait1(String provider, String batch, Format sourceFormat, Format targetFormat, byte[] xmlRecord) {
+		return(transformWait(provider, batch, sourceFormat, targetFormat, xmlRecord));
+	}
+	
+	/**
 	 * Sends the supplied xml or xip file to the DataMapping module
 	 *  
 	 * @param provider A code for the provider of the data
