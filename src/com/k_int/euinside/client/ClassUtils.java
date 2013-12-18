@@ -65,7 +65,13 @@ public class ClassUtils {
 							int count = 0;
 							for (Object listItem : (List<?>)value) {
 								outputString(buffer, fieldName + "[" + count + "]", null, indent);
-								buffer.append(((ClassUtilsToString)listItem).toString(indent + 1));
+								if (listItem instanceof ClassUtilsToString) {
+									buffer.append(((ClassUtilsToString)listItem).toString(indent + 1));
+								} else {
+									indentString(buffer, indent + 1);
+									buffer.append(listItem.toString());
+									buffer.append("\n");
+								}
 								count++;
 							}
 						} else {

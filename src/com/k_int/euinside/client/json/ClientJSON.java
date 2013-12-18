@@ -58,25 +58,40 @@ public class ClientJSON extends BaseClient {
 	 * 
 	 * @return An instance of the specified class or null if the json was not in the correct format for this class or there was an http error
 	 */
+	static public <T> T readJSONfullpath(String path, Class<T> resultType) {
+		T result = null;
+		try {
+			log.debug("Calling URL: " + path);
+			URL url = new URL(path);
+			result = mapper.readValue(url, resultType);
+		} catch (MalformedURLException e) {
+			log.error("Malformed URL: \"" + path + "\"", e);
+		} catch (JsonParseException e) {
+			log.error("Exception parsing JSON from url: \"" + path + "\"", e);
+		} catch (JsonMappingException e) {
+			log.error("Exception mapping JSON from URL: \"" + path + "\"", e);
+		} catch (IOException e) {
+			log.error("IOException reading JSON from URL: \"" + path + "\"", e);
+		}
+		return(result);
+	}
+
+	/**
+	 * Takes a url / path and performs a HTTP GET operation and turns the resulting json string into instances of the specified class
+	 * This method calls buildURL in order to obtain the full url, before calling readJSONfullpath
+	 * 
+	 * @param path The url / path that we need to perform the http get against to obtain the json
+	 * @param resultType The class that the json string needs to be interpreted as
+	 * 
+	 * @return An instance of the specified class or null if the json was not in the correct format for this class or there was an http error
+	 */
 	static public <T> T readJSON(String path, Class<T> resultType) {
 		T result = null;
 		if (getCoreBaseURL() == null) {
 			log.error("The url to the ECKCore module has not been set (coreBaseURL)");
 		} else {
 			String fullPath = buildURL(path);
-			try {
-				log.debug("Calling URL: " + fullPath);
-				URL url = new URL(fullPath);
-				result = mapper.readValue(url, resultType);
-			} catch (MalformedURLException e) {
-				log.error("Malformed URL: \"" + fullPath + "\"", e);
-			} catch (JsonParseException e) {
-				log.error("Exception parsing JSON from url: \"" + fullPath + "\"", e);
-			} catch (JsonMappingException e) {
-				log.error("Exception mapping JSON from URL: \"" + fullPath + "\"", e);
-			} catch (IOException e) {
-				log.error("IOException reading JSON from URL: \"" + fullPath + "\"", e);
-			}
+			result = readJSONfullpath(fullPath, resultType);
 		}	
 		return(result);
 	}

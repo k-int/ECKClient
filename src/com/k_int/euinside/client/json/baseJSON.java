@@ -12,6 +12,8 @@ import org.apache.commons.logging.Log;
  */
 public abstract class baseJSON extends ClassUtilsToString {
 
+	private boolean logUnknownFields = true;
+			
 	/**
 	 * Retrieves the logger for the class being deserialised so that the logging information 
 	 * 
@@ -19,6 +21,10 @@ public abstract class baseJSON extends ClassUtilsToString {
 	 */
 	abstract protected Log getLogger();
 
+	protected void setLogUnknownFields(boolean logUnknownFields) {
+		this.logUnknownFields = logUnknownFields;
+	}
+	
 	/**
 	 * Captures any fields that do not have an appropriate setter and reports it to the log file
 	 * This will stop the exception being thrown when it cannot find a setter
@@ -28,7 +34,9 @@ public abstract class baseJSON extends ClassUtilsToString {
 	 */
 	@JsonAnySetter
 	public void setUnknownField(String fieldName, Object value) {
-		getLogger().info("JSON, field ignored: \"" + fieldName + "\", value: \"" + value.toString() + "\"");
+		if (logUnknownFields) {
+			getLogger().info("JSON, field ignored: \"" + fieldName + "\", value: \"" + value.toString() + "\"");
+		}
 	}
 
 	@Override

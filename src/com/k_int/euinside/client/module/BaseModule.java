@@ -1,5 +1,7 @@
 package com.k_int.euinside.client.module;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -15,6 +17,8 @@ public class BaseModule {
 
 	static public String PATH_SEPARATOR = "/";
 	static public String QUERY_START = "?";
+	static public String ATTRIBUTE_EQUALS = "=";
+	static public String ATTRIBUTE_SEPARATOR = "&";
 
 	/**
 	 * Retrieves the ECKCore base URL
@@ -72,16 +76,49 @@ public class BaseModule {
 		if (modulePath != null) {
 			path += modulePath;
 		}
+		path = buildURL(path, attributes);
+		return(path);
+	}
+
+	/**
+	 * Builds up the URL given the specified attributes
+	 *  
+	 * @param baseURL The url the attributes need appending to
+	 * @param attributes The attributes that need adding tot he url
+	 * 
+	 * @return The desired url
+	 */
+	static public String buildURL(String baseURL, ArrayList<BasicNameValuePair> attributes){
+		String url = baseURL;
 		
 		if (attributes != null) {
 			String paramString = URLEncodedUtils.format(attributes, StandardCharsets.UTF_8);
 			if ((paramString != null) && !paramString.isEmpty()) {
-				path += QUERY_START + paramString;
+				url += QUERY_START + paramString;
 			}
 		}
-		return(path);
+		return(url);
 	}
-
+	
+	/**
+	 * Builds an attribute for the query part of the url 
+	 * 
+	 * @param attribute The attribute name
+	 * @param value The value of the attribute, this will be URL encoded
+	 * @param addSeparator true if we need to add the attribute separator at the beginning of the string
+	 * 
+	 * @return A string containing the attribute and value that can be added to the query part of the url
+	 */
+	static public String buildAttribute(Attribute attribute, String value, boolean addSeparator) {
+		String result = (addSeparator ? ATTRIBUTE_SEPARATOR : "");
+		try {
+			result += attribute.getName() + ATTRIBUTE_EQUALS + URLEncoder.encode(value, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// Ignore these exceptions as they should not occur
+		}
+		return(result);
+	}
+	
 	/**
 	 * Parses the command line arguments for testing the modules
 	 * 

@@ -13,6 +13,7 @@ public abstract class EuropeanaResult extends baseJSON {
 	private String error;
 	private Long statsStartTime;
 	private Long statsDuration;
+	private Integer requestNumber;
 	private Integer itemsCount;
 	private Integer totalResults;
 
@@ -122,6 +123,24 @@ public abstract class EuropeanaResult extends baseJSON {
 	 */
 	public void setStatsDuration(Long statsDuration) {
 		this.statsDuration = statsDuration;
+	}
+
+	/**
+	 * Retrieves the number of requests that have been made by this apikey in the last 24 hours
+	 * 
+	 * @return The number of requests made by the apikey in the last 24 hours
+	 */
+	public Integer getRequestNumber() {
+		return(requestNumber);
+	}
+
+	/**
+	 * Sets the number of requests made by this api key in the last 24 hours
+	 * 
+	 * @param requestNumber The number of requests made by this api key in the last 24 hours
+	 */
+	public void setRequestNumber(Integer requestNumber) {
+		this.requestNumber = requestNumber;
 	}
 
 	/**

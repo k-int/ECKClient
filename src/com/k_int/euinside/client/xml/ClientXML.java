@@ -2,8 +2,16 @@ package com.k_int.euinside.client.xml;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.ctc.wstx.stax.WstxInputFactory;
+import com.ctc.wstx.stax.WstxOutputFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import com.k_int.euinside.client.HttpResult;
@@ -18,14 +26,17 @@ import com.k_int.euinside.client.MappingClient;
  * All methods return class instances of the specified type if the xml is of the correct format. 
  */
 public class ClientXML extends MappingClient {
+	private static Log log = LogFactory.getLog(ClientXML.class);
 
 	private static ClientXML workerObject = null;
 	private static XmlMapper mapper = null;
 	
 	static {
 		workerObject = new ClientXML();
-		mapper = new XmlMapper();
+		XmlFactory factory = new XmlFactory(new WstxInputFactory(), new WstxOutputFactory());
+		mapper = new XmlMapper(factory);
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		mapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
 	}
 
 	@Override
@@ -72,5 +83,17 @@ public class ClientXML extends MappingClient {
 			result = readXMLString(httpResult.getContent(), resultType);
 		}
 		return(result);
+	}
+	
+	static public String writeXML(Object object) {
+		String xml = null;
+		if (object != null) {
+			try {
+				xml = mapper.writeValueAsString(object);
+			} catch (JsonProcessingException e) {
+				log.error("JsonProcessingException writing xml string: \"" + object.toString() + "\"", e);
+			}
+		}
+		return(xml);
 	}
 }
