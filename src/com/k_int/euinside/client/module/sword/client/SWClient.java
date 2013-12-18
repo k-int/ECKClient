@@ -327,7 +327,7 @@ private SwordValidationInfo lastUnmarshallInfo;
 
 /**
  *
- * @return
+ * @return The sword validation information 
  */
 public SwordValidationInfo getLastUnmarshallInfo()
 {
@@ -338,8 +338,9 @@ public SwordValidationInfo getLastUnmarshallInfo()
  * Post a file to the server. The different elements of the post are encoded
  * in the specified message.
  *
- * @param msg
- *            The message that contains the post information.
+ * @param msg The message that contains the post information.
+ *
+ * @return The response from the server 
  *
  * @throws SWORDClientException
  *             if there is an error during the post operation.
