@@ -15,7 +15,9 @@ public enum Action {
 	DEFINITION_PROFILES("profiles"),
 
 	// Actions used by Europeana
+	EUROPEANA_DATASET("dataset"),
 	EUROPEANA_DATASETS("datasets"),
+	EUROPEANA_PROVIDER("provider"),
 	EUROPEANA_PROVIDERS("providers"),
 
 	// Actions used by PID Generate

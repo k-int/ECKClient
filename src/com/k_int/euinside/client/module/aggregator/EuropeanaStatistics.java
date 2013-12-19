@@ -6,6 +6,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.module.Action;
+import com.k_int.euinside.client.module.Attribute;
 import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
@@ -36,7 +37,7 @@ public class EuropeanaStatistics extends BaseModule {
 	 * @return The path appropriate for these parameters
 	 */
 	private static String buildPath(Action action, String wskey) {
-		return(buildPath(action, wskey, null, false));		
+		return(buildPath(action, wskey, null, null));		
 	}
 	
 	/**
@@ -44,20 +45,22 @@ public class EuropeanaStatistics extends BaseModule {
 	 * 
 	 * @param action The eueopeana action that is being performed
 	 * @param wskey The wskey that identifies the caller to europeana
-	 * @param identifier The identifier for this action
+	 * @param secondaryAction If not null a secondary action needs to be performed
 	 * @param isIdentifierProviderId true if the identifier represents a provider identifier
 	 * 
 	 * @return The path appropriate for these parameters
 	 */
-	private static String buildPath(Action action, String wskey, String identifier, boolean isIdentifierProviderId) {
+	private static String buildPath(Action action, String wskey, String identifier, Action secondaryAction) {
+		String path = PATH_SEPARATOR + action.getName();
 		ArrayList<BasicNameValuePair> attributes = new ArrayList<BasicNameValuePair>();
-		attributes.add(new BasicNameValuePair("wskey", wskey));
-		if (identifier == null) {
-			return(buildPath(Module.EUROPEANA, PATH_SEPARATOR + action.getName() + JSON_POSTFIX, attributes));
-		} else {
-			attributes.add(new BasicNameValuePair("id", identifier));
-			return(buildPath(Module.EUROPEANA, PATH_SEPARATOR + action.getName() + PATH_SEPARATOR + (isIdentifierProviderId ? "provider_id" : "dataset_id") + JSON_POSTFIX, attributes));		
+		attributes.add(new BasicNameValuePair(Attribute.WSKEY.getName(), wskey));
+		if (identifier != null) {
+			path += PATH_SEPARATOR + identifier;
+			if (secondaryAction != null) {
+				path += PATH_SEPARATOR + secondaryAction.getName();
+			}
 		}
+		return(buildPath(Module.EUROPEANA, path + JSON_POSTFIX, attributes));
 	}
 	
 	/** 
@@ -80,7 +83,7 @@ public class EuropeanaStatistics extends BaseModule {
 	 * @return The details for the specified provider 
 	 */
 	static public EuropeanaProviderResult getProvider(String wskey, String providerId) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDERS, wskey, providerId, true), EuropeanaProviderResult.class));
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDER, wskey, providerId, null), EuropeanaProviderResult.class));
 	}
 
 	/** 
@@ -92,7 +95,7 @@ public class EuropeanaStatistics extends BaseModule {
 	 * @return The details of the data sets for the specified provider 
 	 */
 	static public EuropeanaDataSetResult getProviderDataSets(String wskey, String providerId) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASETS, wskey, providerId, true), EuropeanaDataSetResult.class));
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_PROVIDER, wskey, providerId, Action.EUROPEANA_DATASETS), EuropeanaDataSetResult.class));
 	}
 
 	/** 
@@ -104,7 +107,7 @@ public class EuropeanaStatistics extends BaseModule {
 	 * @return The details for the specified data set 
 	 */
 	static public EuropeanaDataSetResult getDataSet(String wskey, String dataSetId) {
-		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASETS, wskey, dataSetId, false), EuropeanaDataSetResult.class));
+		return(ClientJSON.readJSON(buildPath(Action.EUROPEANA_DATASET, wskey, dataSetId, null), EuropeanaDataSetResult.class));
 	}
 
 	/** 

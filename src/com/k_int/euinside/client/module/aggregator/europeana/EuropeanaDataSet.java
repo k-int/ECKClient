@@ -12,9 +12,11 @@ import com.k_int.euinside.client.module.aggregator.generic.GenericStatistic;
  */
 public class EuropeanaDataSet extends EuropeanaItemResult {
 	private static Log log = LogFactory.getLog(EuropeanaDataSet.class);
+	private String provIdentifier;
 	private String status;
 	private Long publishedRecords;
 	private Long deletedRecords;
+	private String creationDate;
 
 	public EuropeanaDataSet() {
 	}
@@ -39,6 +41,23 @@ public class EuropeanaDataSet extends EuropeanaItemResult {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	/**
+	 * Retrieves the provider identifier
+	 * 
+	 * @return The provider identifier for the data set
+	 */
+	public String getProvIdentifier() {
+		return(provIdentifier);
+	}
+
+	/**
+	 * Sets the provider identifier
+	 * @param provIdentifier The provider identifer for the data set
+	 */
+	public void setProvIdentifier(String provIdentifier) {
+		this.provIdentifier = provIdentifier;
 	}
 
 	/**
@@ -81,6 +100,23 @@ public class EuropeanaDataSet extends EuropeanaItemResult {
 		}
 	}
 	
+	/**
+	 * Retrieves the creation date
+	 * 
+	 * @return The creation date of the data set
+	 */
+	public String getCreationDate() {
+		return(creationDate);
+	}
+
+	/**
+	 * Sets the Creation Date
+	 * @param creationDate The creation date for the data set
+	 */
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
+	}
+
 	/**
 	 * Converts this instance into a generic statistics result
 	 * 
