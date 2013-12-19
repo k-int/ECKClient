@@ -45,8 +45,8 @@ public class EuropeanaStatistics extends BaseModule {
 	 * 
 	 * @param action The eueopeana action that is being performed
 	 * @param wskey The wskey that identifies the caller to europeana
+	 * @param identifier Either the datset or provider id that you are interested in or null if interested in all records
 	 * @param secondaryAction If not null a secondary action needs to be performed
-	 * @param isIdentifierProviderId true if the identifier represents a provider identifier
 	 * 
 	 * @return The path appropriate for these parameters
 	 */
