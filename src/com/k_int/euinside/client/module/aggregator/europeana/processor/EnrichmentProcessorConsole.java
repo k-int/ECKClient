@@ -17,8 +17,8 @@ public class EnrichmentProcessorConsole extends EnrichmentProcessor {
 	}
 
 	@Override
-	public void start(Long totalRecords) {
-		System.out.println("Processing to start on " + totalRecords.toString() + " records");
+	public void start(Long totalRecords, Long startPosition) {
+		System.out.println("Processing to start on " + totalRecords.toString() + " records, starting at record " + startPosition.toString());
 	}
 
 	@Override

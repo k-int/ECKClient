@@ -110,11 +110,12 @@ public class EuropeanaDataEnrichments extends BaseModule {
 	 * 
 	 * @param collectionName The name of the collection as known by europeana
 	 * @param enrichmentProcessor The processor to be called when we have determined the enrichments
+	 * @param start Where to start processing records from in the result set
 	 * 
 	 */
-	private void getEnrichments(String collectionName, EnrichmentProcessor enrichmentProcessor) {
+	private void getEnrichments(String collectionName, EnrichmentProcessor enrichmentProcessor, long start) {
 		boolean initialiseProcessor = true;
-		Integer startPosition = new Integer(1);
+		Long startPosition = new Long((start < 1) ? 1 : start);
 		boolean moreRecords = true;
 		String searchURL;
 		
@@ -135,7 +136,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 				// Initialise the processor
 				if (initialiseProcessor) {
 					initialiseProcessor = false;
-					enrichmentProcessor.start(searchResults.getTotalResults());
+					enrichmentProcessor.start(searchResults.getTotalResults(), startPosition);
 				}
 				
 				// We have some hits to deal with, so loop through all the items
@@ -165,10 +166,11 @@ public class EuropeanaDataEnrichments extends BaseModule {
 	 * @param wskey The api key that is to be used when accessing the europeana api
 	 * @param collectionName The name of the collection as known by europeana
 	 * @param enrichmentProcessor The processor to be called when we have determined the enrichments
+	 * @param start Where to start processing records from in the result set
 	 * 
 	 */
-	static public void getEnrichments(String wskey, String collectionName, EnrichmentProcessor enrichmentProcessor) {
-		(new EuropeanaDataEnrichments(wskey)).getEnrichments(collectionName, enrichmentProcessor);
+	static public void getEnrichments(String wskey, String collectionName, EnrichmentProcessor enrichmentProcessor, long start) {
+		(new EuropeanaDataEnrichments(wskey)).getEnrichments(collectionName, enrichmentProcessor, start);
 	}
 	
 	/**
@@ -189,6 +191,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 		String wskey = arguments.getWskey();
 		String collection = arguments.getSet();
 		String europeanaIdentifier = arguments.getRecordId();
+		Integer offset = arguments.getOffset();
 		
 		if ((wskey == null) || wskey.isEmpty()) {
 			System.out.println("No wskey specified");
@@ -207,7 +210,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 			if ((collection == null) || collection.isEmpty() || collection.equals(SetManager.SET_DEFAULT)) {
 				System.out.println("Skipping fetching records for a collection as not set specified");
 			} else {
-				getEnrichments(wskey, collection, new EnrichmentProcessorConsole());
+				getEnrichments(wskey, collection, new EnrichmentProcessorConsole(), ((offset == null) ? 1 : offset.longValue()));
 			}
 		}
 	}
