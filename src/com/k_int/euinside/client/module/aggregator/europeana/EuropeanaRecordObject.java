@@ -24,6 +24,8 @@ public class EuropeanaRecordObject extends baseJSON {
 	private List<EuropeanaRecordProxy> proxies = new ArrayList<EuropeanaRecordProxy>();
 	private List<Map<String, Object>> timespans;
 	private List<String> year;
+	private Long timestampCreated;
+	private Long timestampUpdated;
 
 	/**
 	 * Constructor, This disables logging of unmapped fields
@@ -162,5 +164,41 @@ public class EuropeanaRecordObject extends baseJSON {
 	 */
 	public void setYear(List<String> year) {
 		this.year = year;
+	}
+
+	/**
+	 * Retrieves the timestamp of when the record was created
+	 * 
+	 * @return The timestamp for when the record was created
+	 */
+	public Long getTimestampCreated() {
+		return(timestampCreated);
+	}
+
+	/**
+	 * Sets the timestamp of when the record was created
+	 * 
+	 * @param timestampCreated Timestamp for when the record was created
+	 */
+	public void setTimestampCreated(Long timestampCreated) {
+		this.timestampCreated = timestampCreated;
+	}
+
+	/**
+	 * Retrieves the timestamp of when the record was updated
+	 * 
+	 * @return The timestamp for when the record was updated
+	 */
+	public Long getTimestampUpdated() {
+		return(timestampUpdated);
+	}
+
+	/**
+	 * Sets the timestamp of when the record was updated
+	 * 
+	 * @param timestampUpdated Timestamp for when the record was updated
+	 */
+	public void setTimestampUpdated(Long timestampUpdated) {
+		this.timestampUpdated = timestampUpdated;
 	}
 }

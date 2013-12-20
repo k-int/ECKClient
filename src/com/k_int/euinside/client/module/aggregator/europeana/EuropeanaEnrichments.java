@@ -28,6 +28,8 @@ public class EuropeanaEnrichments extends baseJSON {
 	private List<Map<String, Object>> concepts;
 	private List<Map<String, Object>> places;
 	private List<Map<String, Object>> timespans;
+	private Long timestampCreated;
+	private Long timestampUpdated;
 	private List<String> years;
 
 	/**
@@ -51,6 +53,8 @@ public class EuropeanaEnrichments extends baseJSON {
 			setIdentifiers(record.getProxies());
 			setPlaces(record.getPlaces());
 			setTimespans(record.getTimespans());
+			setTimestampCreated(record.getTimestampCreated());
+			setTimestampUpdated(record.getTimestampUpdated());
 			setYears(record.getYear());
 		}
 	}
@@ -196,6 +200,42 @@ public class EuropeanaEnrichments extends baseJSON {
 	 */
 	public void setTimespans(List<Map<String, Object>> timespans) {
 		this.timespans = timespans;
+	}
+
+	/**
+	 * Retrieves the timestamp of when the record was created
+	 * 
+	 * @return The timestamp for when the record was created
+	 */
+	public Long getTimestampCreated() {
+		return(timestampCreated);
+	}
+
+	/**
+	 * Sets the timestamp of when the record was created
+	 * 
+	 * @param timestampCreated Timestamp for when the record was created
+	 */
+	public void setTimestampCreated(Long timestampCreated) {
+		this.timestampCreated = timestampCreated;
+	}
+
+	/**
+	 * Retrieves the timestamp of when the record was updated
+	 * 
+	 * @return The timestamp for when the record was updated
+	 */
+	public Long getTimestampUpdated() {
+		return(timestampUpdated);
+	}
+
+	/**
+	 * Sets the timestamp of when the record was updated
+	 * 
+	 * @param timestampUpdated Timestamp for when the record was updated
+	 */
+	public void setTimestampUpdated(Long timestampUpdated) {
+		this.timestampUpdated = timestampUpdated;
 	}
 
 	/**
