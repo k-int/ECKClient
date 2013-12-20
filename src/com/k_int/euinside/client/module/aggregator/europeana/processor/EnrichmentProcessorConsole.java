@@ -15,4 +15,14 @@ public class EnrichmentProcessorConsole extends EnrichmentProcessor {
 		System.out.println("Enrichments:\n" + enrichments.toString() + "\n");
 		System.out.println("xml:\n" + enrichments.toXML() + "\n");
 	}
+
+	@Override
+	public void start(Long totalRecords) {
+		System.out.println("Processing to start on " + totalRecords.toString() + " records");
+	}
+
+	@Override
+	public void completed() {
+		System.out.println("Processing completed");
+	}
 }

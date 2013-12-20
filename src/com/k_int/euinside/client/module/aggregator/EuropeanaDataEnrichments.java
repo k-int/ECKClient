@@ -113,6 +113,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 	 * 
 	 */
 	private void getEnrichments(String collectionName, EnrichmentProcessor enrichmentProcessor) {
+		boolean initialiseProcessor = true;
 		Integer startPosition = new Integer(1);
 		boolean moreRecords = true;
 		String searchURL;
@@ -131,6 +132,12 @@ public class EuropeanaDataEnrichments extends BaseModule {
 
 			EuropeanaSearchResult searchResults = ClientJSON.readJSONfullpath(searchURL, EuropeanaSearchResult.class);
 			if (searchResults.isSuccess() && (searchResults.getItemsCount() > 0)) {
+				// Initialise the processor
+				if (initialiseProcessor) {
+					initialiseProcessor = false;
+					enrichmentProcessor.start(searchResults.getTotalResults());
+				}
+				
 				// We have some hits to deal with, so loop through all the items
 				for (EuropeanaSearchItem item : searchResults.getItems()) {
 					EuropeanaEnrichments enrichments = getEnrichments(item.getId());
@@ -145,6 +152,10 @@ public class EuropeanaDataEnrichments extends BaseModule {
 				// No point continuing as either we have come to the end of the result set or there is an error
 				moreRecords = false;
 			}
+		}
+		
+		if (!initialiseProcessor) {
+			enrichmentProcessor.completed();
 		}
 	}
 

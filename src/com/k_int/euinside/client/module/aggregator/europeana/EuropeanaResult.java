@@ -15,7 +15,7 @@ public abstract class EuropeanaResult extends baseJSON {
 	private Long statsDuration;
 	private Integer requestNumber;
 	private Integer itemsCount;
-	private Integer totalResults;
+	private Long totalResults;
 
 	/**
 	 * Retrieves the wskey that was used for the query
@@ -166,7 +166,7 @@ public abstract class EuropeanaResult extends baseJSON {
 	 * 
 	 * @return The total number of results for this action
 	 */
-	public Integer getTotalResults() {
+	public Long getTotalResults() {
 		return(totalResults);
 	}
 
@@ -175,7 +175,7 @@ public abstract class EuropeanaResult extends baseJSON {
 	 * 
 	 * @param totalResults The total number of results for this action
 	 */
-	public void setTotalResults(Integer totalResults) {
+	public void setTotalResults(Long totalResults) {
 		this.totalResults = totalResults;
 	}
 }
