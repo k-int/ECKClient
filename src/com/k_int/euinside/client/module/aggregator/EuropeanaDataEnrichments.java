@@ -144,7 +144,11 @@ public class EuropeanaDataEnrichments extends BaseModule {
 					EuropeanaEnrichments enrichments = getEnrichments(item.getId());
 					if (enrichments != null) {
 						// If they want us to continue they will return true
-						moreRecords = enrichmentProcessor.process(enrichments);
+						if (!enrichmentProcessor.process(enrichments)) {
+							// They do not want to continue processing, so we need to set the flag and jump out of the loop
+							moreRecords = false;
+							break;
+						}
 					}
 				}
 				
