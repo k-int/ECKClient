@@ -11,9 +11,10 @@ import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaEnrichment
 public class EnrichmentProcessorConsole extends EnrichmentProcessor {
 
 	@Override
-	public void process(EuropeanaEnrichments enrichments) {
+	public boolean process(EuropeanaEnrichments enrichments) {
 		System.out.println("Enrichments:\n" + enrichments.toString() + "\n");
 		System.out.println("xml:\n" + enrichments.toXML() + "\n");
+		return(true);
 	}
 
 	@Override

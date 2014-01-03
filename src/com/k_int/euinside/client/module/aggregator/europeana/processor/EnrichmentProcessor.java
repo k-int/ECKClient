@@ -19,8 +19,10 @@ public abstract class EnrichmentProcessor {
 	 * Allows processing of the enrichments that have been found
 	 * 
 	 * @param enrichments The enrichments added by europeana
+	 * 
+	 * @return true if we should carry on processing records
 	 */
-	abstract public void process(EuropeanaEnrichments enrichments);
+	abstract public boolean process(EuropeanaEnrichments enrichments);
 	
 	/**
 	 * Notifies the processor that we have completed processing the records

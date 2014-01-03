@@ -143,7 +143,8 @@ public class EuropeanaDataEnrichments extends BaseModule {
 				for (EuropeanaSearchItem item : searchResults.getItems()) {
 					EuropeanaEnrichments enrichments = getEnrichments(item.getId());
 					if (enrichments != null) {
-						enrichmentProcessor.process(enrichments);
+						// If they want us to continue they will return true
+						moreRecords = enrichmentProcessor.process(enrichments);
 					}
 				}
 				
