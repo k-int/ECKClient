@@ -193,10 +193,8 @@ public class SWORDPush {
             try {
                 SWORDErrorDocument errorDoc = response.getErrorDocument();
 
-                errors.append( " The Error URI is: " )
-                        .append( errorDoc.getErrorURI() )
-                        .append( " Summary is: " )
-                        .append( errorDoc.getSummary() )
+                errors.append( "Error: " )
+                        .append( errorDoc.getTitle() )
                         .append( "\n" );
             } catch ( SWORDException se ) {
                 errors.append( se.getMessage() ).append( "\n" );
