@@ -150,6 +150,7 @@ public class EuropeanaDataSet extends EuropeanaItemResult {
 		if (getPublishedRecords() != null) {
 			result.setPublishedRecords(getPublishedRecords());
 		}
+		result.setCreationDate(getCreationDate());
 		result.setIdentifier(getIdentifier());
 		result.setName(getName());
 		if (getDeletedRecords() != null) {

@@ -13,6 +13,7 @@ public class GenericEuropeanaStatistic extends baseJSON {
 	
 	private String identifier;
 	private String name;
+	private String creationDate;
 	private String status;
 	private Long publishedRecords;
 	private Long deletedRecords;
@@ -59,6 +60,24 @@ public class GenericEuropeanaStatistic extends baseJSON {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Retrieves the creation date for this dataset
+	 * 
+	 * @return The europeana creation date for this dataset
+	 */
+	public String getCreationDate() {
+		return(creationDate);
+	}
+
+	/**
+	 * Sets the creation date for this dataset
+	 * 
+	 * @param creationDate The creation date
+	 */
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	/**
