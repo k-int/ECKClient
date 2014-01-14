@@ -23,6 +23,7 @@ public class EuropeanaEnrichments extends baseJSON {
 	private static Log log = LogFactory.getLog(EuropeanaEnrichments.class);
 
 	private String europeanaIdentifier;
+	private String lidoRecID;
 	private List<String> identifiers;
 	private List<Map<String, Object>> agents;
 	private List<Map<String, Object>> concepts;
@@ -80,6 +81,24 @@ public class EuropeanaEnrichments extends baseJSON {
 	 */
 	public void setEuropeanaIdentifier(String europeanaIdentifier) {
 		this.europeanaIdentifier = europeanaIdentifier;
+	}
+
+	/**
+	 * Retrieves the lidoRecID
+	 * 
+	 * @return The lidoRecID
+	 */
+	public String getLidoRecID() {
+		return(lidoRecID);
+	}
+
+	/**
+	 * Sets the lidoRecID
+	 * 
+	 * @param lidoRecID The value to set the lidoRecID to
+	 */
+	public void setLidoRecID(String lidoRecID) {
+		this.lidoRecID = lidoRecID;
 	}
 
 	/**
