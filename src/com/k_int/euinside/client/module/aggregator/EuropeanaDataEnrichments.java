@@ -54,7 +54,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 		EuropeanaEnrichments enrichments = null;
 		ArrayList<BasicNameValuePair> attributes = new ArrayList<BasicNameValuePair>();
 		attributes.add(new BasicNameValuePair(Attribute.WSKEY.getName(), wskey));
-		String recordURL = buildPath(Module.AGGREGATOR, europeanaIdentifier + PATH_SEPARATOR + Action.AGGREGATOR_ENRICHMENT_RECORD.getName() + PATH_SEPARATOR + Aggregator.Europeana, attributes); 
+		String recordURL = buildPath(Module.AGGREGATOR, PATH_SEPARATOR + Aggregator.Europeana + PATH_SEPARATOR + Action.AGGREGATOR_ENRICHMENT_RECORD.getName() + europeanaIdentifier, attributes); 
 		EuropeanaRecord fullRecord = ClientJSON.readJSON(recordURL, EuropeanaRecord.class);
 		if (fullRecord != null) {
 			enrichments = new EuropeanaEnrichments(fullRecord.getObject());
@@ -107,7 +107,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 			attributes.add(new BasicNameValuePair(Attribute.ROWS.getName(), Integer.toString(rows)));
 			attributes.add(new BasicNameValuePair(Attribute.START.getName(), startPosition.toString()));
 			attributes.add(new BasicNameValuePair(Attribute.WSKEY.getName(), wskey));
-			searchURL = buildPath(Module.AGGREGATOR, PATH_SEPARATOR + "*" + PATH_SEPARATOR + collectionName + PATH_SEPARATOR + Action.AGGREGATOR_SEARCH.getName() + PATH_SEPARATOR + Aggregator.Europeana, attributes); 
+			searchURL = buildPath(Module.AGGREGATOR, PATH_SEPARATOR + Aggregator.Europeana + PATH_SEPARATOR + Action.AGGREGATOR_SEARCH.getName() + PATH_SEPARATOR + "*" + PATH_SEPARATOR + collectionName, attributes); 
 
 			EuropeanaSearchResult searchResults = ClientJSON.readJSON(searchURL, EuropeanaSearchResult.class);
 			if (searchResults.isSuccess() && (searchResults.getItemsCount() > 0)) {

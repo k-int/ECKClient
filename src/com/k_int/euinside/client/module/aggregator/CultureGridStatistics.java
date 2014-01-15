@@ -23,7 +23,7 @@ public class CultureGridStatistics extends BaseModule {
 	 * @return The path appropriate for these parameters
 	 */
 	private static String buildPath(Action action, String provider, String collection, String aggregator) {
-		return(buildPath(Module.AGGREGATOR, PATH_SEPARATOR + provider + PATH_SEPARATOR + collection + PATH_SEPARATOR + action.getName() + PATH_SEPARATOR + aggregator));
+		return(buildPath(Module.AGGREGATOR, PATH_SEPARATOR + aggregator + PATH_SEPARATOR + action.getName() + PATH_SEPARATOR + provider + PATH_SEPARATOR + collection));
 	}
 
 	/**
