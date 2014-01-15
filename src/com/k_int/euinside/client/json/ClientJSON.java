@@ -19,7 +19,7 @@ import com.k_int.euinside.client.BaseClient;
  * both methods return class instances of the specified type if the json is of the correct format. 
  */
 public class ClientJSON extends BaseClient {
-	private static Log log = LogFactory.getLog(ClientJSON.class);
+	private static final Log log = LogFactory.getLog(ClientJSON.class);
 
 	private static ObjectMapper mapper = null; 
 

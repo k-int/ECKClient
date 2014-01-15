@@ -31,4 +31,14 @@ public class EuropeanaSearchResult extends EuropeanaResult {
 	public void setItems(List<EuropeanaSearchItem> items) {
 		this.items = items;
 	}
+
+	/**
+	 * Converts this class to the generic search result class
+	 * 
+	 * @return The generic search result class
+	 */
+	public EuropeanaSearchResult convertToGeneric() {
+		// for the time being we will treat the europeana class as the generic search result class
+		return(this);
+	}
 }

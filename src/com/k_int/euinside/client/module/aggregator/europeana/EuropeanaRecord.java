@@ -34,4 +34,14 @@ public class EuropeanaRecord extends EuropeanaResult {
 	public void setObject(EuropeanaRecordObject object) {
 		this.object = object;
 	}
+
+	/**
+	 * Converts this class to the generic full record class
+	 * 
+	 * @return The generic full record class
+	 */
+	public EuropeanaRecord convertToGeneric() {
+		// for the time being we will treat the europeana class as the generic search result class
+		return(this);
+	}
 }

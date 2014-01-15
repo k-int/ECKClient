@@ -7,7 +7,7 @@ import com.k_int.euinside.client.json.baseJSON;
  *
  */
 public abstract class EuropeanaResult extends baseJSON {
-	private String apikey;
+	// Note: have specifically excluded the apikey, as it maybe added by the ECKCore and we dot want callers knowing what it was
 	private String action;
 	private boolean success;
 	private String error;
@@ -16,24 +16,6 @@ public abstract class EuropeanaResult extends baseJSON {
 	private Integer requestNumber;
 	private Integer itemsCount;
 	private Long totalResults;
-
-	/**
-	 * Retrieves the wskey that was used for the query
-	 * 
-	 * @return The wskey
-	 */
-	public String getApikey() {
-		return(apikey);
-	}
-
-	/**
-	 * Sets the wskey used for this result
-	 * 
-	 * @param apikey The wskey used to generate the results
-	 */
-	public void setApikey(String apikey) {
-		this.apikey = apikey;
-	}
 
 	/**
 	 * The action that was performed to generate the results

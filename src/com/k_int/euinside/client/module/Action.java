@@ -2,6 +2,8 @@ package com.k_int.euinside.client.module;
 
 public enum Action {
 	// Actions used by the aggregator service in the core module
+	AGGREGATOR_ENRICHMENT_RECORD("enrichmentRecord"),
+	AGGREGATOR_SEARCH("search"),
 	AGGREGATOR_STATISTICS("statistics"),
 	
 	// Actions used by the data mapping service

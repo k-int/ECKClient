@@ -19,6 +19,7 @@ public class BaseModule {
 	static public String QUERY_START = "?";
 	static public String ATTRIBUTE_EQUALS = "=";
 	static public String ATTRIBUTE_SEPARATOR = "&";
+	static public String JSON_POSTFIX = ".json";
 
 	/**
 	 * Retrieves the ECKCore base URL

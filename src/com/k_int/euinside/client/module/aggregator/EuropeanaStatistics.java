@@ -26,7 +26,6 @@ import com.k_int.euinside.client.module.setmanager.SetManager;
  * </ul>
  */
 public class EuropeanaStatistics extends BaseModule {
-	private static String JSON_POSTFIX = ".json";
 
 	/**
 	 * Builds a Europeana style path
