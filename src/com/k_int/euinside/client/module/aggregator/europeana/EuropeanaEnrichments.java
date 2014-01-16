@@ -29,8 +29,8 @@ public class EuropeanaEnrichments extends baseJSON {
 	private List<Map<String, Object>> concepts;
 	private List<Map<String, Object>> places;
 	private List<Map<String, Object>> timespans;
-	private Long timestampCreated;
-	private Long timestampUpdated;
+	private String timestampCreated;
+	private String timestampUpdated;
 	private List<String> years;
 
 	/**
@@ -113,26 +113,34 @@ public class EuropeanaEnrichments extends baseJSON {
 	}
 
 	/**
-	 * Sets the identifiers from the proxies
+	 * Sets the identifiers from the proxies or identifiers
 	 * 
-	 * @param proxies The proxies from where we retrieve the identifiers
+	 * @param proxiesOrIdentifiers The proxies or identifiers from where we retrieve the identifiers
 	 */
-	public void setIdentifiers(List<EuropeanaRecordProxy> proxies) {
+	@SuppressWarnings("unchecked")
+	public void setIdentifiers(List<?> proxiesOrIdentifiers) {
 		// Determine the identifiers
-		if (proxies != null) {
-			identifiers = new ArrayList<String>();
-			for (EuropeanaRecordProxy proxy : proxies) { 
-				Map<String, Object> proxyDcIdentifiers = proxy.getDcIdentifier(); 
-				if (proxyDcIdentifiers != null) {
-					Collection<Object> proxyIdentifiersCollection = proxyDcIdentifiers.values();
-					for (Object identifier : proxyIdentifiersCollection) {
-						if (identifier instanceof String) {
-							identifiers.add((String)identifier);
-						} else if (identifier instanceof ArrayList) {
-							@SuppressWarnings("unchecked")
-							List<String> identifiersList = (List<String>)identifier; 
-							for (String identifierList : identifiersList) {
-								identifiers.add(identifierList);
+		if ((proxiesOrIdentifiers != null) &&
+			!proxiesOrIdentifiers.isEmpty()) {
+			// We need to determine whether we are dealing with Strings or proxies
+			if (proxiesOrIdentifiers.get(0) instanceof String) {
+				// we are dealing with a list of strings
+				identifiers = (List<String>)proxiesOrIdentifiers;
+			} else {
+				// Must be dealing with proxies
+				identifiers = new ArrayList<String>();
+				for (EuropeanaRecordProxy proxy : (List<EuropeanaRecordProxy>)proxiesOrIdentifiers) { 
+					Map<String, Object> proxyDcIdentifiers = proxy.getDcIdentifier(); 
+					if (proxyDcIdentifiers != null) {
+						Collection<Object> proxyIdentifiersCollection = proxyDcIdentifiers.values();
+						for (Object identifier : proxyIdentifiersCollection) {
+							if (identifier instanceof String) {
+								identifiers.add((String)identifier);
+							} else if (identifier instanceof ArrayList) {
+								List<String> identifiersList = (List<String>)identifier; 
+								for (String identifierList : identifiersList) {
+									identifiers.add(identifierList);
+								}
 							}
 						}
 					}
@@ -226,7 +234,7 @@ public class EuropeanaEnrichments extends baseJSON {
 	 * 
 	 * @return The timestamp for when the record was created
 	 */
-	public Long getTimestampCreated() {
+	public String getTimestampCreated() {
 		return(timestampCreated);
 	}
 
@@ -235,7 +243,7 @@ public class EuropeanaEnrichments extends baseJSON {
 	 * 
 	 * @param timestampCreated Timestamp for when the record was created
 	 */
-	public void setTimestampCreated(Long timestampCreated) {
+	public void setTimestampCreated(String timestampCreated) {
 		this.timestampCreated = timestampCreated;
 	}
 
@@ -244,7 +252,7 @@ public class EuropeanaEnrichments extends baseJSON {
 	 * 
 	 * @return The timestamp for when the record was updated
 	 */
-	public Long getTimestampUpdated() {
+	public String getTimestampUpdated() {
 		return(timestampUpdated);
 	}
 
@@ -253,7 +261,7 @@ public class EuropeanaEnrichments extends baseJSON {
 	 * 
 	 * @param timestampUpdated Timestamp for when the record was updated
 	 */
-	public void setTimestampUpdated(Long timestampUpdated) {
+	public void setTimestampUpdated(String timestampUpdated) {
 		this.timestampUpdated = timestampUpdated;
 	}
 
@@ -284,5 +292,15 @@ public class EuropeanaEnrichments extends baseJSON {
 	 */
 	public String toXML() {
 		return(ClientXML.writeXML(this));
+	}
+
+	/**
+	 * Converts this class to the generic full record class
+	 * 
+	 * @return The generic full record class
+	 */
+	public EuropeanaEnrichments convertToGeneric() {
+		// This is the generic class, so no conversion required
+		return(this);
 	}
 }

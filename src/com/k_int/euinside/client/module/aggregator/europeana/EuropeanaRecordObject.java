@@ -7,6 +7,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.k_int.euinside.client.json.baseJSON;
 
 /**
@@ -24,8 +26,8 @@ public class EuropeanaRecordObject extends baseJSON {
 	private List<EuropeanaRecordProxy> proxies = new ArrayList<EuropeanaRecordProxy>();
 	private List<Map<String, Object>> timespans;
 	private List<String> year;
-	private Long timestampCreated;
-	private Long timestampUpdated;
+	private String timestampCreated;
+	private String timestampUpdated;
 
 	/**
 	 * Constructor, This disables logging of unmapped fields
@@ -171,7 +173,8 @@ public class EuropeanaRecordObject extends baseJSON {
 	 * 
 	 * @return The timestamp for when the record was created
 	 */
-	public Long getTimestampCreated() {
+	@JsonProperty(value="timestamp_created")
+	public String getTimestampCreated() {
 		return(timestampCreated);
 	}
 
@@ -180,7 +183,7 @@ public class EuropeanaRecordObject extends baseJSON {
 	 * 
 	 * @param timestampCreated Timestamp for when the record was created
 	 */
-	public void setTimestampCreated(Long timestampCreated) {
+	public void setTimestampCreated(String timestampCreated) {
 		this.timestampCreated = timestampCreated;
 	}
 
@@ -189,7 +192,8 @@ public class EuropeanaRecordObject extends baseJSON {
 	 * 
 	 * @return The timestamp for when the record was updated
 	 */
-	public Long getTimestampUpdated() {
+	@JsonProperty(value="timestamp_update")
+	public String getTimestampUpdated() {
 		return(timestampUpdated);
 	}
 
@@ -198,7 +202,7 @@ public class EuropeanaRecordObject extends baseJSON {
 	 * 
 	 * @param timestampUpdated Timestamp for when the record was updated
 	 */
-	public void setTimestampUpdated(Long timestampUpdated) {
+	public void setTimestampUpdated(String timestampUpdated) {
 		this.timestampUpdated = timestampUpdated;
 	}
 }
