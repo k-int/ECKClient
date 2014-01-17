@@ -47,16 +47,25 @@ public class EuropeanaEnrichments extends baseJSON {
 	public EuropeanaEnrichments(EuropeanaRecordObject record) {
 
 		if (record != null) {
+			// We need to get hold of the proxy record that defines the enrichments
+			List<String> potentialEnrichedAbouts = null;
+			for (EuropeanaRecordProxy proxy : record.getProxies()) {
+				if (proxy.getEuropeanaProxy()) {
+					// We have found the one we are after
+					potentialEnrichedAbouts = proxy.getPotentialEnrichedAbout();
+				}
+			}
+			
 			// Set the enrichments from the record
-			setAgents(record.getAgents());
-			setConcepts(record.getConcepts());
+			agents = mapFilterByAbout(record.getAgents(), potentialEnrichedAbouts);
+			concepts = mapFilterByAbout(record.getConcepts(), potentialEnrichedAbouts);
+			places = mapFilterByAbout(record.getPlaces(), potentialEnrichedAbouts);
+			timespans = mapFilterByAbout(record.getTimespans(), potentialEnrichedAbouts);
+			years = listFilterByAbout(record.getYear(), potentialEnrichedAbouts);
 			setEuropeanaIdentifier(record.getAbout());
 			setIdentifiers(record.getProxies());
-			setPlaces(record.getPlaces());
-			setTimespans(record.getTimespans());
 			setTimestampCreated(record.getTimestampCreated());
 			setTimestampUpdated(record.getTimestampUpdated());
-			setYears(record.getYear());
 		}
 	}
 
@@ -65,6 +74,56 @@ public class EuropeanaEnrichments extends baseJSON {
 		return(log);
 	}
 
+	private List<Map<String, Object>> mapFilterByAbout(List<Map<String, Object>> objectMaps, List<String> abouts) {
+		List<Map<String, Object>> result = null;
+		if ((abouts != null) &&  (objectMaps != null)) {
+			for (Map<String, Object> objectMap : objectMaps) {
+				String objectAbout = (String)objectMap.get("about");
+				if (objectAbout != null) {
+					boolean found = false;
+					if (abouts.contains(objectAbout)) {
+						found = true;
+					} else {
+						// Look to see if this is part of an isPartOf
+						for (Map<String, Object> objectMap1 : objectMaps) {
+							if (!found) {
+								@SuppressWarnings("unchecked")
+								Map<String, List<String>> objectIsPartOf = (Map<String, List<String>>)objectMap1.get("isPartOf");
+								if (objectIsPartOf != null) {
+									for (List<String> strings : objectIsPartOf.values()) {
+										found = strings.contains(objectAbout);
+									}
+								}
+							}
+						}
+					}
+					if (found) {
+						if (result == null) {
+							result = new ArrayList<Map<String, Object>>(); 
+						}
+						result.add(objectMap);
+					}
+				}
+			}
+		}
+		return(result);
+	}
+	
+	private List<String> listFilterByAbout(List<String> strings, List<String> abouts) {
+		List<String> result = null;
+		if ((abouts != null) && (strings != null)) {
+			for (String string : strings) {
+				if (abouts.contains(string)) {
+					if (result == null) {
+						result = new ArrayList<String>(); 
+					}
+					result.add(string);
+				}
+			}
+		}
+		return(result);
+	}
+	
 	/**
 	 * Retrieves the europeana identifier
 	 * 
