@@ -14,7 +14,6 @@ import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
 import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaEnrichments;
-import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaRecord;
 import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaSearchItem;
 import com.k_int.euinside.client.module.aggregator.europeana.EuropeanaSearchResult;
 import com.k_int.euinside.client.module.aggregator.europeana.processor.EnrichmentProcessor;
