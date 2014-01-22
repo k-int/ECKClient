@@ -55,10 +55,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 		ArrayList<BasicNameValuePair> attributes = new ArrayList<BasicNameValuePair>();
 		attributes.add(new BasicNameValuePair(Attribute.WSKEY.getName(), wskey));
 		String recordURL = buildPath(Module.AGGREGATOR, PATH_SEPARATOR + Aggregator.Europeana + PATH_SEPARATOR + Action.AGGREGATOR_ENRICHMENT_RECORD.getName() + europeanaIdentifier, attributes); 
-		EuropeanaRecord fullRecord = ClientJSON.readJSON(recordURL, EuropeanaRecord.class);
-		if (fullRecord != null) {
-			enrichments = new EuropeanaEnrichments(fullRecord.getObject());
-		}
+		enrichments = ClientJSON.readJSON(recordURL, EuropeanaEnrichments.class);
 		return(enrichments);
 	}
 	
