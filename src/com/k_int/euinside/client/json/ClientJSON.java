@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -12,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.k_int.euinside.client.BaseClient;
+import com.k_int.euinside.client.HttpResult;
 
 /**
  * The ClientJSON class handles json manipulation for us,
@@ -93,6 +96,23 @@ public class ClientJSON extends BaseClient {
 			String fullPath = buildURL(path);
 			result = readJSONfullpath(fullPath, resultType);
 		}	
+		return(result);
+	}
+
+	/**
+	 * Checks the result of the HttpResult and converts the content into an instance of the specified class
+	 * 
+	 * @param httpResult The http result object that we will obtain the xml from
+	 * @param resultType The type of the class that is to be generated
+	 *
+	 * @return An instance of the specified class if the json is correctly formatted
+	 */
+	static public <T> T readJSON(HttpResult httpResult, Class<T> resultType) {
+		T result = null;
+		if ((httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) ||
+		    (httpResult.getHttpStatusCode() == HttpServletResponse.SC_PRECONDITION_FAILED)) {
+			result = readJSONString(httpResult.getContent(), resultType);
+		}
 		return(result);
 	}
 }

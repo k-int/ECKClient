@@ -2,6 +2,8 @@ package com.k_int.euinside.client;
 
 import java.nio.charset.StandardCharsets;
 
+import org.apache.http.entity.ContentType;
+
 /**
  * The HttpResult contans the result of an http call
  */
@@ -9,6 +11,7 @@ public class HttpResult {
 	private Error callResult;
 	private int httpStatusCode;
 	private byte [] content;
+	private String contentType;
 
 	public HttpResult() {
 		callResult = Error.NONE;
@@ -78,6 +81,31 @@ public class HttpResult {
 	}
 	
 	/**
+	 * Retrieves the content type as returned from the server
+	 * 
+	 * @return The content type as returned by the server
+	 */
+	public String getContentType() {
+		return(contentType);
+	}
+
+	/**
+	 * Sets the content type returned by the server
+	 * 
+	 * @param content The content type of the the content
+	 */
+	public void setContentType(String contentType) {
+		// Not interested in the charset
+		if (contentType != null) {
+			this.contentType = contentType.replaceAll(";.*$", "").toLowerCase();
+		}
+	}
+	
+	public boolean isContentTypeJSON() {
+		return((contentType != null) && contentType.equals(ContentType.APPLICATION_JSON));
+	}
+	
+	/**
 	 * Formats the members of this class in a simple to view way
 	 * 
 	 * @return The formatted string
@@ -86,6 +114,7 @@ public class HttpResult {
 		String result = "Class: HttpResult:\n"; 
 		result += "\tcallResult: " + callResult + "\n";
 		result += "\tHhttpStatusCode: " + httpStatusCode + "\n";
+		result += "\tContent Type: " + ((contentType == null) ? "" : contentType) + "\n";
 		result += "\tContent: " + ((content == null) ? "" : content) + "\n";
 		return(result);
 	}

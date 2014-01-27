@@ -12,6 +12,7 @@ import com.k_int.euinside.client.module.Action;
 import com.k_int.euinside.client.module.BaseModule;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.Module;
+import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.xml.ClientXML;
 
 /**
@@ -95,7 +96,13 @@ public abstract class ValidateBase extends BaseModule {
 	 * @return The interpreted data returned form the server
 	 */
 	private ValidationResult mapHttpResultToErrors(HttpResult result) {
-		return(ClientXML.readXML(result, ValidationResult.class));
+		ValidationResult validationResult = null;
+		if (result.isContentTypeJSON()) {
+			validationResult = ClientJSON.readJSON(result, ValidationResult.class);
+		} else {
+			validationResult = ClientXML.readXML(result, ValidationResult.class);
+		}
+		return(validationResult);
 	}
 
 	/**

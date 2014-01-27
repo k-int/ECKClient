@@ -8,7 +8,7 @@ import com.k_int.euinside.client.module.Module;
  */
 public class ValidateSemantika extends ValidateBase {
 
-	static private final String DEFAULT_LIDO_PROFILE_FILENAME = "LidoValidationProfile_Semantika.xsd"; 
+	static private final String DEFAULT_LIDO_PROFILE_FILENAME = "LidoValidationProfile_Semantika.xml"; 
 
 	// Due to the base class being abstract, we need to instantiate an object and use it
 	// Using the one object for multiple calls is fine as there are no class members

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -265,6 +266,10 @@ public class ClientHTTP extends BaseClient {
 		            int httpStatusCode = response.getStatusLine().getStatusCode();
 	            	result.setContent(EntityUtils.toByteArray(resEntity));		            	
 		            result.setHttpStatusCode(httpStatusCode);
+		            Header contentType = resEntity.getContentType();
+		            if (contentType != null) {
+			            result.setContentType(contentType.getValue());
+		            }
 		            if ((httpStatusCode != HttpServletResponse.SC_OK) && (httpStatusCode != HttpServletResponse.SC_ACCEPTED)) {
 		            	result.setCallResult(Error.HTTP_ERROR);
 		            }
