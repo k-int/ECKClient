@@ -39,7 +39,6 @@ public class EuropeanaDataEnrichments extends BaseModule {
 	 * @param wskey The api key that is to be used when accessing the europeana api
 	 */
 	private EuropeanaDataEnrichments(String wskey) {
-		// We build up the tail of the record url here, so we do not have to do it for every record
 		this.wskey = wskey;
 	}
 	
@@ -49,7 +48,7 @@ public class EuropeanaDataEnrichments extends BaseModule {
 	 * @param europeanaIdentifier The identifier of the record
 	 * 
 	 */
-	public EuropeanaEnrichments getEnrichments(String europeanaIdentifier) {
+	private EuropeanaEnrichments getEnrichments(String europeanaIdentifier) {
 		EuropeanaEnrichments enrichments = null;
 		ArrayList<BasicNameValuePair> attributes = new ArrayList<BasicNameValuePair>();
 		attributes.add(new BasicNameValuePair(Attribute.WSKEY.getName(), wskey));
@@ -150,6 +149,19 @@ public class EuropeanaDataEnrichments extends BaseModule {
 	 */
 	static public void getEnrichments(String wskey, String collectionName, EnrichmentProcessor enrichmentProcessor, long start) {
 		(new EuropeanaDataEnrichments(wskey)).getEnrichments(collectionName, enrichmentProcessor, start);
+	}
+	
+	/**
+	 * Fetches the enrichments for an entire europeana collection
+	 * 
+	 * @param wskey The api key that is to be used when accessing the europeana api
+	 * @param collectionName The name of the collection as known by europeana
+	 * @param enrichmentProcessor The processor to be called when we have determined the enrichments
+	 * @param start Where to start processing records from in the result set
+	 * 
+	 */
+	static public void getEnrichments(String wskey, String collectionName, EnrichmentProcessor enrichmentProcessor, long start, int rows) {
+		(new EuropeanaDataEnrichments(wskey)).getEnrichments(collectionName, enrichmentProcessor, start, rows);
 	}
 	
 	/**

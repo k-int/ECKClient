@@ -10,6 +10,7 @@ public enum Attribute {
 	HISTORY_ITEMS("historyItems"),
 	ITEMS_PROCESSED("itemsProcessed"),
 	INSTITUTION_URL("institutionUrl"),
+	LIDO_REC_ID("lidoRecID"),
 	LIMIT("limit"),
 	NUMBER_FAILED("numberFailed"),
 	NUMBER_SUCCESSFUL("numberSuccessful"),

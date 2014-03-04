@@ -187,13 +187,16 @@ public abstract class ValidateBase extends BaseModule {
 		CommandLineArguments arguments = parseCommandLineArguments(args);
 		
 		if (!arguments.getFilenames().isEmpty()) {
-			ValidationResult result = send(arguments.getProvider(), arguments.getFilenames().get(0));
-	
-			if (result == null) {
-				System.out.println("Failed to validate file");
-			} else {
-				System.out.println("Result from validate");
-				System.out.println(result.toString());
+			for (String filename : arguments.getFilenames()) {
+				System.out.println("Validating file: " + filename);
+				ValidationResult result = send(arguments.getProvider(), filename);
+		
+				if (result == null) {
+					System.out.println("Failed to validate file");
+				} else {
+					System.out.println("Result from validate");
+					System.out.println(result.toString());
+				}
 			}
 		}
 		
