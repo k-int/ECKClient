@@ -59,7 +59,7 @@ public class EuropeanaStatistics extends BaseModule {
 				path += PATH_SEPARATOR + secondaryAction.getName();
 			}
 		}
-		return(buildPath(Module.EUROPEANA, path + JSON_POSTFIX, attributes));
+		return(buildPath(Module.EUROPEANA, path, attributes));
 	}
 	
 	/** 
