@@ -118,6 +118,23 @@ public class EuropeanaDataSet extends EuropeanaItemResult {
 	}
 
 	/**
+	 * Retrieves name of the data set (it used to be called name)
+	 * 
+	 * @return The name of the data set
+	 */
+	public String getEdmDatasetName() {
+		return(getName());
+	}
+
+	/**
+	 * Sets the Dataset Name (used to be called name)
+	 * @param edmDatasetName The name of the data set
+	 */
+	public void setEdmDatasetName(String edmDatasetName) {
+		setName(edmDatasetName);
+	}
+
+	/**
 	 * Converts this instance into a generic statistics result
 	 * 
 	 * @return A generic statistics object that represents this data
