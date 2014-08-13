@@ -15,6 +15,8 @@ public enum Attribute {
 	NUMBER_FAILED("numberFailed"),
 	NUMBER_SUCCESSFUL("numberSuccessful"),
 	OFFSET("offset"),
+	PARAMETER1("parameter1"),
+	PARAMETER2("parameter2"),
 	PROFILE("profile"),
 	QUERY("query"),
 	RECORD("record"),

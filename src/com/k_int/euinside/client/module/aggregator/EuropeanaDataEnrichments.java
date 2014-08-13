@@ -102,10 +102,13 @@ public class EuropeanaDataEnrichments extends BaseModule {
 			attributes.add(new BasicNameValuePair(Attribute.ROWS.getName(), Integer.toString(rows)));
 			attributes.add(new BasicNameValuePair(Attribute.START.getName(), startPosition.toString()));
 			attributes.add(new BasicNameValuePair(Attribute.WSKEY.getName(), wskey));
-			searchURL = buildPath(Module.AGGREGATOR, PATH_SEPARATOR + Aggregator.Europeana + PATH_SEPARATOR + Action.AGGREGATOR_SEARCH.getName() + PATH_SEPARATOR + "*" + PATH_SEPARATOR + collectionName, attributes); 
+
+			// Strictly speaking we should have the collection name as part of the url, but this causes problems if it has a forward slash
+			attributes.add(new BasicNameValuePair(Attribute.PARAMETER2.getName(), collectionName));
+			searchURL = buildPath(Module.AGGREGATOR, PATH_SEPARATOR + Aggregator.Europeana + PATH_SEPARATOR + Action.AGGREGATOR_SEARCH.getName() + PATH_SEPARATOR + "*", attributes); 
 
 			EuropeanaSearchResult searchResults = ClientJSON.readJSON(searchURL, EuropeanaSearchResult.class);
-			if (searchResults.isSuccess() && (searchResults.getItemsCount() > 0)) {
+			if ((searchResults != null) && searchResults.isSuccess() && (searchResults.getItemsCount() > 0)) {
 				// Initialise the processor
 				if (initialiseProcessor) {
 					initialiseProcessor = false;
