@@ -22,13 +22,13 @@
 		<repository>
 			<id>k-int-releases</id>
 			<name>Knowledge Intergation Maven2 Repository</name>
-			<url>http://projects.k-int.com:8081/nexus-webapp-1.4.0/content/repositories/releases/</url>
+			<url>http://nexus.k-int.com/content/repositories/releases/</url>
 		</repository>
 
 		<snapshotRepository>
 			<id>k-int-snapshots</id>
 			<name>Knowledge Intergation Maven2 Snapshot Repository</name>
-			<url>http://projects.k-int.com:8081/nexus-webapp-1.4.0/content/repositories/snapshots/</url>
+			<url>http://nexus.k-int.com/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
