@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.k-int.EUInside</groupId>
 	<artifactId>ECKClient</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.3</version>
 	<name>ECKClient</name>
 	<description>Client library to support the ECK modules</description>
 
@@ -15,7 +15,7 @@
 		<connection>scm:git:git://github.com/k-int/ECKClient.git</connection>
 		<developerConnection>scm:git:https://github.com/k-int/ECKClient.git</developerConnection>
 		<url>https://github.com/k-int/ECKClient</url>
-		<tag>HEAD</tag>
+		<tag>ECKClient-0.3</tag>
 	</scm>
 
 	<distributionManagement>
