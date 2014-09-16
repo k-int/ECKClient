@@ -34,18 +34,9 @@
 
 	<repositories>
 		<repository>
-			<id>k-int</id>
-			<name>k-int Development Repository</name>
-			<url>http://developer.k-int.com/maven2/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-
-		<repository>
 			<id>k-int-release-repo</id>
 			<name>k-int Releases Repositoy</name>
-			<url>http://developer.k-int.com/nexus-webapp-1.4.0/content/repositories/releases/</url>
+			<url>http://nexus.k-int.com/content/repositories/releases/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
