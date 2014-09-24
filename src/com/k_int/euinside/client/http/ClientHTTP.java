@@ -6,14 +6,13 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -270,7 +269,7 @@ public class ClientHTTP extends BaseClient {
 		            if (contentType != null) {
 			            result.setContentType(contentType.getValue());
 		            }
-		            if ((httpStatusCode != HttpServletResponse.SC_OK) && (httpStatusCode != HttpServletResponse.SC_ACCEPTED)) {
+		            if ((httpStatusCode != HttpStatus.SC_OK) && (httpStatusCode != HttpStatus.SC_ACCEPTED)) {
 		            	result.setCallResult(Error.HTTP_ERROR);
 		            }
 	

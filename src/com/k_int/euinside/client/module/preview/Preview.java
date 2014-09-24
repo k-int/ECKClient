@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 
 import com.k_int.euinside.client.HttpResult;
@@ -46,7 +45,7 @@ public class Preview extends BaseModule{
 		ArrayList<byte[]> recordArray = new ArrayList<byte[]>();
 		recordArray.add(xmlRecord);
 		HttpResult httpResult = ClientHTTP.sendBytes(buildPath(provider, batch), recordArray, null, ContentType.APPLICATION_OCTET_STREAM);
-		if (httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) {
+		if (httpResult.getHttpStatusCode() == HttpStatus.SC_OK) {
 			// Now this should be a zip file, so we need tto unzip it
 			UnZipRecords unzip = new UnZipRecords(httpResult.getContentBytes());
 			result = unzip.getNextEntry(null);

@@ -1,9 +1,8 @@
 package com.k_int.euinside.client.xml;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpStatus;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.ctc.wstx.stax.WstxOutputFactory;
@@ -78,8 +77,8 @@ public class ClientXML extends MappingClient {
 	 */
 	static public <T> T readXML(HttpResult httpResult, Class<T> resultType) {
 		T result = null;
-		if ((httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) ||
-		    (httpResult.getHttpStatusCode() == HttpServletResponse.SC_PRECONDITION_FAILED)) {
+		if ((httpResult.getHttpStatusCode() == HttpStatus.SC_OK) ||
+		    (httpResult.getHttpStatusCode() == HttpStatus.SC_PRECONDITION_FAILED)) {
 			result = readXMLString(httpResult.getContent(), resultType);
 		}
 		return(result);

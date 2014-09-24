@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -109,8 +109,8 @@ public class ClientJSON extends BaseClient {
 	 */
 	static public <T> T readJSON(HttpResult httpResult, Class<T> resultType) {
 		T result = null;
-		if ((httpResult.getHttpStatusCode() == HttpServletResponse.SC_OK) ||
-		    (httpResult.getHttpStatusCode() == HttpServletResponse.SC_PRECONDITION_FAILED)) {
+		if ((httpResult.getHttpStatusCode() == HttpStatus.SC_OK) ||
+		    (httpResult.getHttpStatusCode() == HttpStatus.SC_PRECONDITION_FAILED)) {
 			result = readJSONString(httpResult.getContent(), resultType);
 		}
 		return(result);
