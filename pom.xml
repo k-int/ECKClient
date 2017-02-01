@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.k-int.EUInside</groupId>
 	<artifactId>ECKClient</artifactId>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5</version>
 	<name>ECKClient</name>
 	<description>Client library to support the ECK modules</description>
 
@@ -73,7 +73,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>2.10.4</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
 					<links>
@@ -93,6 +93,7 @@
 					<subpackages>com.k_int.euinside.client</subpackages>
 					<use>true</use>
 					<version>true</version>
+					<additionalJOption>-Xdoclint:none</additionalJOption>
 				</configuration>
 			</plugin>
 
