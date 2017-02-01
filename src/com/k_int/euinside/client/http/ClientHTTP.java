@@ -24,7 +24,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -243,7 +243,7 @@ public class ClientHTTP extends BaseClient {
 		
 		if (result.getCallResult() == Error.NONE){
 			// Now we can execute the query
-	        HttpClient httpclient = new DefaultHttpClient();
+	        HttpClient httpclient = HttpClientBuilder.create().build();
 	        try {
 	        	String url = buildURL(path);
 	        	HttpRequestBase httpRequest;

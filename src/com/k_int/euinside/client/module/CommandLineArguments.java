@@ -5,6 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.k_int.euinside.client.module.dataTransformation.Format;
 import com.k_int.euinside.client.module.setmanager.SetManager;
 
@@ -32,6 +37,7 @@ public class CommandLineArguments {
 	private Integer itemsProcessed = null;
 	private String language = "";
 	private Integer limit = null;
+	private String metisBaseURL;
 	private String moduleName = null;
 	private Integer numberFailed = null;
 	private Integer numberSuccessful = null;
@@ -57,6 +63,7 @@ public class CommandLineArguments {
 	private String set = SetManager.SET_DEFAULT;
 	private Format sourceFormat = Format.LIDO;
 	private Format targetFormat = Format.EDM;
+	private String tempDirectory = "";
 	private boolean useSemantika = true;
 	private String wskey = null;
     private String swordLocation;
@@ -66,8 +73,16 @@ public class CommandLineArguments {
     private String collectionId;
     private String filePath;
 
-
 	public CommandLineArguments(String [] args) {
+		this(args, false);
+	}
+
+	public CommandLineArguments(String [] args, boolean initialiseLogging) {
+		if (initialiseLogging) {
+			initialiseConsoleLogging();
+		}
+
+		// Now inspect the arguments
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-accessionNumber":
@@ -166,6 +181,11 @@ public class CommandLineArguments {
 					setRunList(true);
 					break;
 					
+				case "-metisBaseURL":
+					i++;
+					setMetisBaseURL(args[i]);
+					break;
+					
 				case "-moduleName":
 					i++;
 					setModuleName(args[i]);
@@ -262,6 +282,11 @@ public class CommandLineArguments {
 					
 				case "-useSemantika":
 					setUseSemantika(true);
+					break;
+					
+				case "-tempDirectory":
+                    i++;
+					setTempDirectory(args[i]);
 					break;
 					
 				case "-validate":
@@ -433,7 +458,7 @@ public class CommandLineArguments {
         return filePath;
     }
     public void setFilePath(String filepath){
-        filePath=filepath;
+        this.filePath = filepath;
     }
 
     public String getField() {
@@ -490,6 +515,14 @@ public class CommandLineArguments {
 
 	public void setLimit(String limit) {
 		this.limit = Integer.parseInt(limit);
+	}
+
+	public String getMetisBaseURL() {
+		return(metisBaseURL);
+	}
+
+	public void setMetisBaseURL(String metisBaseURL) {
+		this.metisBaseURL = metisBaseURL;
 	}
 
 	public String getModuleName() {
@@ -628,6 +661,13 @@ public class CommandLineArguments {
 		return(useSemantika);
 	}
 	
+    public String getTempDirectory(){
+        return(tempDirectory);
+    }
+    public void setTempDirectory(String tempDirectory){
+    	this.tempDirectory = tempDirectory;
+    }
+
 	public String getWskey() {
 		return(wskey);
 	}
@@ -706,5 +746,18 @@ public class CommandLineArguments {
 
     public void setSwordURL( String swordLocation ) {
         this.swordLocation = swordLocation;
+    }
+
+    public static void initialiseConsoleLogging() {
+    	// Probably not the best place to put this, it was just a convenient place to put it as it will only be used by the main methods ... 
+    	ConsoleAppender console = new ConsoleAppender(); //create appender
+
+    	//configure the appender
+    	console.setLayout(new PatternLayout("%d [%p|%c|%C{1}] %m%n")); 
+    	console.setThreshold(Level.DEBUG);
+    	console.activateOptions();
+
+    	//add appender to the root Logger
+    	Logger.getRootLogger().addAppender(console);
     }
 }
