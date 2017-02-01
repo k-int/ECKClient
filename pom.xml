@@ -93,6 +93,7 @@
 					<subpackages>com.k_int.euinside.client</subpackages>
 					<use>true</use>
 					<version>true</version>
+					<additionalJOptions>-Xdoclint:none</additionalJOptions>
 				</configuration>
 			</plugin>
 
