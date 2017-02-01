@@ -92,7 +92,7 @@ public class HttpResult {
 	/**
 	 * Sets the content type returned by the server
 	 * 
-	 * @param content The content type of the the content
+	 * @param contentType The content type of the the content
 	 */
 	public void setContentType(String contentType) {
 		// Not interested in the charset
