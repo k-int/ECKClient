@@ -26,13 +26,19 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpStatus;
 import org.xml.sax.InputSource;
 
-import eu.europeana.corelib.utils.EuropeanaUriUtils;
-import eu.europeana.metis.preview.rest.client.PreviewClient;
-import eu.europeana.metis.preview.service.ExtendedValidationResult;
+// Only need these if using the Metis Preview Client
+//import eu.europeana.corelib.utils.EuropeanaUriUtils;
+//import eu.europeana.metis.preview.rest.client.PreviewClient;
+//import eu.europeana.metis.preview.service.ExtendedValidationResult;
 
+import com.k_int.euinside.client.HttpResult;
+import com.k_int.euinside.client.http.ClientHTTP;
+import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.module.CommandLineArguments;
+import com.k_int.euinside.client.xml.ClientXML;
 
 public class Preview {
 	private static Log log = LogFactory.getLog(Preview.class);
@@ -57,10 +63,11 @@ public class Preview {
 	private static String tempDirectory = "/tmp"; 
 
 	/** The base url for the metis preview api */ 
-	private static String baseURL = "http://metis-preview-test.cfapps.io";
+	private static String baseURL = "http://metis-preview-test.cfapps.io/";
 
-	/** The preview client that does the work for us */
-	private static PreviewClient previewClient = null;
+// Only need this if using the Metis Preview Client
+//	/** The preview client that does the work for us */
+//	private static PreviewClient previewClient = null;
 
 	/** The base value to be used for the collection id */
 	private static String collectionIdPrefix = "eckClient";
@@ -127,6 +134,9 @@ public class Preview {
 	public static void setURL(String baseURL) {
 		if (!StringUtils.isEmpty(baseURL)) {
 			Preview.baseURL = baseURL;
+			if (!Preview.baseURL.endsWith("/")) {
+				Preview.baseURL += "/";
+			}
 		}
 	}
 
@@ -165,18 +175,19 @@ public class Preview {
 		}
 	}
 
-	/**
-	 * Retrieve the instance of the metis client that we are using
-	 * 
-	 * @return an instance of the metis preview client
-	 */
-	private PreviewClient getMetisPreviewClient() {
-		// We do not initialise on startup as that causes knock on problems in the metis preview client
-		if (previewClient == null) {
-			previewClient = new PreviewClient(baseURL);
-		}
-		return(previewClient);
-	}
+// Only need this if you are using the Metis PreviewClient
+//	/**
+//	 * Retrieve the instance of the metis client that we are using
+//	 * 
+//	 * @return an instance of the metis preview client
+//	 */
+//	private PreviewClient getMetisPreviewClient() {
+//		// We do not initialise on startup as that causes knock on problems in the metis preview client
+//		if (previewClient == null) {
+//			previewClient = new PreviewClient(baseURL);
+//		}
+//		return(previewClient);
+//	}
 
 	/**
 	 * Constructs a new Preview object
@@ -296,6 +307,27 @@ public class Preview {
 	}
 
 	/**
+	 * Maps the returned json into a set of classes
+	 * 
+	 * @param result ... The result returned from the metis preview module
+	 * 
+	 * @return The interpreted data returned from the server
+	 */
+	static private MetisPreviewResult mapHttpResult(HttpResult result) {
+		MetisPreviewResult previewResult = null;
+		if (result.getHttpStatusCode() == HttpStatus.SC_OK) {
+			if (result.isContentTypeJSON()) {
+				previewResult = ClientJSON.readJSONString(result.getContent(), MetisPreviewResult.class);
+			} else {
+				previewResult = ClientXML.readXMLString(result.getContent(), MetisPreviewResult.class);
+			}
+		} else {
+			log.error("Unexpected result from preview, status: " + result.getHttpStatusCode() + ", content: " + result.getContent());
+		}
+		return(previewResult);
+	}
+
+	/**
 	 * Sends the zip file to metis
 	 */
 	private void sendZip() {
@@ -306,8 +338,10 @@ public class Preview {
 			// Does the file exist
 			if (zipFile.exists()) {
 				try {
-					// Now we can ask the preview client to send it for us, we assume EDM External and null for the crosswalk, whatever that is
-					ExtendedValidationResult metisResult = getMetisPreviewClient().previewRecords(zipFile, collectionIdentifier, true, null);
+					// Use this one if using the Metis PreviewClient
+//					ExtendedValidationResult metisResult = getMetisPreviewClient().previewRecords(zipFile, collectionIdentifier, true, null);
+
+					MetisPreviewResult metisResult = mapHttpResult(ClientHTTP.sendMetisPreview(Preview.baseURL + "upload", zipFile, collectionIdentifier));
 					if (metisResult == null) {
 						// At the moment we do not get an error message back from metis if it fails, so give it a generic one
 						resultRecord.setMessage("Failed to send file to the metis preview service, please contact the system administrator");
@@ -375,7 +409,7 @@ public class Preview {
 	            	String extractedString = byteOutputStream.toString(StandardCharsets.UTF_8.name());
 	            	InputSource inputSource = new InputSource(new StringReader(extractedString));
 	            	String recordId = xpathExpressionRecordId.evaluate(inputSource);
-	            	String europeanaRecordId = EuropeanaUriUtils.createEuropeanaId(collectionIdentifier, recordId);
+	            	String europeanaRecordId = MetisUriUtils.createEuropeanaId(collectionIdentifier, recordId);
 	            	String url = urlPrefix + europeanaRecordId + urlSuffix;
 	            	recordURLs.add(url);
 	            	zipStream.closeEntry();

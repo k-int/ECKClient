@@ -102,7 +102,7 @@ public class HttpResult {
 	}
 	
 	public boolean isContentTypeJSON() {
-		return((contentType != null) && contentType.equals(ContentType.APPLICATION_JSON));
+		return((contentType != null) && contentType.startsWith(ContentType.APPLICATION_JSON.getMimeType()));
 	}
 	
 	/**

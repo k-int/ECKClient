@@ -56,8 +56,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 
@@ -168,16 +168,20 @@
 			<artifactId>woodstox-core-asl</artifactId>
 			<version>4.2.0</version>
 		</dependency>
-		<dependency>
+<!--  Brings in to many dependencies so have stopped using the Metis Validation Client -->
+<!-- 	<dependency>
 			<groupId>eu.europeana.metis</groupId>
 			<artifactId>validation-client</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+-->
+<!--  Brings in to many dependencies so have stopped using the Metis Preview Client -->
+<!-- 	<dependency>
 			<groupId>eu.europeana.metis</groupId>
 			<artifactId>metis-preview-client</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+-->
 	</dependencies>
 
 </project>

@@ -1,7 +1,9 @@
 package com.k_int.euinside.client.module.validation;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,14 +24,14 @@ public class ValidationResultRecord extends baseJSON {
 
 	@JacksonXmlProperty(isAttribute=true)  
 	private String id;
-	
+
 	@JacksonXmlProperty(isAttribute=true)  
 	private boolean result = false;
-	
+
 	@JacksonXmlElementWrapper(useWrapping=false)
 	@JacksonXmlProperty(isAttribute=false, localName="error")
 	private List<ValidationResultRecordError> errors;
-	
+
 	public ValidationResultRecord() {
 	}
 
@@ -37,7 +39,7 @@ public class ValidationResultRecord extends baseJSON {
 	protected Log getLogger() {
 		return(log);
 	}
-	
+
 	/**
 	 * Returns the id of the record that his result is for
 	 * 
@@ -79,6 +81,10 @@ public class ValidationResultRecord extends baseJSON {
 		this.result = RESULT_SUCCESS.equalsIgnoreCase(result) || RESULT_SUCCESSFUL.equalsIgnoreCase(result);
 	}
 
+	public void setResult(boolean result) {
+		this.result = result;
+	}
+
 	@JsonSetter("Result")
 	public void setResultsemantika(String result) {
 		setResult(result);
@@ -100,6 +106,19 @@ public class ValidationResultRecord extends baseJSON {
 	 */
 	public void setErrors(List<ValidationResultRecordError> errors) {
 		this.errors = errors;
+	}
+
+	public void addError(String text) {
+		addError(text, null);
+	}
+
+	public void addError(String text, String plugin) {
+		if (!StringUtils.isEmpty(text)) {
+			if (errors == null) {
+				errors = new ArrayList<ValidationResultRecordError>();
+			}
+			errors.add(new ValidationResultRecordError(text, plugin));
+		}
 	}
 
 	@JacksonXmlElementWrapper(useWrapping=false)

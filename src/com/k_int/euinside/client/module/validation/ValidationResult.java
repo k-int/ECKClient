@@ -1,5 +1,6 @@
 package com.k_int.euinside.client.module.validation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -23,11 +24,34 @@ public class ValidationResult extends baseJSON {
 
 	@JacksonXmlProperty(isAttribute=true)  
 	private String set;
-	  
+
 	@JacksonXmlElementWrapper(useWrapping=false)
 	@JacksonXmlProperty(localName="record")
 	private List<ValidationResultRecord> records;
-	
+
+	/**
+	 * Constructs a ValidationResult instance with a provider and set
+	 * 
+	 * @param Provider the provider of the results
+	 * @param set the name given to this set of results
+	 */
+	public ValidationResult(String provider, String set) {
+		setProvider(provider);
+		setSet(set);
+	}
+
+	/**
+	 * Constructs a ValidationResult instance with a provider
+	 * 
+	 * @param Provider the provider of the results
+	 */
+	public ValidationResult(String provider) {
+		this(provider, null);
+	}
+
+	/**
+	 * Constructs a ValidationResult instance
+	 */
 	public ValidationResult() {
 	}
 
@@ -35,7 +59,7 @@ public class ValidationResult extends baseJSON {
 	protected Log getLogger() {
 		return(log);
 	}
-	
+
 	/**
 	 * Returns the provider that the validation was submitted for
 	 * 
@@ -103,6 +127,20 @@ public class ValidationResult extends baseJSON {
 	 */
 	public void setRecords(List<ValidationResultRecord> records) {
 		this.records = records;
+	}
+
+	/**
+	 * Creates a new validation result record
+	 * 
+	 * @return the newly created result record
+	 */
+	public ValidationResultRecord addRecord() {
+		ValidationResultRecord result = new ValidationResultRecord();
+		if (records == null) {
+			records = new ArrayList<ValidationResultRecord>();
+		}
+		records.add(result);
+		return(result);
 	}
 
 	@JacksonXmlElementWrapper(useWrapping=false)
