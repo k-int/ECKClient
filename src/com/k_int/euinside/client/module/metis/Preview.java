@@ -26,7 +26,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpStatus;
 import org.xml.sax.InputSource;
 
 // Only need these if using the Metis Preview Client
@@ -34,11 +33,8 @@ import org.xml.sax.InputSource;
 //import eu.europeana.metis.preview.rest.client.PreviewClient;
 //import eu.europeana.metis.preview.service.ExtendedValidationResult;
 
-import com.k_int.euinside.client.HttpResult;
 import com.k_int.euinside.client.http.ClientHTTP;
-import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.module.CommandLineArguments;
-import com.k_int.euinside.client.xml.ClientXML;
 
 public class Preview {
 	private static Log log = LogFactory.getLog(Preview.class);
@@ -242,7 +238,7 @@ public class Preview {
 			zipFile = new File(zipFilename);
 		}
 
-		// Finally generate ourselces a result record
+		// Finally generate ourselves a result record
 		resultRecord = new ResultRecord();
 	}
 
@@ -307,27 +303,6 @@ public class Preview {
 	}
 
 	/**
-	 * Maps the returned json into a set of classes
-	 * 
-	 * @param result ... The result returned from the metis preview module
-	 * 
-	 * @return The interpreted data returned from the server
-	 */
-	static private MetisPreviewResult mapHttpResult(HttpResult result) {
-		MetisPreviewResult previewResult = null;
-		if (result.getHttpStatusCode() == HttpStatus.SC_OK) {
-			if (result.isContentTypeJSON()) {
-				previewResult = ClientJSON.readJSONString(result.getContent(), MetisPreviewResult.class);
-			} else {
-				previewResult = ClientXML.readXMLString(result.getContent(), MetisPreviewResult.class);
-			}
-		} else {
-			log.error("Unexpected result from preview, status: " + result.getHttpStatusCode() + ", content: " + result.getContent());
-		}
-		return(previewResult);
-	}
-
-	/**
 	 * Sends the zip file to metis
 	 */
 	private void sendZip() {
@@ -341,7 +316,7 @@ public class Preview {
 					// Use this one if using the Metis PreviewClient
 //					ExtendedValidationResult metisResult = getMetisPreviewClient().previewRecords(zipFile, collectionIdentifier, true, null);
 
-					MetisPreviewResult metisResult = mapHttpResult(ClientHTTP.sendMetisPreview(Preview.baseURL + "upload", zipFile, collectionIdentifier));
+					MetisPreviewResult metisResult = TranslateMetisPreviewResult.instance.translate(ClientHTTP.sendMetisPreview(Preview.baseURL + "upload", zipFile, collectionIdentifier));
 					if (metisResult == null) {
 						// At the moment we do not get an error message back from metis if it fails, so give it a generic one
 						resultRecord.setMessage("Failed to send file to the metis preview service, please contact the system administrator");
@@ -350,7 +325,15 @@ public class Preview {
 						resultRecord.setRecordURLs(getRecordURLs(metisResult.getPortalUrl()));
 						resultRecord.setExpiryDate(metisResult.getDate());
 						resultRecord.setResult(metisResult.isSuccess());
-						resultRecord.setMessage(metisResult.getPortalUrl());
+						if (metisResult.isSuccess()) {
+							resultRecord.setMessage(metisResult.getPortalUrl());
+						} else {
+							if (metisResult.getResultList() != null) {
+								if (!metisResult.getResultList().isEmpty()) {
+									resultRecord.setMessage(metisResult.getResultList().get(0).getMessage());
+								}
+							}
+						}
 					}
 				} catch (Exception e) {
 					log.error("Exception thrown while sending to metis for preview: " + zipFile.getAbsolutePath(), e);
@@ -532,6 +515,17 @@ public class Preview {
 	 */
 	public static ResultRecord previewRecord(String record) {
 		return(previewRecord(record, null));
+	}
+
+	/**
+	 * Passes the record to metis for previewing, automatically generating a collection identifier
+	 * 
+	 * @param record the record as a byte array that is to be previewed, it is assumed the record is UTF-8
+	 *
+	 * @return The result of passing the record to metis or an error if one occurred 
+	 */
+	public static ResultRecord previewRecord(byte [] record) {
+		return(previewRecord(new String(record, StandardCharsets.UTF_8), null));
 	}
 
 	/**

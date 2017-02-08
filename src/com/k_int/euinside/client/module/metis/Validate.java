@@ -9,13 +9,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.entity.ContentType;
 
-import com.k_int.euinside.client.HttpResult;
 import com.k_int.euinside.client.http.ClientHTTP;
 import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.module.CommandLineArguments;
 import com.k_int.euinside.client.module.validation.ValidationResult;
 import com.k_int.euinside.client.module.validation.ValidationResultRecord;
-import com.k_int.euinside.client.xml.ClientXML;
 
 // Imports only used if using the Metis Validation Client
 // Note: we stopped using because of the jar file it includes
@@ -117,8 +115,8 @@ public class Validate {
 				String json = ClientJSON.convertToJSON(record);
 // This is the call if you use the metis validation client
 //				ValidationResult metisResult = getMetisClient().validateRecord(schema, edmRecord, version);
-				MetisValidationResult metisResult = mapHttpResult(ClientHTTP.sendJSONData(validateURL, json, ContentType.APPLICATION_JSON));
-				
+				MetisValidationResult metisResult = TranslateMetisValidationResult.instance.translate(ClientHTTP.sendJSONData(validateURL, json, ContentType.APPLICATION_JSON));
+
 				if (metisResult != null) {
 					validationResultRecord.setResult(metisResult.isSuccess());
 					validationResultRecord.addError(metisResult.getMessage());
@@ -133,23 +131,6 @@ public class Validate {
 		return(validationResult);
 	}
 	
-	/**
-	 * Maps the returned json into a set of classes
-	 * 
-	 * @param result ... The result returned from the metis validation module
-	 * 
-	 * @return The interpreted data returned from the server
-	 */
-	static private MetisValidationResult mapHttpResult(HttpResult result) {
-		MetisValidationResult validationResult = null;
-		if (result.isContentTypeJSON()) {
-			validationResult = ClientJSON.readJSONString(result.getContent(), MetisValidationResult.class);
-		} else {
-			validationResult = ClientXML.readXMLString(result.getContent(), MetisValidationResult.class);
-		}
-		return(validationResult);
-	}
-
 	/**
 	 * Sends the supplied record to the Validation module for validation
 	 *  
@@ -168,6 +149,17 @@ public class Validate {
 
 		// return the result to the caller, we will probably create our own class for this
 		return(validationResult);
+	}
+	
+	/**
+	 * Sends the supplied record to the Validation module for validation
+	 *  
+	 * @param record the record as a byte array that is to be validated, it is assumed the record is UTF-8
+	 * 
+	 * @return The interpreted data returned from the server or null if we are unable to read the contents of the file
+	 */
+	static public ValidationResult validate(byte [] record) {
+		return(validate(new String(record, StandardCharsets.UTF_8)));
 	}
 	
 	/**
