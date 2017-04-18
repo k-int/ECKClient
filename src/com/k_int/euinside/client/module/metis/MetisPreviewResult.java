@@ -26,6 +26,10 @@ public class MetisPreviewResult extends baseJSON {
 	@JacksonXmlProperty(isAttribute=false)  
 	private Date date;
 
+	@JacksonXmlElementWrapper(useWrapping=false)
+	@JacksonXmlProperty(isAttribute=false, localName="records")  
+	private List<String> records;
+
 	@Override
 	protected Log getLogger() {
 		return(log);
@@ -61,5 +65,13 @@ public class MetisPreviewResult extends baseJSON {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public List<String> getRecords() {
+		return this.records;
+	}
+
+	public void setRecords(List<String> records) {
+		this.records = records;
 	}
 }
