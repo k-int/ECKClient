@@ -30,7 +30,7 @@ public class Validate {
 //	private static ValidationClient metisClient = null;
 
 	/** The base url of the metis validation api we will be using */
-	private static String baseURL = "http://metis-validation-test.cfapps.io";
+	private static String baseURL = "http://metis-validation-rest-test.cfapps.io/";
 
 	/** The schema we will be using */
 	private static String schema = "EDM-EXTERNAL";

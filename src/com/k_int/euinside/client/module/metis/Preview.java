@@ -59,7 +59,7 @@ public class Preview {
 	private static String tempDirectory = "/tmp"; 
 
 	/** The base url for the metis preview api */ 
-	private static String baseURL = "http://metis-preview-test.cfapps.io/";
+	private static String baseURL = "http://metis-preview-rest-test.cfapps.io/";
 
 // Only need this if using the Metis Preview Client
 //	/** The preview client that does the work for us */
