@@ -323,8 +323,6 @@ public class Preview {
 						log.error("Failed to send file \"" + zipFile.getAbsolutePath() + "\" to metis");
 					} else {
 //						log.info("Result record URL: "+getRecordURLs(metisResult.getPortalUrl()));
-						//ToDo generate correct URLs. URL becomes broken at ...?api_url=...
-						//ToDo follow code through to see how URLs are generated.
 						resultRecord.setRecordURLs(getRecordURLs(metisResult.getPortalUrl()));
 						resultRecord.setExpiryDate(metisResult.getDate());
 						resultRecord.setResult(metisResult.isSuccess());
@@ -357,7 +355,6 @@ public class Preview {
 	 * @return A list of all the urls to the records contained in the zip file 
 	 */
 	private List<String> getRecordURLs(String collectionPortalURL) {
-		//ToDo here building the URLs from collectionPortalURL
 		log.debug(" --- Using Collection Portal URL: "+collectionPortalURL);
 		/// Metis is going to be changed so it returns these, so we shouldn't need to generate them
 		ArrayList<String> recordURLs = new ArrayList<String>();
