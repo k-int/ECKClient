@@ -322,6 +322,9 @@ public class Preview {
 						resultRecord.setMessage("Failed to send file to the metis preview service, please contact the system administrator");
 						log.error("Failed to send file \"" + zipFile.getAbsolutePath() + "\" to metis");
 					} else {
+//						log.info("Result record URL: "+getRecordURLs(metisResult.getPortalUrl()));
+						//ToDo generate correct URLs. URL becomes broken at ...?api_url=...
+						//ToDo follow code through to see how URLs are generated.
 						resultRecord.setRecordURLs(getRecordURLs(metisResult.getPortalUrl()));
 						resultRecord.setExpiryDate(metisResult.getDate());
 						resultRecord.setResult(metisResult.isSuccess());
@@ -354,6 +357,8 @@ public class Preview {
 	 * @return A list of all the urls to the records contained in the zip file 
 	 */
 	private List<String> getRecordURLs(String collectionPortalURL) {
+		//ToDo here building the URLs from collectionPortalURL
+		log.debug(" --- Using Collection Portal URL: "+collectionPortalURL);
 		/// Metis is going to be changed so it returns these, so we shouldn't need to generate them
 		ArrayList<String> recordURLs = new ArrayList<String>();
 
@@ -367,8 +372,12 @@ public class Preview {
 				urlPrefix += "record";
 
 				// Now determine the url suffix
-				String urlSuffix = ".html?api_url=" + URLEncoder.encode(StringUtils.substringBefore(collectionPortalURL, "/portal").replace("portal", "api") + "/api", StandardCharsets.UTF_8.name());
+				//Previous urLSuffix:
+				//String urlSuffix = ".html?api_url=" + URLEncoder.encode(StringUtils.substringBefore(collectionPortalURL, "/portal").replace("portal", "api") + "/api", StandardCharsets.UTF_8.name());
+				//Working urlSuffix - works straight from recordURLs output:
+				String urlSuffix = ".html?portal_url=" + URLEncoder.encode(StringUtils.substringBefore(collectionPortalURL, "/portal").replace("portal", "api") + "/api", StandardCharsets.UTF_8.name());
 				urlSuffix += "?q=" + StringUtils.substringAfter(collectionPortalURL, "q=");
+				log.debug("URL with suffixes: "+urlSuffix);
 				if (collectionPortalURL.endsWith("*")) {
 					urlSuffix = urlSuffix.substring(0, urlSuffix.length() - 1);
 				}
