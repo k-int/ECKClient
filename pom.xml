@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.k-int.EUInside</groupId>
 	<artifactId>ECKClient</artifactId>
-	<version>0.6-SNAPSHOT</version>
+	<version>0.7</version>
 	<name>ECKClient</name>
 	<description>Client library to support the ECK modules</description>
 
@@ -45,6 +45,18 @@
 			<url>http://nexus.k-int.com/content/repositories/releases/</url>
 			<releases>
 				<enabled>true</enabled>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>europeane-snapshot-repo</id>
+			<name>Europeana Snapshots Repository</name>
+			<url>http://artifactory.eanadev.org/artifactory/libs-snapshot-local/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
 			</releases>
 		</repository>
 	</repositories>
