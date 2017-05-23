@@ -32,6 +32,12 @@ public class BaseClient {
 	 * @return The URL to be used to access the ECKCore
 	 */
 	static public String buildURL(String path) {
-		return(coreBaseURL + "/" + path);
+		String url = path;
+
+		// Only prefix with the base url if the path does not begin with http
+		if (!path.startsWith("http")) {
+			url = coreBaseURL + "/" + path;
+		}
+		return(url);
 	}
 }

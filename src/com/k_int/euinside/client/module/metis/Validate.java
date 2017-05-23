@@ -7,20 +7,30 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.entity.ContentType;
 
+import com.k_int.euinside.client.http.ClientHTTP;
+import com.k_int.euinside.client.json.ClientJSON;
 import com.k_int.euinside.client.module.CommandLineArguments;
+import com.k_int.euinside.client.module.validation.ValidationResult;
+import com.k_int.euinside.client.module.validation.ValidationResultRecord;
 
-import eu.europeana.validation.client.ValidationClient;
-import eu.europeana.validation.model.ValidationResult;
+// Imports only used if using the Metis Validation Client
+// Note: we stopped using because of the jar file it includes
+//import eu.europeana.validation.client.ValidationClient;
+//import eu.europeana.validation.model.ValidationResult;
 
 public class Validate {
 	private static Log log = LogFactory.getLog(Validate.class);
 
-	/** The metis client class we are going to use for validation */
-	private static ValidationClient metisClient = null;
+	private static final String VALIDATION_PROVIDER_METIS = "metis";
+
+// Variable only used if using Metis Validation client
+//	/** The metis client class we are going to use for validation */
+//	private static ValidationClient metisClient = null;
 
 	/** The base url of the metis validation api we will be using */
-	private static String baseURL = "http://metis-validation-test.cfapps.io";
+	private static String baseURL = "http://metis-validation-rest-test.cfapps.io/";
 
 	/** The schema we will be using */
 	private static String schema = "EDM-EXTERNAL";
@@ -28,18 +38,26 @@ public class Validate {
 	/** The version of the schema we will be using */
 	private static String version = "undefined";
 
-	/**
-	 * Retrieve the instance of the metis client that we are using
-	 * 
-	 * @return an instance of the metis validation client
-	 */
-	private static ValidationClient getMetisClient() {
-		// We do not initialise on startup as that causes knock on problems in the metis validation client
-		if (metisClient == null) {
-			metisClient = new ValidationClient(baseURL);
-		}
-		return(metisClient);
+	/** The url to use for metis */
+	private static String validateURL;
+
+	static {
+		setValidateURL();
 	}
+
+// Only required if we use the metis validation client
+//	/**
+//	 * Retrieve the instance of the metis client that we are using
+//	 * 
+//	 * @return an instance of the metis validation client
+//	 */
+//	private static ValidationClient getMetisClient() {
+//		// We do not initialise on startup as that causes knock on problems in the metis validation client
+//		if (metisClient == null) {
+//			metisClient = new ValidationClient(baseURL);
+//		}
+//		return(metisClient);
+//	}
 
 	/**
 	 * Set the base url to the Metis validation service
@@ -49,6 +67,7 @@ public class Validate {
 	public static void setURL(String baseURL) {
 		if (!StringUtils.isEmpty(baseURL)) {
 			Validate.baseURL = baseURL;
+			setValidateURL();
 		}
 	}
 
@@ -59,12 +78,19 @@ public class Validate {
 	 * @param version the version of the schema that they are using (default: undefined)
 	 */
 	public static void setSchema(String schema, String version) {
-		Validate.schema = schema;
-		Validate.version = version;
+		if (!StringUtils.isEmpty(schema) && !StringUtils.isEmpty(version)) {
+			Validate.schema = schema;
+			Validate.version = version;
+			setValidateURL();
+		}
 	}
 
-	static public ResultRecord validate(String edmRecord) {
-		return(validate(edmRecord, null));
+	/**
+	 * Sets the metis validate url base on the current settings
+	 * 
+	 */
+	static void setValidateURL() {
+		validateURL = baseURL + "/schema/validate/" + schema + "/" + version;
 	}
 
 	/**
@@ -72,32 +98,37 @@ public class Validate {
 	 *  
 	 * @param edmRecord The edm record that needs to be validated
 	 * 
-	 * @return The interpreted data returned from the server
+	 * @return The validation result
 	 */
-	static public ResultRecord validate(String edmRecord, ResultRecord result) {
+	static public ValidationResult validate(String edmRecord) {
 		// Ensure we have a result record
-		if (result == null) {
-			result = new ResultRecord();
-		}
+		ValidationResult validationResult = new ValidationResult(VALIDATION_PROVIDER_METIS);
+		ValidationResultRecord validationResultRecord = validationResult.addRecord();
 
 		// Nothing to do if we do no not have an edm record
 		if (StringUtils.isEmpty(edmRecord)) {
-			result.setMessage("No EDM record supplied");
+			validationResultRecord.addError("No EDM record supplied");
 		} else {
 			try {
-				ValidationResult metisResult = getMetisClient().validateRecord(schema, edmRecord, version);
+				MetisRecord record = new MetisRecord();
+				record.setRecord(edmRecord);
+				String json = ClientJSON.convertToJSON(record);
+// This is the call if you use the metis validation client
+//				ValidationResult metisResult = getMetisClient().validateRecord(schema, edmRecord, version);
+				MetisValidationResult metisResult = TranslateMetisValidationResult.instance.translate(ClientHTTP.sendJSONData(validateURL, json, ContentType.APPLICATION_JSON));
+
 				if (metisResult != null) {
-					result.setResult(metisResult.isSuccess());
-					result.setMessage(metisResult.getMessage());
+					validationResultRecord.setResult(metisResult.isSuccess());
+					validationResultRecord.addError(metisResult.getMessage());
 				}
 			} catch (Exception e) {
 				log.error("Exception thrown while attempting to validate edm record:\n" + edmRecord, e);	
-				result.setMessage(e.getMessage());
+				validationResultRecord.addError(e.getMessage());
 			}
 		}
 
 		// return the result to the caller, we will probably create our own class for this
-		return(result);
+		return(validationResult);
 	}
 	
 	/**
@@ -105,19 +136,30 @@ public class Validate {
 	 *  
 	 * @param filename The file that contains the record that is to be sent to the metis
 	 * 
-	 * @return The interpreted data returned from the server
+	 * @return The interpreted data returned from the server or null if we are unable to read the contents of the file
 	 */
-	static public ResultRecord validateFile(String filename) {
-		ResultRecord result = new ResultRecord();
+	static public ValidationResult validateFile(String filename) {
+		ValidationResult validationResult = null;
 		try {
 			String edmRecord = FileUtils.readFileToString(new File(filename), StandardCharsets.UTF_8);
-			validate(edmRecord, result);
+			validationResult = validate(edmRecord);
 		} catch (Exception e) {
 			log.error("Exception thrown while attempting to validate edm file:\n" + filename, e);	
 		}
 
 		// return the result to the caller, we will probably create our own class for this
-		return(result);
+		return(validationResult);
+	}
+	
+	/**
+	 * Sends the supplied record to the Validation module for validation
+	 *  
+	 * @param record the record as a byte array that is to be validated, it is assumed the record is UTF-8
+	 * 
+	 * @return The interpreted data returned from the server or null if we are unable to read the contents of the file
+	 */
+	static public ValidationResult validate(byte [] record) {
+		return(validate(new String(record, StandardCharsets.UTF_8)));
 	}
 	
 	/**
@@ -140,7 +182,7 @@ public class Validate {
 			setURL(arguments.getMetisBaseURL());
 			for (String filename : arguments.getFilenames()) {
 				log.info("Validating file: " + filename);
-				ResultRecord result = validateFile(filename);
+				ValidationResult result = validateFile(filename);
 		
 				if (result == null) {
 					log.error("Failed to validate file");

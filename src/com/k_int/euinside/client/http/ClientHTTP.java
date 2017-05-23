@@ -3,12 +3,12 @@ package com.k_int.euinside.client.http;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,9 +18,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -46,8 +48,54 @@ public class ClientHTTP extends BaseClient {
 	static private String CONTENT_TYPE_CHARSET_UTF_8 = "; charset=" + StandardCharsets.UTF_8.name(); 
 	
 	// Why isn't this part of the ContentType class
-	static private String CONTENT_TYPE_APPLICATION_XML = "application/xml"; // The one in the ContentType class automatically appends iso-8859-1
-	static private String CONTENT_TYPE_APPLICATION_ZIP = "application/zip";
+	public static final ContentType CONTENT_TYPE_APPLICATION_XML = ContentType.create("application/xml", StandardCharsets.UTF_8);
+	public static final ContentType CONTENT_TYPE_APPLICATION_ZIP = ContentType.create("application/zip", (Charset)null);
+
+	/**
+	 * Performs a HTTP PUT to send json to the given path
+	 * 
+	 * @param url The URL / Path of where the data needs to be sent
+	 * @param json The json that is to be sent
+	 * @param acceptableResponseContentType The type of content we expect to be returned
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult sendJSONData(String url, String json, ContentType acceptableResponseContentType) {
+		return(sendData(url, json.getBytes(StandardCharsets.UTF_8), ContentType.APPLICATION_JSON, acceptableResponseContentType));
+	}
+
+	/**
+	 * Performs a HTTP PUT to send a zip file for metis preview
+	 * 
+	 * @param url The URL / Path of where the data needs to be sent
+	 * @param zipFile The file that is to be sent
+	 * @param collectionId the id of the collection that this this preview is associated with
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult sendMetisPreview(String url, File zipFile, String collectionId) {
+		// Bit naff to do this, but one of the parameters required the string to be of type JSON
+		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+		entityBuilder.addBinaryBody("file", zipFile, CONTENT_TYPE_APPLICATION_ZIP, zipFile.getName());
+		entityBuilder.addTextBody("edmExternal", Boolean.TRUE.toString(), ContentType.APPLICATION_JSON);
+		entityBuilder.addTextBody("collectionId", collectionId);
+		return(send(url, entityBuilder.build(), null, ContentType.APPLICATION_JSON));
+	}
+
+	/**
+	 * Performs a HTTP PUT to send a byte array to the given path
+	 * 
+	 * @param url The URL / Path of where the data needs to be sent
+	 * @param data The json that is to be sent
+	 * @param contentType The content type of the source data
+	 * @param acceptableResponseContentType The type of content we expect to be returned
+	 * 
+	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
+	 */
+	static public HttpResult sendData(String url, byte [] data, ContentType contentType, ContentType acceptableResponseContentType) {
+		HttpEntity requestEntity = new ByteArrayEntity(data, contentType);
+		return(send(url, requestEntity, null, acceptableResponseContentType));
+	}
 
 	/**
 	 * Performs a HTTP PUT to send the supplied zip data to the given path
@@ -92,19 +140,19 @@ public class ClientHTTP extends BaseClient {
 	static public HttpResult sendBytes(String path, ArrayList<byte[]> xmlData, ArrayList<byte[]> zipData, ArrayList<BasicNameValuePair> attributes, ContentType acceptableResponseContentType) {
 		HttpResult result = new HttpResult();
 		
-        MultipartEntity requestEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+		MultipartEntity requestEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);;
         int filenameCount = 1;
 
 		if (xmlData != null) {
 			for (byte[] xmlBytes : xmlData) {
-				requestEntity.addPart(getFileParameterName(false, filenameCount), new ByteArrayBody(xmlBytes, CONTENT_TYPE_APPLICATION_XML + CONTENT_TYPE_CHARSET_UTF_8, FILENAME_PREFIX + filenameCount));
+				requestEntity.addPart(getFileParameterName(false, filenameCount), new ByteArrayBody(xmlBytes, CONTENT_TYPE_APPLICATION_XML.toString(), FILENAME_PREFIX + filenameCount));
 				filenameCount++;
 			}
 		}
-		
+
 		if (zipData != null) {
 			for (byte[] zipBytes : zipData) {
-				requestEntity.addPart(getFileParameterName(true, filenameCount), new ByteArrayBody(zipBytes, CONTENT_TYPE_APPLICATION_ZIP, FILENAME_PREFIX + filenameCount));
+				requestEntity.addPart(getFileParameterName(true, filenameCount), new ByteArrayBody(zipBytes, CONTENT_TYPE_APPLICATION_ZIP.getMimeType(), FILENAME_PREFIX + filenameCount));
 				filenameCount++;
 			}
 		}
@@ -176,7 +224,7 @@ public class ClientHTTP extends BaseClient {
 
 					if (result.getCallResult() == Error.NONE) {
 						log.info("Adding filename: " + filename);
-						requestEntity.addPart(getFileParameterName(isZipFile, filenameCount), new FileBody(fileObject, (isZipFile ? CONTENT_TYPE_APPLICATION_ZIP : CONTENT_TYPE_APPLICATION_XML), StandardCharsets.UTF_8.name()));
+						requestEntity.addPart(getFileParameterName(isZipFile, filenameCount), new FileBody(fileObject, (isZipFile ? CONTENT_TYPE_APPLICATION_ZIP.getMimeType() : CONTENT_TYPE_APPLICATION_XML.getMimeType()), StandardCharsets.UTF_8.name()));
 						filenameCount++;
 					}
 				} else {
@@ -228,16 +276,20 @@ public class ClientHTTP extends BaseClient {
 	 *  
 	 * @return A HttpResult object that can be interrogated to see if the call was successful or not
 	 */
-	static public HttpResult send(String path, MultipartEntity requestEntity, ArrayList<BasicNameValuePair> attributes, ContentType acceptableResponseContentType) {
+	static public HttpResult send(String path, HttpEntity requestEntity, ArrayList<BasicNameValuePair> attributes, ContentType acceptableResponseContentType) {
 		HttpResult result = new HttpResult();
 		if (attributes != null) {
-			for (BasicNameValuePair attribute : attributes) {
-				try {
-					requestEntity.addPart(attribute.getName(), new StringBody(attribute.getValue()));
-				} catch (UnsupportedEncodingException e) {
-					log.error("UnsupportedEncodingException thrown, attribute: \"" + attribute.getName() + "\", Value: \"" + attribute.getValue() + "\"", e);
-					result.setCallResult(Error.ENCODEING);
-				}		
+			if (requestEntity instanceof MultipartEntity) {
+				MultipartEntity multipartEntiry = null;
+				multipartEntiry = (MultipartEntity)requestEntity;
+				for (BasicNameValuePair attribute : attributes) {
+					try {
+						multipartEntiry.addPart(attribute.getName(), new StringBody(attribute.getValue()));
+					} catch (UnsupportedEncodingException e) {
+						log.error("UnsupportedEncodingException thrown, attribute: \"" + attribute.getName() + "\", Value: \"" + attribute.getValue() + "\"", e);
+						result.setCallResult(Error.ENCODEING);
+					}
+				}
 			}
 		}
 		

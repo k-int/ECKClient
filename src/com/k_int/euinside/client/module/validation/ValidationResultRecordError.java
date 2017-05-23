@@ -29,14 +29,19 @@ public class ValidationResultRecordError extends baseJSON {
 		setText(text);
 	}
 
+	public ValidationResultRecordError(String text, String plugin) {
+		setText(text);
+		setPlugin(plugin);
+	}
+
 	public ValidationResultRecordError() {
 	}
-	
+
 	@Override
 	protected Log getLogger() {
 		return(log);
 	}
-	
+
 	/**
 	 * The plugin that discovered the error
 	 * 

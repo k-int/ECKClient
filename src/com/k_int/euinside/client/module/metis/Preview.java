@@ -28,10 +28,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
 
-import eu.europeana.corelib.utils.EuropeanaUriUtils;
-import eu.europeana.metis.preview.rest.client.PreviewClient;
-import eu.europeana.metis.preview.service.ExtendedValidationResult;
+// Only need these if using the Metis Preview Client
+//import eu.europeana.corelib.utils.EuropeanaUriUtils;
+//import eu.europeana.metis.preview.rest.client.PreviewClient;
+//import eu.europeana.metis.preview.service.ExtendedValidationResult;
 
+import com.k_int.euinside.client.http.ClientHTTP;
 import com.k_int.euinside.client.module.CommandLineArguments;
 
 public class Preview {
@@ -57,10 +59,11 @@ public class Preview {
 	private static String tempDirectory = "/tmp"; 
 
 	/** The base url for the metis preview api */ 
-	private static String baseURL = "http://metis-preview-test.cfapps.io";
+	private static String baseURL = "http://metis-preview-rest-test.cfapps.io/";
 
-	/** The preview client that does the work for us */
-	private static PreviewClient previewClient = null;
+// Only need this if using the Metis Preview Client
+//	/** The preview client that does the work for us */
+//	private static PreviewClient previewClient = null;
 
 	/** The base value to be used for the collection id */
 	private static String collectionIdPrefix = "eckClient";
@@ -127,6 +130,9 @@ public class Preview {
 	public static void setURL(String baseURL) {
 		if (!StringUtils.isEmpty(baseURL)) {
 			Preview.baseURL = baseURL;
+			if (!Preview.baseURL.endsWith("/")) {
+				Preview.baseURL += "/";
+			}
 		}
 	}
 
@@ -165,18 +171,19 @@ public class Preview {
 		}
 	}
 
-	/**
-	 * Retrieve the instance of the metis client that we are using
-	 * 
-	 * @return an instance of the metis preview client
-	 */
-	private PreviewClient getMetisPreviewClient() {
-		// We do not initialise on startup as that causes knock on problems in the metis preview client
-		if (previewClient == null) {
-			previewClient = new PreviewClient(baseURL);
-		}
-		return(previewClient);
-	}
+// Only need this if you are using the Metis PreviewClient
+//	/**
+//	 * Retrieve the instance of the metis client that we are using
+//	 * 
+//	 * @return an instance of the metis preview client
+//	 */
+//	private PreviewClient getMetisPreviewClient() {
+//		// We do not initialise on startup as that causes knock on problems in the metis preview client
+//		if (previewClient == null) {
+//			previewClient = new PreviewClient(baseURL);
+//		}
+//		return(previewClient);
+//	}
 
 	/**
 	 * Constructs a new Preview object
@@ -231,7 +238,7 @@ public class Preview {
 			zipFile = new File(zipFilename);
 		}
 
-		// Finally generate ourselces a result record
+		// Finally generate ourselves a result record
 		resultRecord = new ResultRecord();
 	}
 
@@ -306,17 +313,28 @@ public class Preview {
 			// Does the file exist
 			if (zipFile.exists()) {
 				try {
-					// Now we can ask the preview client to send it for us, we assume EDM External and null for the crosswalk, whatever that is
-					ExtendedValidationResult metisResult = getMetisPreviewClient().previewRecords(zipFile, collectionIdentifier, true, null);
+					// Use this one if using the Metis PreviewClient
+//					ExtendedValidationResult metisResult = getMetisPreviewClient().previewRecords(zipFile, collectionIdentifier, true, null);
+
+					MetisPreviewResult metisResult = TranslateMetisPreviewResult.instance.translate(ClientHTTP.sendMetisPreview(Preview.baseURL + "upload", zipFile, collectionIdentifier));
 					if (metisResult == null) {
 						// At the moment we do not get an error message back from metis if it fails, so give it a generic one
 						resultRecord.setMessage("Failed to send file to the metis preview service, please contact the system administrator");
 						log.error("Failed to send file \"" + zipFile.getAbsolutePath() + "\" to metis");
 					} else {
+						log.debug("Result record URL: "+getRecordURLs(metisResult.getPortalUrl()));
 						resultRecord.setRecordURLs(getRecordURLs(metisResult.getPortalUrl()));
 						resultRecord.setExpiryDate(metisResult.getDate());
 						resultRecord.setResult(metisResult.isSuccess());
-						resultRecord.setMessage(metisResult.getPortalUrl());
+						if (metisResult.isSuccess()) {
+							resultRecord.setMessage(metisResult.getPortalUrl());
+						} else {
+							if (metisResult.getResultList() != null) {
+								if (!metisResult.getResultList().isEmpty()) {
+									resultRecord.setMessage(metisResult.getResultList().get(0).getMessage());
+								}
+							}
+						}
 					}
 				} catch (Exception e) {
 					log.error("Exception thrown while sending to metis for preview: " + zipFile.getAbsolutePath(), e);
@@ -337,6 +355,7 @@ public class Preview {
 	 * @return A list of all the urls to the records contained in the zip file 
 	 */
 	private List<String> getRecordURLs(String collectionPortalURL) {
+		log.debug("Using Collection Portal URL: "+collectionPortalURL);
 		/// Metis is going to be changed so it returns these, so we shouldn't need to generate them
 		ArrayList<String> recordURLs = new ArrayList<String>();
 
@@ -350,8 +369,12 @@ public class Preview {
 				urlPrefix += "record";
 
 				// Now determine the url suffix
-				String urlSuffix = ".html?api_url=" + URLEncoder.encode(StringUtils.substringBefore(collectionPortalURL, "/portal").replace("portal", "api") + "/api", StandardCharsets.UTF_8.name());
+				//Previous urLSuffix:
+				//String urlSuffix = ".html?api_url=" + URLEncoder.encode(StringUtils.substringBefore(collectionPortalURL, "/portal").replace("portal", "api") + "/api", StandardCharsets.UTF_8.name());
+				//Working urlSuffix - works straight from recordURLs output:
+				String urlSuffix = ".html?portal_url=" + URLEncoder.encode(StringUtils.substringBefore(collectionPortalURL, "/portal").replace("portal", "api") + "/api", StandardCharsets.UTF_8.name());
 				urlSuffix += "?q=" + StringUtils.substringAfter(collectionPortalURL, "q=");
+				log.debug("URL with suffixes: "+urlSuffix);
 				if (collectionPortalURL.endsWith("*")) {
 					urlSuffix = urlSuffix.substring(0, urlSuffix.length() - 1);
 				}
@@ -375,7 +398,7 @@ public class Preview {
 	            	String extractedString = byteOutputStream.toString(StandardCharsets.UTF_8.name());
 	            	InputSource inputSource = new InputSource(new StringReader(extractedString));
 	            	String recordId = xpathExpressionRecordId.evaluate(inputSource);
-	            	String europeanaRecordId = EuropeanaUriUtils.createEuropeanaId(collectionIdentifier, recordId);
+	            	String europeanaRecordId = MetisUriUtils.createEuropeanaId(collectionIdentifier, recordId);
 	            	String url = urlPrefix + europeanaRecordId + urlSuffix;
 	            	recordURLs.add(url);
 	            	zipStream.closeEntry();
@@ -498,6 +521,17 @@ public class Preview {
 	 */
 	public static ResultRecord previewRecord(String record) {
 		return(previewRecord(record, null));
+	}
+
+	/**
+	 * Passes the record to metis for previewing, automatically generating a collection identifier
+	 * 
+	 * @param record the record as a byte array that is to be previewed, it is assumed the record is UTF-8
+	 *
+	 * @return The result of passing the record to metis or an error if one occurred 
+	 */
+	public static ResultRecord previewRecord(byte [] record) {
+		return(previewRecord(new String(record, StandardCharsets.UTF_8), null));
 	}
 
 	/**

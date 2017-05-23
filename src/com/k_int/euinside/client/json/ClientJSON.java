@@ -31,6 +31,23 @@ public class ClientJSON extends BaseClient {
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 	}
 
+	/*
+	 * Takes an Object and converts it to a json string
+	 * 
+	 * @param objectToConvert The object that is to be converted into json
+	 * 
+	 * @return the generated json
+	 */
+	static public String convertToJSON(Object objectToConvert) {
+		String json = null;
+		try {
+			json = mapper.writeValueAsString(objectToConvert);
+		} catch (Exception e) {
+			log.error("Exception while generating json for object: \"" + objectToConvert.toString() + "\"", e);
+		}
+		return(json);
+	}
+
 	/**
 	 * Takes a json string and turns it into instances of the specified class
 	 * 
