@@ -56,7 +56,7 @@ public class Preview {
 	private static final String IDENTIFIER_SEPARATOR = "_";
 
 	/** The directory used for creating the zip files */
-	private static String tempDirectory = "/tmp"; 
+	private static String tempDirectory = "/tmp/";
 
 	/** The base url for the metis preview api */ 
 	private static String baseURL = "http://metis-preview-rest-test.cfapps.io/";
